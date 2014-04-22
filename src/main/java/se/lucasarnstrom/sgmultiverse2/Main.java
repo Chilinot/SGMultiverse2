@@ -36,6 +36,17 @@ public class Main extends JavaPlugin {
 	
 	public void onEnable() {
 		
+		// Init config
+		Config.init(this);
+		
+		// Load defaults
+		Config.checkDefaults();
+		
+		// Load worlds
+		
+		// Initiate listeners
+		
+		// Initiate managers
+		
 	}
-
 }
