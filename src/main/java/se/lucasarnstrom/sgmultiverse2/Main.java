@@ -30,9 +30,19 @@
 
 package se.lucasarnstrom.sgmultiverse2;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
+
 public class Main extends JavaPlugin {
+	
+	private ConsoleLogger logger;
+	
+	public ChestManager chestManager;
 	
 	public void onEnable() {
 		
@@ -42,11 +52,37 @@ public class Main extends JavaPlugin {
 		// Load defaults
 		Config.checkDefaults();
 		
-		// Load worlds
+		// Initiate main logger
+		ConsoleLogger.init(this);
+		
+		logger = new ConsoleLogger("Main");
+		logger.debug("Running onEnable()...");
+		
 		
 		// Initiate listeners
+		logger.debug("Initiating listeners...");
+		
+		
 		
 		// Initiate managers
+		logger.debug("Initiating managers...");
 		
+		chestManager = new ChestManager(this);
+		
+		
+		
+		// Load worlds
+		logger.debug("Loading worlds...");
+		
+		for(String name : getConfig().getConfigurationSection("worlds").getKeys(false)) {
+			
+			logger.debug("Loading world \"" + name + "\".");
+			
+			World w = Bukkit.createWorld(new WorldCreator(name));
+			
+			
+		}
+		
+		logger.debug("onEnable() is finished!");
 	}
 }
