@@ -30,10 +30,13 @@
 
 package se.lucasarnstrom.sgmultiverse2;
 
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
@@ -81,6 +84,16 @@ public class Main extends JavaPlugin {
 			World w = Bukkit.createWorld(new WorldCreator(name));
 			
 			
+		}
+		
+		// Metrics
+		try {
+			logger.debug("Initiating metrics...");
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		}
+		catch (IOException e) {
+			logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
 		}
 		
 		logger.debug("onEnable() is finished!");
