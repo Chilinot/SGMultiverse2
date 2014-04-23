@@ -39,13 +39,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
+
+import se.lucasarnstrom.sgmultiverse2.managers.*;
 
 public class Main extends JavaPlugin {
 	
 	private ConsoleLogger logger;
 	
-	public ChestManager chestManager;
+	public ChestManager  chestManager;
+	public PlayerManager playerManager;
 	
 	public void onEnable() {
 		
@@ -70,7 +72,8 @@ public class Main extends JavaPlugin {
 		// Initiate managers
 		logger.debug("Initiating managers...");
 		
-		chestManager = new ChestManager(this);
+		chestManager  = new ChestManager(this);
+		playerManager = new PlayerManager();
 		
 		
 		

@@ -73,6 +73,9 @@ public class Config {
 			put("time.arena", 300);
 			put("time.end",   120);
 			
+			// Itemlist
+			put("lootlist", "itemlist"); // Allows server operators to define different lootlists for different worlds.
+			
 		}};
 		
 		if(!config.contains("worlds")) {
