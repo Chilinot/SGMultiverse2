@@ -47,11 +47,16 @@ public class Config {
 	
 	@SuppressWarnings("serial")
 	public static void checkDefaults() {
-		HashMap<String, Object> defaults = new HashMap<String, Object>() {{
-			put("debug", false);
-		}};
 		
 		boolean save = false;
+		
+		// General defaults
+		HashMap<String, Object> defaults = new HashMap<String, Object>() {{
+			
+			// General
+			put("debug", false);
+			
+		}};
 		
 		for(Entry<String, Object> e : defaults.entrySet()) {
 			if(!config.contains(e.getKey())) {
@@ -59,6 +64,33 @@ public class Config {
 				save = true;
 			}
 		}
+		
+		// World defaults
+		HashMap<String, Object> world_defaults = new HashMap<String, Object>() {{
+			
+			// Time
+			put("time.start", 120);
+			put("time.arena", 300);
+			put("time.end",   120);
+			
+		}};
+		
+		if(!config.contains("worlds")) {
+			config.set("worlds.sgmworld1.time.start", 120);
+			config.set("worlds.sgmworld2.time.start", 120);
+		}
+		
+		for(String name : config.getConfigurationSection("worlds").getKeys(false)) {
+			
+			for(Entry<String, Object> entry : world_defaults.entrySet()) {
+				String key = "worlds." + name + "." + entry.getKey();
+				if(!config.contains(key))
+					config.set(key, entry.getValue());
+			}
+			
+			save = true;
+		}
+		
 		
 		if(save) {
 			plugin.saveConfig();
