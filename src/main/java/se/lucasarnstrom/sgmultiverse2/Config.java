@@ -74,7 +74,7 @@ public class Config {
 			put("time.end",   120);
 			
 			// Itemlist
-			put("lootlist", "itemlist"); // Allows server operators to define different lootlists for different worlds.
+			put("lootlist", "default"); // Allows server operators to define different lootlists for different worlds.
 			
 		}};
 		
