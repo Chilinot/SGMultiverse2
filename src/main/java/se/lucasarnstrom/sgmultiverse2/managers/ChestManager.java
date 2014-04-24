@@ -1,11 +1,11 @@
 /**
  *  Name: ChestManager.java
- *  Date: 22:08:03 - 7 jul 2012
+ *  Date: 10:36:00 - 24 apr 2014
  * 
  *  Author: LucasEmanuel @ bukkit forums
  *  
  *  
- *  Copyright 2013 Lucas Arnstr�m
+ *  Copyright 2014 Lucas Arnström
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
@@ -56,31 +55,49 @@ public class ChestManager {
 	
 	private Main plugin;
 	private ConsoleLogger logger;
-	private FileConfiguration itemConfig;
 	
-	private ArrayList<Location> randomizedchests;
+	private ArrayList<Location> randomizedchests = new ArrayList<Location>();
 	
-	private RandomCollection<String> itemlist;
-	private HashMap<String, RandomCollection<String>> enchantmentlists;
-	private Map<String, String> enchable;
+	private HashMap<String, Object[]> worlds = new HashMap<String, Object[]>();
 	
 	private Random generator;
 	
 	public ChestManager(Main instance) {
-		this.plugin = instance;
-		this.logger = new ConsoleLogger("ChestManager");
+		plugin = instance;
+		logger = new ConsoleLogger("ChestManager");
 		
-		this.randomizedchests = new ArrayList<Location>();
-		this.loadItemList();
+		generator = new Random(System.currentTimeMillis());
 		
-		this.generator = new Random(System.currentTimeMillis());
-		
-		this.logger.debug("Initiated");
+		logger.debug("Initiated");
 	}
 	
+	public void addWorld(String name) {
+		worlds.put(name, new Object[] {
+			plugin.getConfig().getString("worlds." + name + ".lootlist") + ".yml",  // Itemconfig
+			new RandomCollection<String>(),                                         // Itemlist
+			new HashMap<String, RandomCollection<String>>(),                        // enchantmentlists
+			new HashMap<String, String>()                                           // enchable
+		});
+		
+		loadItemList(name);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void randomizeChest(Chest chest) {
 		
-		if(!this.randomizedchests.contains(chest.getLocation())) {
+		String worldname = chest.getLocation().getWorld().getName();
+		
+		if(!randomizedchests.contains(chest.getLocation()) // Is the chest already logged?
+				&& worlds.containsKey(worldname)) {        // Is it a registered world?
+			
+			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(
+				new File(plugin.getDataFolder(), (String) worlds.get(worldname)[0])
+			);
+			
+			RandomCollection<String> itemlist = (RandomCollection<String>) worlds.get(worldname)[1];
+			HashMap<String, String>  enchable = (HashMap<String, String>)  worlds.get(worldname)[3];
+			HashMap<String, RandomCollection<String>> enchantmentlists = 
+					(HashMap<String, RandomCollection<String>>) worlds.get(worldname)[2];
 			
 			int spawnchance = itemConfig.getInt("blankChestChance-OneOutOf");
 			
@@ -89,12 +106,12 @@ public class ChestManager {
 				Inventory inventory = chest.getInventory();
 				inventory.clear();
 				
-				int items = this.generator.nextInt(itemConfig.getInt("maxAmountOfItems")) + 1;
+				int items = generator.nextInt(itemConfig.getInt("maxAmountOfItems")) + 1;
 				
 				for(int i = 0 ; i < items ; i++) {
 					
 					Enchantment enchantment = null;
-					String itemname = this.itemlist.next();
+					String itemname = itemlist.next();
 					
 					ItemStack item = new ItemStack(Material.getMaterial(itemname.toUpperCase()), 1);
 					
@@ -103,25 +120,25 @@ public class ChestManager {
 					 *  Enchantments -- start
 					 */
 					
-					if(this.enchable.containsKey(itemname)) {
+					if(enchable.containsKey(itemname)) {
 						
-						String itemtype = this.enchable.get(itemname);
+						String itemtype = enchable.get(itemname);
 						
 						// Get the specified enchantchance for the item
 						double enchantchance = 0.0d;
 						
 						if(itemtype.equals("swords") || itemtype.equals("bow")) {
-							enchantchance = this.itemConfig.getDouble("weapons." + itemname + ".enchantmentchance");
+							enchantchance = itemConfig.getDouble("weapons." + itemname + ".enchantmentchance");
 						} else if (itemtype.equals("armors")) {
-							enchantchance = this.itemConfig.getDouble("armors." + itemname + ".enchantmentchance");
+							enchantchance = itemConfig.getDouble("armors." + itemname + ".enchantmentchance");
 						}
 						
 						// Generate a random double and retrieve an enchantment if the generated value is less or equal to the enchantchance
-						if(this.generator.nextDouble() <= enchantchance) {
+						if(generator.nextDouble() <= enchantchance) {
 							
 							// Try to find a random enchantment with a maximum of 5 tries
 							for(int j = 0 ; j < 5 ; j++) {
-								enchantment = Enchantment.getByName(this.enchantmentlists.get(itemtype).next().toUpperCase());
+								enchantment = Enchantment.getByName(enchantmentlists.get(itemtype).next().toUpperCase());
 								
 								if(enchantment.canEnchantItem(item))
 									break;
@@ -134,7 +151,7 @@ public class ChestManager {
 						if(enchantment != null) {
 							
 							// Generate a random level for the enchantment based on the items maxlevel + 1
-							int level = this.generator.nextInt(enchantment.getMaxLevel()) + 1;
+							int level = generator.nextInt(enchantment.getMaxLevel()) + 1;
 							
 							// If the level is above the maxlevel, set it to max level
 							if(level > enchantment.getMaxLevel())
@@ -157,7 +174,7 @@ public class ChestManager {
 					
 					for(int j = 0 ; j < inventory.getSize() ; j++) {
 						
-						place = this.generator.nextInt(inventory.getSize());
+						place = generator.nextInt(inventory.getSize());
 						
 						if(inventory.getItem(place) == null)
 							break;
@@ -169,19 +186,19 @@ public class ChestManager {
 				chest.update();
 			}
 			
-			this.randomizedchests.add(chest.getLocation());
+			randomizedchests.add(chest.getLocation());
 		}
 	}
 	
 	public void addChestToLog(Location location) {
-		if(!this.randomizedchests.contains(location))
-			this.randomizedchests.add(location);
+		if(!randomizedchests.contains(location))
+			randomizedchests.add(location);
 	}
 	
 	public void clearLogs(String worldname) {
 		logger.debug("Clearing logs for world - " + worldname);
 		
-		Iterator<Location> locations = this.randomizedchests.iterator();
+		Iterator<Location> locations = randomizedchests.iterator();
 		while(locations.hasNext()) {
 			
 			Location location = locations.next();
@@ -193,47 +210,52 @@ public class ChestManager {
 		logger.debug("finished...");
 	}
 	
-    private void loadItemList() {
-		
-		this.itemConfig = YamlConfiguration.loadConfiguration(new File(this.plugin.getDataFolder(), "itemlist.yml"));
-		
-		logger.debug("Loading configuration file.");
+    @SuppressWarnings("unchecked")
+	private void loadItemList(String worldname) {
+    	
+    	logger.debug("Loading configuration file for world \"" + worldname + "\".");
+    	
+    	FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(
+			new File(plugin.getDataFolder(), (String) worlds.get(worldname)[0])
+		);
 		
 		// Check the default settings
-		this.checkDefaults();
+		checkDefaults(itemConfig, worldname);
 		
+		// Retrieve the needed collections for the world.
+		RandomCollection<String> itemlist = (RandomCollection<String>) worlds.get(worldname)[1];
+		HashMap<String, String>  enchable = (HashMap<String, String>)  worlds.get(worldname)[3];
+		HashMap<String, RandomCollection<String>> enchantmentlists = 
+				(HashMap<String, RandomCollection<String>>) worlds.get(worldname)[2];
 		
 		
 		// --- Items
-		this.itemlist = new RandomCollection<String>();
-		this.enchable = new HashMap<String, String>();
 		
 		for(String string : itemConfig.getConfigurationSection("weapons").getKeys(false)) {
-			this.itemlist.add(itemConfig.getDouble("weapons." + string + ".spawnchance"), string);
+			itemlist.add(itemConfig.getDouble("weapons." + string + ".spawnchance"), string);
 			
 			if(string.equals("bow"))
-				this.enchable.put(string, "bow");
+				enchable.put(string, "bow");
 			else
-				this.enchable.put(string, "swords");
+				enchable.put(string, "swords");
 		}
 		
 		for(String string : itemConfig.getConfigurationSection("armors").getKeys(false)) {
-			this.itemlist.add(itemConfig.getDouble("armors." + string + ".spawnchance"), string);
-			this.enchable.put(string, "armors");
+			itemlist.add(itemConfig.getDouble("armors." + string + ".spawnchance"), string);
+			enchable.put(string, "armors");
 		}
 		
 		for(String string : itemConfig.getConfigurationSection("food").getKeys(false)) {
-			this.itemlist.add(itemConfig.getDouble("food." + string), string);
+			itemlist.add(itemConfig.getDouble("food." + string), string);
 		}
 		
 		for(String string : itemConfig.getConfigurationSection("items").getKeys(false)) {
-			this.itemlist.add(itemConfig.getDouble("items." + string), string);
+			itemlist.add(itemConfig.getDouble("items." + string), string);
 		}
 		
 		
 		
 		// --- Enchantments
-		this.enchantmentlists = new HashMap<String, RandomCollection<String>>();
 		
 		RandomCollection<String> swords = new RandomCollection<String>();
 		RandomCollection<String> bows   = new RandomCollection<String>();
@@ -251,15 +273,15 @@ public class ChestManager {
 			armors.add(itemConfig.getDouble("enchantments.armors." + armorench), armorench);
 		}
 		
-		this.enchantmentlists.put("swords", swords);
-		this.enchantmentlists.put("bow",    bows);
-		this.enchantmentlists.put("armors", armors);
+		enchantmentlists.put("swords", swords);
+		enchantmentlists.put("bow",    bows);
+		enchantmentlists.put("armors", armors);
 		
 		
 		logger.debug("Finished loading config");
 	}
 
-	private void checkDefaults() {
+	private void checkDefaults(FileConfiguration itemConfig, String worldname) {
 		boolean save = false;
 		
 		if(!itemConfig.contains("maxAmountOfItems")) {
@@ -363,11 +385,9 @@ public class ChestManager {
 		
 		if(save) {
 			try {
-				itemConfig.save(this.plugin.getDataFolder() + File.separator + "itemlist.yml");
-				// Some sort of bug makes it impossible to use the config.getList(), reloading it after saving seems to fix it.
-				this.itemConfig = YamlConfiguration.loadConfiguration(new File(this.plugin.getDataFolder(), "itemlist.yml"));
+				itemConfig.save(plugin.getDataFolder() + File.separator + worlds.get(worldname)[0]);
 			} catch (IOException e) {
-				this.logger.severe("Could not save the itemlist!");
+				logger.severe("Could not save the itemlist!");
 			}
 		}
 	}

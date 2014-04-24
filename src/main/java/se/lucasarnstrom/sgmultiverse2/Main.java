@@ -86,7 +86,7 @@ public class Main extends JavaPlugin {
 			
 			World w = Bukkit.createWorld(new WorldCreator(name));
 			
-			
+			chestManager.addWorld(name);
 		}
 		
 		// Metrics
