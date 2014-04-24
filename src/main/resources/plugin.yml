@@ -2,3 +2,9 @@ name: ${project.name}
 author: LucasEmanuel
 version: ${project.version}
 main: ${project.groupId}.${project.artifactId}.Main
+
+commands:
+  sgjoin:
+    description: Used to join a game of SurvivalGames.
+    usage: /<command> <worldname>
+    permission: sgmultiverse.commands.sgjoin

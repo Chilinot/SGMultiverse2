@@ -64,6 +64,13 @@ public class Main extends JavaPlugin {
 		logger.debug("Running onEnable()...");
 		
 		
+		// Register commands
+		logger.debug("Registering commands...");
+		Commands c = new Commands(this);
+		
+		getCommand("sgjoin").setExecutor(c);
+		
+		
 		// Initiate listeners
 		logger.debug("Initiating listeners...");
 		
