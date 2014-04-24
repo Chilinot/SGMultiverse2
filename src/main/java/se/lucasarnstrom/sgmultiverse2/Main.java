@@ -46,8 +46,8 @@ public class Main extends JavaPlugin {
 	
 	private ConsoleLogger logger;
 	
-	public ChestManager  chestManager;
-	public PlayerManager playerManager;
+	public ChestManager chestManager;
+	public WorldManager worldManager;
 	
 	public void onEnable() {
 		
@@ -72,9 +72,8 @@ public class Main extends JavaPlugin {
 		// Initiate managers
 		logger.debug("Initiating managers...");
 		
-		chestManager  = new ChestManager(this);
-		playerManager = new PlayerManager();
-		
+		chestManager = new ChestManager(this);
+		worldManager = new WorldManager();
 		
 		
 		// Load worlds
@@ -87,6 +86,7 @@ public class Main extends JavaPlugin {
 			World w = Bukkit.createWorld(new WorldCreator(name));
 			
 			chestManager.addWorld(name);
+			worldManager.addWorld(w);
 		}
 		
 		// Metrics
