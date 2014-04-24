@@ -53,21 +53,14 @@ import se.lucasarnstrom.sgmultiverse2.Main;
 
 public class ChestManager {
 	
-	private Main plugin;
-	private ConsoleLogger logger;
-	
-	private ArrayList<Location> randomizedchests = new ArrayList<Location>();
-	
-	private HashMap<String, Object[]> worlds = new HashMap<String, Object[]>();
-	
-	private Random generator;
+	private Main                      plugin;
+	private ConsoleLogger             logger           = new ConsoleLogger("ChestManager");
+	private ArrayList<Location>       randomizedchests = new ArrayList<Location>();
+	private HashMap<String, Object[]> worlds           = new HashMap<String, Object[]>();
+	private Random                    generator        = new Random(System.currentTimeMillis());
 	
 	public ChestManager(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger("ChestManager");
-		
-		generator = new Random(System.currentTimeMillis());
-		
 		logger.debug("Initiated");
 	}
 	
