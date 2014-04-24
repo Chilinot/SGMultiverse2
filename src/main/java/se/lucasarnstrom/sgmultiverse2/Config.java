@@ -84,16 +84,14 @@ public class Config {
 		}
 		
 		for(String name : config.getConfigurationSection("worlds").getKeys(false)) {
-			
 			for(Entry<String, Object> entry : world_defaults.entrySet()) {
 				String key = "worlds." + name + "." + entry.getKey();
-				if(!config.contains(key))
+				if(!config.contains(key)) {
 					config.set(key, entry.getValue());
+					save = true;
+				}
 			}
-			
-			save = true;
 		}
-		
 		
 		if(save) {
 			plugin.saveConfig();
