@@ -90,13 +90,15 @@ public class Main extends JavaPlugin {
 		}
 		
 		// Metrics
-		try {
-			logger.debug("Initiating metrics...");
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-		}
-		catch (IOException e) {
-			logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
+		if(getConfig().getBoolean("metrics")) {
+			try {
+				logger.debug("Initiating metrics...");
+				Metrics metrics = new Metrics(this);
+				metrics.start();
+			}
+			catch (IOException e) {
+				logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
+			}
 		}
 		
 		logger.debug("onEnable() is finished!");
