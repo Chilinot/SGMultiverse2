@@ -65,11 +65,19 @@ public class ChestManager {
 	}
 	
 	public void addWorld(String name) {
+		
+		String config = 
+			plugin.getDataFolder() + 
+			"/lootlists/" + 
+			plugin.getConfig().getString("worlds." + name + ".lootlist") + 
+			".yml"
+		;
+		
 		worlds.put(name, new Object[] {
-			plugin.getConfig().getString("worlds." + name + ".lootlist") + ".yml",  // Itemconfig
-			new RandomCollection<String>(),                                         // Itemlist
-			new HashMap<String, RandomCollection<String>>(),                        // enchantmentlists
-			new HashMap<String, String>()                                           // enchable
+			config,                                           // Itemconfig
+			new RandomCollection<String>(),                   // Itemlist
+			new HashMap<String, RandomCollection<String>>(),  // enchantmentlists
+			new HashMap<String, String>()                     // enchable
 		});
 		
 		loadItemList(name);
@@ -84,7 +92,7 @@ public class ChestManager {
 				&& worlds.containsKey(worldname)) {        // Is it a registered world?
 			
 			FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), (String) worlds.get(worldname)[0])
+				new File((String) worlds.get(worldname)[0])
 			);
 			
 			RandomCollection<String> itemlist = (RandomCollection<String>) worlds.get(worldname)[1];
@@ -209,7 +217,7 @@ public class ChestManager {
     	logger.debug("Loading configuration file for world \"" + worldname + "\".");
     	
     	FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(
-			new File(plugin.getDataFolder(), (String) worlds.get(worldname)[0])
+			new File((String) worlds.get(worldname)[0])
 		);
 		
 		// Check the default settings
@@ -378,7 +386,7 @@ public class ChestManager {
 		
 		if(save) {
 			try {
-				itemConfig.save(plugin.getDataFolder() + File.separator + worlds.get(worldname)[0]);
+				itemConfig.save((String) worlds.get(worldname)[0]);
 			} catch (IOException e) {
 				logger.severe("Could not save the itemlist!");
 			}
