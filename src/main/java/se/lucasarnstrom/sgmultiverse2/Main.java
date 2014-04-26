@@ -69,6 +69,7 @@ public class Main extends JavaPlugin {
 		Commands c = new Commands(this);
 		
 		getCommand("sgjoin").setExecutor(c);
+		getCommand("sglocation").setExecutor(c);
 		
 		
 		// Initiate listeners

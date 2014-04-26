@@ -23,6 +23,10 @@ public class WorldManager {
 		worlds.put(w.getName(), new GameWorld(w));
 	}
 	
+	public boolean isRegistered(String w) {
+		return worlds.containsKey(w);
+	}
+	
 	public boolean allowPlayerJoin(String w) {
 		if(worlds.containsKey(w)) {
 			return worlds.get(w).allowPlayerJoin();
@@ -46,5 +50,21 @@ public class WorldManager {
 		for(Player p : w.getPlayers()) {
 			p.sendMessage(msg);
 		}
+	}
+
+	public int getNumberOfMainLocations(String w) {
+		if(isRegistered(w)) {
+			 
+		}
+		
+		return 0;
+	}
+
+	public int getNumberOfArenaLocations(String w) {
+		if(isRegistered(w)) {
+			
+		}
+		
+		return 0;
 	}
 }

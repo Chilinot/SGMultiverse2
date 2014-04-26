@@ -8,3 +8,7 @@ commands:
     description: Used to join a game of SurvivalGames.
     usage: /<command> <worldname>
     permission: sgmultiverse.commands.sgjoin
+  sglocation:
+    description: Used to add locations to a gameworld.
+    usage: /<command> <add|save|info> [<main|arena>]
+    permission: sgmultiverse.commands.sglocation

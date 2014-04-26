@@ -23,6 +23,7 @@ public class Commands implements CommandExecutor {
 		
 		switch(command) {
 			case "sgjoin": return sgjoin(sender, args);
+			case "sglocation": return sglocation(sender, args);
 		}
 		
 		return false;
@@ -45,5 +46,29 @@ public class Commands implements CommandExecutor {
 		
 		return true;
 	}
-
+	
+	private boolean sglocation(CommandSender sender, String[] args) {
+		
+		if(!(sender instanceof Player)) {
+			sender.sendMessage(ChatColor.RED + "You need to be a player to use this command!");
+		}
+		
+		Player p = (Player) sender;
+		
+		if(!plugin.worldManager.isRegistered(p.getWorld().getName())) {
+			p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
+			return true;
+		}
+		else if(args.length == 0) {
+			sender.sendMessage(ChatColor.RED + "You need to provide atleast one argument to the command!");
+			return true;
+		}
+		else if(args.length == 1 && args[0].equalsIgnoreCase("info")) {
+			p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
+			p.sendMessage(" - MAIN  : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(p.getWorld().getName()));
+			p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(p.getWorld().getName()));
+		}
+		
+		return true;
+	}
 }
