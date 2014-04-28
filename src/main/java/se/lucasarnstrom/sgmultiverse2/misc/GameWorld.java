@@ -31,12 +31,20 @@ public class GameWorld {
 	public void addLocationStart(Location l) {
 		locations_start.put(l, null);
 	}
-	
-	public void addLocationArena(Location l) {
-		locations_arena.put(l, false);
-	}
-	
-	public void sendAllPlayersToArena() {
+
+    public void addLocationArena(Location l) {
+        locations_arena.put(l, false);
+    }
+
+    public int getNumberOfMainLocations() {
+        return locations_start.size();
+    }
+
+    public int getNumberOfArenaLocations() {
+        return locations_arena.size();
+    }
+
+    public void sendAllPlayersToArena() {
 		Iterator<UUID> i = playerlist.iterator();
 		while(i.hasNext()) {
 			

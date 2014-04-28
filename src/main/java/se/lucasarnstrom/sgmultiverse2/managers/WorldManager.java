@@ -54,7 +54,7 @@ public class WorldManager {
 
 	public int getNumberOfMainLocations(String w) {
 		if(isRegistered(w)) {
-			 
+			 return worlds.get(w).getNumberOfMainLocations();
 		}
 		
 		return 0;
@@ -62,7 +62,7 @@ public class WorldManager {
 
 	public int getNumberOfArenaLocations(String w) {
 		if(isRegistered(w)) {
-			
+            return worlds.get(w).getNumberOfArenaLocations();
 		}
 		
 		return 0;
