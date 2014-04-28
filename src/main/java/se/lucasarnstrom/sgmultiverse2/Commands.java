@@ -54,8 +54,9 @@ public class Commands implements CommandExecutor {
 		}
 		
 		Player p = (Player) sender;
+        String worldname = p.getWorld().getName();
 		
-		if(!plugin.worldManager.isRegistered(p.getWorld().getName())) {
+		if(!plugin.worldManager.isRegistered(worldname)) {
 			p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
 			return true;
 		}
@@ -65,10 +66,32 @@ public class Commands implements CommandExecutor {
 		}
 		else if(args.length == 1 && args[0].equalsIgnoreCase("info")) {
 			p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
-			p.sendMessage(" - MAIN  : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(p.getWorld().getName()));
-			p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(p.getWorld().getName()));
+			p.sendMessage(" - MAIN  : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
+			p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
+            return true;
 		}
+        else if(args.length == 1 && args[0].equalsIgnoreCase("save")) {
+            p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
+            plugin.worldManager.saveLocations(worldname);
+            return true;
+        }
+        else if(args.length == 2 && args[0].equalsIgnoreCase("add")) {
+            if(args[1].equalsIgnoreCase("main")) {
+                plugin.worldManager.addMainLocation(worldname, p.getLocation());
+            }
+            else if(args[1].equalsIgnoreCase("arena")) {
+                plugin.worldManager.addArenaLocation(worldname, p.getLocation());
+            }
+            else {
+                return false;
+            }
+
+            p.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GOLD + args[1].toUpperCase() + ChatColor.GREEN + " location! " +
+                    "Remember to save if you want the locations to be permanent!");
+
+            return true;
+        }
 		
-		return true;
+		return false;
 	}
 }

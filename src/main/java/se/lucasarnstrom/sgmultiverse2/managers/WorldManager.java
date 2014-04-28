@@ -2,7 +2,9 @@ package se.lucasarnstrom.sgmultiverse2.managers;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -40,6 +42,10 @@ public class WorldManager {
 			worlds.get(worldname).addPlayer(p);
 		}
 	}
+
+    public void broadcast(String wname, String msg) {
+        broadcast(Bukkit.getWorld(wname), msg);
+    }
 	
 	public void broadcast(World w, String msg) {
 		
@@ -67,4 +73,22 @@ public class WorldManager {
 		
 		return 0;
 	}
+
+    public void saveLocations(String w) {
+        if(isRegistered(w)) {
+            worlds.get(w).saveLocations();
+        }
+    }
+
+    public void addMainLocation(String w, Location l) {
+        if(isRegistered(w)) {
+            worlds.get(w).addLocationStart(l);
+        }
+    }
+
+    public void addArenaLocation(String w, Location l) {
+        if(isRegistered(w)) {
+            worlds.get(w).addLocationArena(l);
+        }
+    }
 }

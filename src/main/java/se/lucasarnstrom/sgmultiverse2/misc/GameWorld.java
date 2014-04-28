@@ -109,4 +109,8 @@ public class GameWorld {
 		
 		p.teleport(l);
 	}
+
+    public void saveLocations() {
+
+    }
 }
