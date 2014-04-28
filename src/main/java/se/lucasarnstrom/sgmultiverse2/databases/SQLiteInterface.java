@@ -84,7 +84,7 @@ public class SQLiteInterface {
 				
 				Statement stmt = con.createStatement();
 				
-				stmt.execute("CREATE TABLE IF NOT EXISTS signlocations (serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL)");
+				stmt.execute("CREATE TABLE IF NOT EXISTS signlocations  (worldname VARCHAR(255) NOT NULL, x DOUBLE(255) NOT NULL, y DOUBLE(255) NOT NULL, z DOUBLE(255) NOT NULL)");
 				stmt.execute("CREATE TABLE IF NOT EXISTS startlocations (worldname VARCHAR(255) NOT NULL, x DOUBLE(255) NOT NULL, y DOUBLE(255) NOT NULL, z DOUBLE(255) NOT NULL, type VARCHAR(10) NOT NULL)");
 				stmt.execute("CREATE TABLE IF NOT EXISTS playerstats (playername VARHCAR(250) NOT NULL PRIMARY KEY, wins INT(10), kills INT(10), deaths INT(10))");
 				stmt.execute("CREATE TABLE IF NOT EXISTS inventories (playername VARCHAR(250) NOT NULL PRIMARY KEY, inventory VARCHAR(8000) NOT NULL)");
