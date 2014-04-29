@@ -55,8 +55,8 @@ public class ChestManager {
 	
 	private Main                      plugin;
 	private ConsoleLogger             logger           = new ConsoleLogger("ChestManager");
-	private ArrayList<Location>       randomizedchests = new ArrayList<Location>();
-	private HashMap<String, Object[]> worlds           = new HashMap<String, Object[]>();
+	private ArrayList<Location>       randomizedchests = new ArrayList<>();
+	private HashMap<String, Object[]> worlds           = new HashMap<>();
 	private Random                    generator        = new Random(System.currentTimeMillis());
 	
 	public ChestManager(Main instance) {
