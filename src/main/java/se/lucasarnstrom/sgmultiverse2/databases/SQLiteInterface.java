@@ -33,6 +33,7 @@ package se.lucasarnstrom.sgmultiverse2.databases;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.sql.*;
@@ -43,7 +44,7 @@ import java.util.Set;
 
 public class SQLiteInterface {
 
-    enum LocationType {
+    public enum LocationType {
         MAIN,
         ARENA
     }
@@ -140,7 +141,10 @@ public class SQLiteInterface {
 		}
 	}
 	
-	public ArrayList<HashSet<Location>> getStartLocations(String worldname) {
+	public void loadLocations(final String worldname) {
+
+        final ArrayList<HashSet<Location>> locations = new ArrayList<>();
+
 		synchronized(lock) {
 			
 			String select = "SELECT * " +
@@ -150,17 +154,15 @@ public class SQLiteInterface {
 			try {
 				testConnection();
 				
-				ArrayList<HashSet<Location>> locations = new ArrayList<>();
-				
 				PreparedStatement stmt_main  = con.prepareStatement(select);
 				PreparedStatement stmt_arena = con.prepareStatement(select);
 				
 				stmt_main.setString(1, worldname);
-                stmt_main.setString(2, "main");
+                stmt_main.setString(2, LocationType.MAIN.toString());
 				ResultSet rs_main = stmt_main.executeQuery();
 				
 				stmt_arena.setString(1, worldname);
-                stmt_arena.setString(2, "arena");
+                stmt_arena.setString(2, LocationType.ARENA.toString());
 				ResultSet rs_arena = stmt_arena.executeQuery();
 				
 				HashSet<Location> main  = new HashSet<>();
@@ -189,33 +191,33 @@ public class SQLiteInterface {
 				rs_arena.close();
 				stmt_main.close();
 				stmt_arena.close();
-				
-				return locations;
 			}
 			catch(SQLException e) {
-				System.out.println("Error while retrieving startlocations for world " + worldname + ". " +
+				System.out.println("Error while retrieving startlocations for world \"" + worldname + "\". " +
 						"Message: " + e.getMessage());
-				return null;
+				return;
 			}
 		}
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for(Location l : locations.get(0)) {
+                    plugin.worldManager.addMainLocation(worldname, l);
+                }
+                for(Location l : locations.get(1)) {
+                    plugin.worldManager.addArenaLocation(worldname, l);
+                }
+            }
+        }.runTask(plugin);
 	}
 	
-	public void saveStartLocations(String worldname, LocationType type, Set<Location> locations) {
+	public void storeStartLocations(String worldname, LocationType type, Location[] locations) {
 		synchronized(lock) {
 			testConnection();
 			
 			String insert_s = "INSERT OR REPLACE INTO startlocations " +
 							  "VALUES(?,?,?,?,?)";
-
-            String t = null;
-            switch(type) {
-                case MAIN:
-                    t = "main";
-                    break;
-                case ARENA:
-                    t = "arena";
-                    break;
-            }
 			
 			try {
 				PreparedStatement stmt = con.prepareStatement(insert_s);
@@ -225,7 +227,7 @@ public class SQLiteInterface {
                     stmt.setDouble(2, l.getX());
                     stmt.setDouble(3, l.getY());
                     stmt.setDouble(4, l.getZ());
-					stmt.setString(5, t);
+					stmt.setString(5, type.toString());
 					stmt.addBatch();
 				}
 				
@@ -239,7 +241,7 @@ public class SQLiteInterface {
 		}
 	}
 	
-	public void clearStartLocations(String worldname, String type) {
+	public void clearStartLocations(String worldname, LocationType type) {
 		synchronized(lock) {
 			testConnection();
 			
@@ -249,7 +251,7 @@ public class SQLiteInterface {
 			try {
 				PreparedStatement stmt = con.prepareStatement(delete_s);
 				stmt.setString(1, worldname);
-				stmt.setString(2, type);
+				stmt.setString(2, type.toString());
 				stmt.execute();
 				stmt.close();
 			}
@@ -260,226 +262,226 @@ public class SQLiteInterface {
 		}
 	}
 	
-	public HashMap<String, String> getSignlocations() {
-		synchronized(lock) {
-			try {
-				HashMap<String, String> map = new HashMap<String, String>();
-				
-				testConnection();
-				
-				Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT * FROM signlocations");
-				
-				while(rs.next()) {
-					
-					String serial    = rs.getString("serial_position");
-					String worldname = rs.getString("worldname");
-					
-					map.put(serial, worldname);
-				}
-				
-				rs.close();
-				stmt.close();
-				
-				return map;
-			}
-			catch (SQLException e) {
-				System.out.println("Error while retrieving saved signlocations! Message: " + e.getMessage());
-				return null;
-			}
-		}
-	}
-	
-	public void saveSignLocations(HashMap<SerializedLocation, String> locations) {
-		synchronized(lock) {
-			testConnection();
-			
-			String insert_s = "INSERT OR REPLACE INTO signlocations " +
-							  "VALUES( ? , ? )";
-			
-			try {
-				PreparedStatement stmt = con.prepareStatement(insert_s);
-				
-				for(Entry<SerializedLocation, String> entry : locations.entrySet()) {
-					stmt.setString(1, entry.getKey().toString());
-					stmt.setString(2, entry.getValue());
-					stmt.addBatch();
-				}
-				
-				stmt.executeBatch();
-				stmt.close();
-			}
-			catch (SQLException e) {
-				System.out.println("Error while saving signs! Message: " + e.getMessage());
-			}
-		}
-	}
-	
-	public void removeSign(SerializedLocation l) {
-		synchronized(lock) {
-			testConnection();
-			
-			String delete = "DELETE FROM signlocations " +
-							"WHERE serial_position = ?";
-			
-			try {
-				PreparedStatement stmt = con.prepareStatement(delete);
-				stmt.setString(1, l.toString());
-				stmt.execute();
-				stmt.close();
-			}
-			catch (SQLException e) {
-				System.out.println("Error while removing sign! Message: " + e.getMessage());
-			}
-		}
-	}
-	
-	public void loadPlayerStats(final String playername) {
-		
-		final int[] stats = new int[3];
-		
-		synchronized(lock) {
-			testConnection();
-			
-			String select = "SELECT * " +
-							"FROM playerstats " +
-							"WHERE playername = ?";
-			try {
-				PreparedStatement stmt = con.prepareStatement(select);
-				
-				stmt.setString(1, playername);
-				
-				ResultSet rs = stmt.executeQuery();
-				
-				if(rs.next()) {
-					stats[0] = rs.getInt("wins");
-					stats[1] = rs.getInt("kills");
-					stats[2] = rs.getInt("deaths");
-				}
-				
-				rs.close();
-				stmt.close();
-			}
-			catch (SQLException e) {
-				System.out.println("Error while loading stats for player= " + playername + "! " +
-						"Message: " + e.getMessage());
-			}
-		}
-		
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			public void run() {
-				plugin.statsManager.addWinPoints(playername, stats[0], false);
-				plugin.statsManager.addKillPoints(playername, stats[1], false);
-				plugin.statsManager.addDeathPoints(playername, stats[2], false);
-			}
-		});
-	}
-
-	public void addScore(String playername, int wins, int kills, int deaths) {
-		synchronized(lock) {
-			testConnection();
-			
-			String select_s = "SELECT * FROM playerstats WHERE playername = ?";
-			
-			String update_s = "UPDATE playerstats " +
-							  "SET wins = wins + ? , kills = kills + ? , deaths = deaths + ? " +
-							  "WHERE playername = ?";
-			
-			String insert_s = "INSERT INTO playerstats " +
-							  "VALUES( ? , ? , ? , ? )";
-			
-			PreparedStatement select = null;
-			PreparedStatement update = null;
-			PreparedStatement insert = null;
-			
-			try {
-				select = con.prepareStatement(select_s);
-				select.setString(1, playername);
-				
-				ResultSet rs = select.executeQuery();
-				
-				if(rs.next()) {
-					update = con.prepareStatement(update_s);
-					update.setInt(1, wins);
-					update.setInt(2, kills);
-					update.setInt(3, deaths);
-					update.setString(4, playername);
-					update.execute();
-					update.close();
-				}
-				else {
-					insert = con.prepareStatement(insert_s);
-					insert.setString(1, playername);
-					insert.setInt(2, wins);
-					insert.setInt(3, kills);
-					insert.setInt(4, deaths);
-					insert.execute();
-					insert.close();
-				}
-				
-				rs.close();
-				select.close();
-			}
-			catch (SQLException e) {
-				System.out.println("Error while saving stats for player= " + playername + "! " +
-								   "Message: " + e.getMessage());
-			}
-		}
-	}
-
-	public void saveInventory(String playername, String serial) {
-		synchronized(lock) {
-			testConnection();
-			
-			String insert_s = "INSERT OR REPLACE INTO inventories " +
-							  "VALUES( ? , ? )";
-			try {
-				PreparedStatement stmt = con.prepareStatement(insert_s);
-				stmt.setString(1, playername);
-				stmt.setString(2, serial);
-				stmt.execute();
-				stmt.close();
-			}
-			catch (SQLException e) {
-				System.out.println("Error while saving inventory for player=" + playername + "! " +
-								   "Message: " + e.getMessage());
-			}
-		}
-	}
-	
-	public String loadInventory(String playername) {
-		synchronized(lock) {
-			testConnection();
-			
-			String select_s = "SELECT inventory FROM inventories WHERE playername = ? ";
-			String delete_s = "DELETE FROM inventories WHERE playername = ? ";
-			
-			try {
-				String serial = null;
-				
-				PreparedStatement select = con.prepareStatement(select_s);
-				select.setString(1, playername);
-				
-				ResultSet rs = select.executeQuery();
-				if(rs.next()) {
-					serial = rs.getString("inventory");
-					PreparedStatement delete = con.prepareStatement(delete_s);
-					delete.setString(1, playername);
-					delete.execute();
-					delete.close();
-				}
-				
-				rs.close();
-				select.close();
-				
-				return serial;
-			}
-			catch (SQLException e) {
-				System.out.println("Error while loading inventory for player=" + playername + "! " +
-								   "Message: " + e.getMessage());
-			}
-		}
-		
-		return null;
-	}
+//	public HashMap<String, String> getSignlocations() {
+//		synchronized(lock) {
+//			try {
+//				HashMap<String, String> map = new HashMap<String, String>();
+//
+//				testConnection();
+//
+//				Statement stmt = con.createStatement();
+//				ResultSet rs = stmt.executeQuery("SELECT * FROM signlocations");
+//
+//				while(rs.next()) {
+//
+//					String serial    = rs.getString("serial_position");
+//					String worldname = rs.getString("worldname");
+//
+//					map.put(serial, worldname);
+//				}
+//
+//				rs.close();
+//				stmt.close();
+//
+//				return map;
+//			}
+//			catch (SQLException e) {
+//				System.out.println("Error while retrieving saved signlocations! Message: " + e.getMessage());
+//				return null;
+//			}
+//		}
+//	}
+//
+//	public void saveSignLocations(HashMap<SerializedLocation, String> locations) {
+//		synchronized(lock) {
+//			testConnection();
+//
+//			String insert_s = "INSERT OR REPLACE INTO signlocations " +
+//							  "VALUES( ? , ? )";
+//
+//			try {
+//				PreparedStatement stmt = con.prepareStatement(insert_s);
+//
+//				for(Entry<SerializedLocation, String> entry : locations.entrySet()) {
+//					stmt.setString(1, entry.getKey().toString());
+//					stmt.setString(2, entry.getValue());
+//					stmt.addBatch();
+//				}
+//
+//				stmt.executeBatch();
+//				stmt.close();
+//			}
+//			catch (SQLException e) {
+//				System.out.println("Error while saving signs! Message: " + e.getMessage());
+//			}
+//		}
+//	}
+//
+//	public void removeSign(SerializedLocation l) {
+//		synchronized(lock) {
+//			testConnection();
+//
+//			String delete = "DELETE FROM signlocations " +
+//							"WHERE serial_position = ?";
+//
+//			try {
+//				PreparedStatement stmt = con.prepareStatement(delete);
+//				stmt.setString(1, l.toString());
+//				stmt.execute();
+//				stmt.close();
+//			}
+//			catch (SQLException e) {
+//				System.out.println("Error while removing sign! Message: " + e.getMessage());
+//			}
+//		}
+//	}
+//
+//	public void loadPlayerStats(final String playername) {
+//
+//		final int[] stats = new int[3];
+//
+//		synchronized(lock) {
+//			testConnection();
+//
+//			String select = "SELECT * " +
+//							"FROM playerstats " +
+//							"WHERE playername = ?";
+//			try {
+//				PreparedStatement stmt = con.prepareStatement(select);
+//
+//				stmt.setString(1, playername);
+//
+//				ResultSet rs = stmt.executeQuery();
+//
+//				if(rs.next()) {
+//					stats[0] = rs.getInt("wins");
+//					stats[1] = rs.getInt("kills");
+//					stats[2] = rs.getInt("deaths");
+//				}
+//
+//				rs.close();
+//				stmt.close();
+//			}
+//			catch (SQLException e) {
+//				System.out.println("Error while loading stats for player= " + playername + "! " +
+//						"Message: " + e.getMessage());
+//			}
+//		}
+//
+//		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+//			public void run() {
+//				plugin.statsManager.addWinPoints(playername, stats[0], false);
+//				plugin.statsManager.addKillPoints(playername, stats[1], false);
+//				plugin.statsManager.addDeathPoints(playername, stats[2], false);
+//			}
+//		});
+//	}
+//
+//	public void updateScore(String playername, int wins, int kills, int deaths) {
+//		synchronized(lock) {
+//			testConnection();
+//
+//			String select_s = "SELECT * FROM playerstats WHERE playername = ?";
+//
+//			String update_s = "UPDATE playerstats " +
+//							  "SET wins = wins + ? , kills = kills + ? , deaths = deaths + ? " +
+//							  "WHERE playername = ?";
+//
+//			String insert_s = "INSERT INTO playerstats " +
+//							  "VALUES( ? , ? , ? , ? )";
+//
+//			PreparedStatement select = null;
+//			PreparedStatement update = null;
+//			PreparedStatement insert = null;
+//
+//			try {
+//				select = con.prepareStatement(select_s);
+//				select.setString(1, playername);
+//
+//				ResultSet rs = select.executeQuery();
+//
+//				if(rs.next()) {
+//					update = con.prepareStatement(update_s);
+//					update.setInt(1, wins);
+//					update.setInt(2, kills);
+//					update.setInt(3, deaths);
+//					update.setString(4, playername);
+//					update.execute();
+//					update.close();
+//				}
+//				else {
+//					insert = con.prepareStatement(insert_s);
+//					insert.setString(1, playername);
+//					insert.setInt(2, wins);
+//					insert.setInt(3, kills);
+//					insert.setInt(4, deaths);
+//					insert.execute();
+//					insert.close();
+//				}
+//
+//				rs.close();
+//				select.close();
+//			}
+//			catch (SQLException e) {
+//				System.out.println("Error while saving stats for player= " + playername + "! " +
+//								   "Message: " + e.getMessage());
+//			}
+//		}
+//	}
+//
+//	public void storeInventory(String playername, String serial) {
+//		synchronized(lock) {
+//			testConnection();
+//
+//			String insert_s = "INSERT OR REPLACE INTO inventories " +
+//							  "VALUES( ? , ? )";
+//			try {
+//				PreparedStatement stmt = con.prepareStatement(insert_s);
+//				stmt.setString(1, playername);
+//				stmt.setString(2, serial);
+//				stmt.execute();
+//				stmt.close();
+//			}
+//			catch (SQLException e) {
+//				System.out.println("Error while saving inventory for player=" + playername + "! " +
+//								   "Message: " + e.getMessage());
+//			}
+//		}
+//	}
+//
+//	public String loadInventory(String playername) {
+//		synchronized(lock) {
+//			testConnection();
+//
+//			String select_s = "SELECT inventory FROM inventories WHERE playername = ? ";
+//			String delete_s = "DELETE FROM inventories WHERE playername = ? ";
+//
+//			try {
+//				String serial = null;
+//
+//				PreparedStatement select = con.prepareStatement(select_s);
+//				select.setString(1, playername);
+//
+//				ResultSet rs = select.executeQuery();
+//				if(rs.next()) {
+//					serial = rs.getString("inventory");
+//					PreparedStatement delete = con.prepareStatement(delete_s);
+//					delete.setString(1, playername);
+//					delete.execute();
+//					delete.close();
+//				}
+//
+//				rs.close();
+//				select.close();
+//
+//				return serial;
+//			}
+//			catch (SQLException e) {
+//				System.out.println("Error while loading inventory for player=" + playername + "! " +
+//								   "Message: " + e.getMessage());
+//			}
+//		}
+//
+//		return null;
+//	}
 }

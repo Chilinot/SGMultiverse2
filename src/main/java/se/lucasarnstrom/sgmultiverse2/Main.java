@@ -40,6 +40,7 @@ import org.mcstats.Metrics;
 
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
+import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface;
 import se.lucasarnstrom.sgmultiverse2.managers.*;
 
 public class Main extends JavaPlugin {
@@ -48,6 +49,8 @@ public class Main extends JavaPlugin {
 	
 	public ChestManager chestManager;
 	public WorldManager worldManager;
+
+    public SQLiteInterface sqlite;
 	
 	public void onEnable() {
 		
@@ -62,7 +65,9 @@ public class Main extends JavaPlugin {
 		
 		logger = new ConsoleLogger("Main");
 		logger.debug("Running onEnable()...");
-		
+
+        // Initiating storage
+        sqlite = new SQLiteInterface(this);
 		
 		// Register commands
 		logger.debug("Registering commands...");
@@ -81,7 +86,7 @@ public class Main extends JavaPlugin {
 		logger.debug("Initiating managers...");
 		
 		chestManager = new ChestManager(this);
-		worldManager = new WorldManager();
+		worldManager = new WorldManager(this);
 		
 		
 		// Load worlds
@@ -111,4 +116,9 @@ public class Main extends JavaPlugin {
 		
 		logger.debug("onEnable() is finished!");
 	}
+
+    public void onDisable() {
+        logger.debug("Closing SQLite connection.");
+        sqlite.closeConnection();
+    }
 }

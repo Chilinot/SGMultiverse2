@@ -1,10 +1,7 @@
 package se.lucasarnstrom.sgmultiverse2.misc;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,18 +9,23 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.sgmultiverse2.Main;
+import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface;
 
 public class GameWorld {
-	
+
+    private Main plugin;
 	private ConsoleLogger logger;
 	
 	private final World                world;
-	private HashSet<UUID>              playerlist      = new HashSet<UUID>();
-	private HashMap<Location, String>  locations_start = new HashMap<Location, String>();
-	private HashMap<Location, Boolean> locations_arena = new HashMap<Location, Boolean>();
+	private HashSet<UUID>              playerlist      = new HashSet<>();
+	private HashMap<Location, String>  locations_start = new HashMap<>();
+	private HashMap<Location, Boolean> locations_arena = new HashMap<>();
 	
-	public GameWorld(World w) {
+	public GameWorld(Main instance, World w) {
+        plugin = instance;
 		world = w;
 		logger = new ConsoleLogger("GameWorld-" + w.getName());
 	}
@@ -111,6 +113,17 @@ public class GameWorld {
 	}
 
     public void saveLocations() {
+        final String wname = world.getName();
 
+        final Location[] main  = (Location[]) locations_start.keySet().toArray();
+        final Location[] arena = (Location[]) locations_arena.keySet().toArray();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.sqlite.storeStartLocations(wname, SQLiteInterface.LocationType.MAIN,  main);
+                plugin.sqlite.storeStartLocations(wname, SQLiteInterface.LocationType.ARENA, arena);
+            }
+        }.runTaskAsynchronously(plugin);
     }
 }

@@ -8,21 +8,34 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.misc.GameWorld;
 
 public class WorldManager {
-	
+
+    private Main plugin;
 	private ConsoleLogger logger = new ConsoleLogger("WorldManager");
 	
 	private HashMap<String, GameWorld> worlds = new HashMap<String, GameWorld>();
 	
-	public WorldManager() {
+	public WorldManager(Main instance) {
+        plugin = instance;
 		logger.debug("Initiated");
 	}
 	
 	public void addWorld(World w) {
-		worlds.put(w.getName(), new GameWorld(w));
+		worlds.put(w.getName(), new GameWorld(plugin, w));
+
+        final String wname = w.getName();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.sqlite.loadLocations(wname);
+            }
+        }.runTaskAsynchronously(plugin);
 	}
 	
 	public boolean isRegistered(String w) {
