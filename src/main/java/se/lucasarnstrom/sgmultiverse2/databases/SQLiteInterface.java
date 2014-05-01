@@ -1,10 +1,10 @@
 /**
  *  Name:    ConcurrentSQLiteConnection.java
  *  Created: 17:37:33 - 8 maj 2013
- * 
+ *
  *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
- *  
+ *
  *
  *  Copyright 2013 Lucas Arnström
  *
@@ -20,12 +20,12 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *
  *
  *  Filedescription:
  *
- * 
+ *
  */
 
 package se.lucasarnstrom.sgmultiverse2.databases;
@@ -38,91 +38,87 @@ import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 public class SQLiteInterface {
 
-    public enum LocationType {
-        MAIN,
-        ARENA
-    }
-	
+	public enum LocationType {
+		MAIN,
+		ARENA
+	}
+
 	private Main plugin;
 	private final String folder;
-	
+
 	private Connection con;
-	
+
 	// Dummy object for locking purpose
-	private Object lock = new Object();
-	
+	final private Object lock = new Object();
+
 	public SQLiteInterface(Main instance) {
 		plugin = instance;
-		
+
 		folder = plugin.getDataFolder().getAbsolutePath();
-		
+
 		getConnection();
 	}
-	
+
 	private void testConnection() {
-		synchronized(lock) {
+		synchronized (lock) {
 			try {
 				con.getCatalog();
-			}
-			catch(SQLException e) {
+			} catch (SQLException e) {
 				System.out.println("SQLite-connection no longer valid! Trying to re-establish one...");
 				getConnection();
 			}
 		}
 	}
-	
+
 	private void getConnection() {
-		synchronized(lock) {
+		synchronized (lock) {
 			try {
 				Class.forName("org.sqlite.JDBC");
 				con = DriverManager.getConnection("jdbc:sqlite:" + folder + "/data.db");
-				
+
 				Statement stmt = con.createStatement();
-				
-				stmt.execute(
-                    "CREATE TABLE IF NOT EXISTS signlocations  (" +
-                        "worldname VARCHAR(255) NOT NULL, " +
-                        "x         DOUBLE(255)  NOT NULL, " +
-                        "y         DOUBLE(255)  NOT NULL, " +
-                        "z         DOUBLE(255)  NOT NULL" +
-                    ")"
-                );
 
 				stmt.execute(
-                    "CREATE TABLE IF NOT EXISTS startlocations (" +
-                        "worldname VARCHAR(255) NOT NULL, " +
-                        "x         DOUBLE(255)  NOT NULL, " +
-                        "y         DOUBLE(255)  NOT NULL, " +
-                        "z         DOUBLE(255)  NOT NULL, " +
-                        "type      VARCHAR(10)  NOT NULL" +
-                    ")"
-                );
+						"CREATE TABLE IF NOT EXISTS signlocations  (" +
+								"worldname VARCHAR(255) NOT NULL, " +
+								"x         DOUBLE(255)  NOT NULL, " +
+								"y         DOUBLE(255)  NOT NULL, " +
+								"z         DOUBLE(255)  NOT NULL" +
+								")"
+				);
 
 				stmt.execute(
-                    "CREATE TABLE IF NOT EXISTS playerstats (" +
-                        "playername VARHCAR(250) NOT NULL PRIMARY KEY, " +
-                        "wins       INT(10), " +
-                        "kills      INT(10), " +
-                        "deaths     INT(10)" +
-                    ")"
-                );
+						"CREATE TABLE IF NOT EXISTS startlocations (" +
+								"worldname VARCHAR(255) NOT NULL, " +
+								"x         DOUBLE(255)  NOT NULL, " +
+								"y         DOUBLE(255)  NOT NULL, " +
+								"z         DOUBLE(255)  NOT NULL, " +
+								"type      VARCHAR(10)  NOT NULL" +
+								")"
+				);
 
 				stmt.execute(
-                    "CREATE TABLE IF NOT EXISTS inventories (" +
-                        "playername VARCHAR(250)  NOT NULL PRIMARY KEY, " +
-                        "inventory  VARCHAR(8000) NOT NULL" +
-                    ")"
-                );
-				
+						"CREATE TABLE IF NOT EXISTS playerstats (" +
+								"playername VARHCAR(250) NOT NULL PRIMARY KEY, " +
+								"wins       INT(10), " +
+								"kills      INT(10), " +
+								"deaths     INT(10)" +
+								")"
+				);
+
+				stmt.execute(
+						"CREATE TABLE IF NOT EXISTS inventories (" +
+								"playername VARCHAR(250)  NOT NULL PRIMARY KEY, " +
+								"inventory  VARCHAR(8000) NOT NULL" +
+								")"
+				);
+
 				stmt.close();
-			}
-			catch(ClassNotFoundException | SQLException e) {
+			} catch (ClassNotFoundException | SQLException e) {
 				System.out.println("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
 				System.out.println("Error message: " + e.getMessage());
 			}
@@ -130,138 +126,134 @@ public class SQLiteInterface {
 	}
 
 	public void closeConnection() {
-		synchronized(lock) {
+		synchronized (lock) {
 			try {
 				con.close();
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				System.out.println("Error while closing connection, data might have been lost! " +
 						"Message: " + e.getMessage());
 			}
 		}
 	}
-	
+
 	public void loadLocations(final String worldname) {
 
-        final ArrayList<HashSet<Location>> locations = new ArrayList<>();
+		final ArrayList<HashSet<Location>> locations = new ArrayList<>();
 
-		synchronized(lock) {
-			
+		synchronized (lock) {
+
 			String select = "SELECT * " +
-							"FROM startlocations " +
-							"WHERE worldname = ? " +
-							"AND type = ?";
+					"FROM startlocations " +
+					"WHERE worldname = ? " +
+					"AND type = ?";
 			try {
 				testConnection();
-				
-				PreparedStatement stmt_main  = con.prepareStatement(select);
+
+				PreparedStatement stmt_main = con.prepareStatement(select);
 				PreparedStatement stmt_arena = con.prepareStatement(select);
-				
+
 				stmt_main.setString(1, worldname);
-                stmt_main.setString(2, LocationType.MAIN.toString());
+				stmt_main.setString(2, LocationType.MAIN.toString());
 				ResultSet rs_main = stmt_main.executeQuery();
-				
+
 				stmt_arena.setString(1, worldname);
-                stmt_arena.setString(2, LocationType.ARENA.toString());
+				stmt_arena.setString(2, LocationType.ARENA.toString());
 				ResultSet rs_arena = stmt_arena.executeQuery();
-				
-				HashSet<Location> main  = new HashSet<>();
+
+				HashSet<Location> main = new HashSet<>();
 				HashSet<Location> arena = new HashSet<>();
 
-                World w = Bukkit.getWorld(worldname);   // It doesn't matter that it is not thread-safe.
+				World w = Bukkit.getWorld(worldname);   // It doesn't matter that it is not thread-safe.
 
-                while(rs_main.next()) {
-                    double x = rs_main.getDouble(2);
-                    double y = rs_main.getDouble(3);
-                    double z = rs_main.getDouble(4);
+				while (rs_main.next()) {
+					double x = rs_main.getDouble(2);
+					double y = rs_main.getDouble(3);
+					double z = rs_main.getDouble(4);
 					main.add(new Location(w, x, y, z));
 				}
-				
-				while(rs_arena.next()) {
-                    double x = rs_main.getDouble(2);
-                    double y = rs_main.getDouble(3);
-                    double z = rs_main.getDouble(4);
-                    arena.add(new Location(w, x, y, z));
+
+				while (rs_arena.next()) {
+					double x = rs_main.getDouble(2);
+					double y = rs_main.getDouble(3);
+					double z = rs_main.getDouble(4);
+					arena.add(new Location(w, x, y, z));
 				}
-				
+
 				locations.add(main);
 				locations.add(arena);
-				
+
 				rs_main.close();
 				rs_arena.close();
 				stmt_main.close();
 				stmt_arena.close();
-			}
-			catch(SQLException e) {
+			} catch (SQLException e) {
 				System.out.println("Error while retrieving startlocations for world \"" + worldname + "\". " +
 						"Message: " + e.getMessage());
 				return;
 			}
 		}
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for(Location l : locations.get(0)) {
-                    plugin.worldManager.addMainLocation(worldname, l);
-                }
-                for(Location l : locations.get(1)) {
-                    plugin.worldManager.addArenaLocation(worldname, l);
-                }
-            }
-        }.runTask(plugin);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for (Location l : locations.get(0)) {
+					plugin.worldManager.addMainLocation(worldname, l);
+				}
+				for (Location l : locations.get(1)) {
+					plugin.worldManager.addArenaLocation(worldname, l);
+				}
+			}
+		}.runTask(plugin);
 	}
-	
+
 	public void storeStartLocations(String worldname, LocationType type, Location[] locations) {
-		synchronized(lock) {
+		synchronized (lock) {
 			testConnection();
-			
+
 			String insert_s = "INSERT OR REPLACE INTO startlocations " +
-							  "VALUES(?,?,?,?,?)";
-			
+					"VALUES(?,?,?,?,?)";
+
 			try {
 				PreparedStatement stmt = con.prepareStatement(insert_s);
-				
-				for(Location l : locations) {
+
+				for (Location l : locations) {
 					stmt.setString(1, worldname);
-                    stmt.setDouble(2, l.getX());
-                    stmt.setDouble(3, l.getY());
-                    stmt.setDouble(4, l.getZ());
+					stmt.setDouble(2, l.getX());
+					stmt.setDouble(3, l.getY());
+					stmt.setDouble(4, l.getZ());
 					stmt.setString(5, type.toString());
 					stmt.addBatch();
 				}
-				
+
 				stmt.executeBatch();
 				stmt.close();
-			}
-			catch(SQLException e) {
+			} catch (SQLException e) {
 				System.out.println("Error while saving startlocations for world " + worldname + ". " +
 						"Message: " + e.getMessage());
 			}
 		}
 	}
-	
+
 	public void clearStartLocations(String worldname, LocationType type) {
-		synchronized(lock) {
+		synchronized (lock) {
 			testConnection();
-			
+
 			String delete_s = "DELETE FROM startlocations " +
-							  "WHERE worldname = ? " +
-							  "AND type = ?";
+					"WHERE worldname = ? " +
+					"AND type = ?";
 			try {
 				PreparedStatement stmt = con.prepareStatement(delete_s);
 				stmt.setString(1, worldname);
 				stmt.setString(2, type.toString());
 				stmt.execute();
 				stmt.close();
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				System.out.println("Error while clearing startlocations! " +
 						"Message: " + e.getMessage());
 			}
 		}
 	}
-	
+
 //	public HashMap<String, String> getSignlocations() {
 //		synchronized(lock) {
 //			try {
