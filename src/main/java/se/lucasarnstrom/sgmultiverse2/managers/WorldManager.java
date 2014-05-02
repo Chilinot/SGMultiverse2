@@ -128,7 +128,7 @@ public class WorldManager {
 	}
 
 	public boolean allowBlock(Block b) {
-		return isRegistered(b.getWorld().getName()) && worlds.get(b.getWorld().getName()).allowBlock(b);
+		return isRegistered(b.getWorld().getName()) && worlds.get(b.getWorld().getName()).allowBlock(b.getType());
 	}
 
 	public void logBlock(Block b, boolean placed) {

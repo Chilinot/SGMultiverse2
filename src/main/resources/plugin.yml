@@ -25,6 +25,9 @@ permissions:
     default: op
   sgmultiverse.commands.sgtp:
     default: op
+  sgmultiverse.ignore.startblock:
+    description: Allows a user to break/place blocks before a game has started.
+    default: op
   sgmultiverse.ignore.blockfilter:
     description: Allows a user to bypass the blockfilter.
     default: false

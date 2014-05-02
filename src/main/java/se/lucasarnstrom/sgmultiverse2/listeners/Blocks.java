@@ -80,8 +80,8 @@ public class Blocks implements Listener {
 		
 		if(wm.isRegistered(block.getWorld().getName())) {
 			if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
-					|| event.getPlayer().hasPermission("sgmultiverse.ignore.blockfilter")) {
-				if(wm.allowBlock(block)) {
+					|| event.getPlayer().hasPermission("sgmultiverse.ignore.startblock")) {
+				if(wm.allowBlock(block) || event.getPlayer().hasPermission("sgmultiverse.ignore.blockfilter")) {
 					wm.logBlock(block, true);
 					if(block.getType().equals(Material.CHEST))
 						plugin.chestManager.addChestToLog(block.getLocation());
@@ -108,8 +108,8 @@ public class Blocks implements Listener {
 		
 		if(wm.isRegistered(block.getWorld().getName())) {
 			if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
-					|| player.hasPermission("sgmultiverse.ignore.blockfilter")) {
-				if(wm.allowBlock(block)) {
+					|| player.hasPermission("sgmultiverse.ignore.startblock")) {
+				if(wm.allowBlock(block) || event.getPlayer().hasPermission("sgmultiverse.ignore.blockfilter")) {
 					wm.logBlock(block, false);
 				}
 				else {

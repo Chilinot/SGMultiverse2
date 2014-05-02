@@ -67,6 +67,9 @@ public class Config {
 		// World defaults
 		HashMap<String, Object> world_defaults = new HashMap<String, Object>() {{
 
+			// General
+			put("blockfilter", "2, 3, 5, 12, 13, 16, 17, 18, 20, 24, 31, 32, 35, 37, 38, 39, 40, 46, 50, 54, 58, 61, 85, 102");
+
 			// Time
 			put("time.start", 120);
 			put("time.arena", 300);

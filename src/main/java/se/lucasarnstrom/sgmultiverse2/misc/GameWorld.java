@@ -27,10 +27,7 @@
 
 package se.lucasarnstrom.sgmultiverse2.misc;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
@@ -40,11 +37,8 @@ import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface.LocationType;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.StatusFlag;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 public class GameWorld {
 
@@ -56,12 +50,58 @@ public class GameWorld {
 	private HashMap<Location, String> locations_start = new HashMap<>();
 	private HashMap<Location, Boolean> locations_arena = new HashMap<>();
 
+	private EnumSet<Material> blockfilter = null;
+
 	public GameWorld(Main instance, World w) {
 		plugin = instance;
 		world = w;
 		logger = new ConsoleLogger("GameWorld-" + w.getName());
 
 		//TODO Load all configurations for the world.
+
+		// Load blockfilter
+		String materials = plugin.getConfig().getString("worlds." + world.getName() + ".blockfilter");
+
+		if(materials != null) {
+			String[] list = materials.split(", ");
+
+			for(String s : list) {
+
+				if(s.equalsIgnoreCase("false")) {
+					logger.info("Blockfilter disabled for world " + world.getName());
+					blockfilter = null; // Just to make sure it is disabled.
+					break;
+				}
+
+				// Remove any data added by user since it can't handle that right now
+				if(s.contains(":"))
+					s = s.split(":")[0];
+
+				try {
+					int id = Integer.parseInt(s);
+					addMaterialToFilter(id);
+				}
+				catch(NumberFormatException e) {
+					logger.severe("Incorrectly formatted blockfilter for world \"" + world.getName() + "\" :: ENTRY IS NOT A VALID MATERIAL-ID: ENTRY = \"" + s + "\"");
+					continue;
+				}
+			}
+		}
+	}
+
+	private void addMaterialToFilter(int id) throws NumberFormatException {
+		if(blockfilter == null) {
+			blockfilter = EnumSet.noneOf(Material.class);
+		}
+
+		Material m = Material.getMaterial(id);
+
+		if(m == null)
+			throw new NumberFormatException();
+		else {
+			logger.debug("Adding material \"" + m + "\" to blockfilter for world \"" + world.getName() + "\"");
+			blockfilter.add(m);
+		}
 	}
 
 	public void addLocationStart(Location l) {
@@ -171,9 +211,12 @@ public class GameWorld {
 		}.runTaskAsynchronously(plugin);
 	}
 
-	public boolean allowBlock(Block b) {
-		//TODO fix allowBlock
-		return true;
+	public void reset() {
+		//TODO fix reset
+	}
+
+	public boolean allowBlock(Material m) {
+		return blockfilter != null ? blockfilter.contains(m) : true;
 	}
 
 	public void logBlock(Block b, boolean placed) {
