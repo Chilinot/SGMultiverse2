@@ -49,13 +49,13 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		//TODO Use iconmenus for the commands
-		//TODO Commands: sgleave, sginfo
+		//TODO Commands: sgleave, sginfo, sgstats
 
 		String command = cmd.getName();
 
 		switch (command) {
 			case "sgjoin":
-				return sgjoin(sender);
+				return sgjoin(sender, args);
 			case "sglocation":
 				return sglocation(sender, args);
 			case "sgtp":
@@ -92,19 +92,30 @@ public class Commands implements CommandExecutor {
 		return true;
 	}
 
-	private boolean sgjoin(CommandSender sender) {
+	private boolean sgjoin(CommandSender sender, String[] args) {
 
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
 			return true;
+		}
+		else if(args.length != 1) {
+			return false;
 		}
 
 		Player p = (Player) sender;
 
 		WorldManager wm = plugin.worldManager;
 
-		if (wm.allowPlayerJoin(p.getWorld().getName())) {
-			wm.addPlayer(p.getWorld().getName(), p);
+		if(wm.isRegistered(args[0])) {
+			if (wm.allowPlayerJoin(args[0])) {
+				wm.addPlayer(args[0], p);
+			}
+			else {
+				p.sendMessage(ChatColor.RED + "That game is full!");
+			}
+		}
+		else {
+			p.sendMessage(ChatColor.RED + "There is no game with that name!");
 		}
 
 		return true;
