@@ -1,8 +1,6 @@
 /**
- *  Name: ChestManager.java
- *  Date: 10:36:00 - 24 apr 2014
- *
- *  Author: LucasEmanuel @ bukkit forums
+ *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
  *  Copyright 2014 Lucas Arnström
@@ -21,12 +19,12 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  *
+ *
  *  Filedescription:
  *
- *  Manages all chest related stuff.
- *  Like randomizing and logging etc.
  *
  */
+
 
 package se.lucasarnstrom.sgmultiverse2.managers;
 

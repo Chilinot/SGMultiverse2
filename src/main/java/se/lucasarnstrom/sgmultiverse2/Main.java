@@ -1,8 +1,6 @@
 /**
- *  Name: Main.java
- *  Date: 23:32:50 - 5 apr 2014
- *
- *  Author: Lucas Arnström
+ *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
  *  Copyright 2014 Lucas Arnström
@@ -21,10 +19,9 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  *
+ *
  *  Filedescription:
  *
- *  This is the main class of the plugin. This initiates all everything that needs
- *  to be setup for the plugin to be fully working.
  *
  */
 
@@ -79,6 +76,7 @@ public class Main extends JavaPlugin {
 		// Initiate listeners
 		logger.debug("Initiating listeners...");
 
+		//TODO start on the listeners
 
 		// Initiate managers
 		logger.debug("Initiating managers...");

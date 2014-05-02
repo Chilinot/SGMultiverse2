@@ -1,12 +1,9 @@
 /**
- *  Name:    ConcurrentSQLiteConnection.java
- *  Created: 17:37:33 - 8 maj 2013
- *
- *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Author:  Lucas Arnstrï¿½m - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
- *  Copyright 2013 Lucas Arnström
+ *  Copyright 2014 Lucas Arnstrï¿½m
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +24,7 @@
  *
  *
  */
+
 
 package se.lucasarnstrom.sgmultiverse2.databases;
 
@@ -138,7 +136,7 @@ public class SQLiteInterface {
 
 	public void loadLocations(final String worldname) {
 
-		final ArrayList<HashSet<Location>> locations = new ArrayList<>();
+		final ArrayList<HashSet<Location>> locations = new ArrayList<HashSet<Location>>();
 
 		synchronized (lock) {
 
