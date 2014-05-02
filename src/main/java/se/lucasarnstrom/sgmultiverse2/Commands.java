@@ -28,7 +28,9 @@
 
 package se.lucasarnstrom.sgmultiverse2;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -56,9 +58,38 @@ public class Commands implements CommandExecutor {
 				return sgjoin(sender);
 			case "sglocation":
 				return sglocation(sender, args);
+			case "sgtp":
+				return sgtp(sender, args);
 		}
 
 		return false;
+	}
+
+	private boolean sgtp(CommandSender sender, String[] args) {
+
+		if (!(sender instanceof Player)) {
+			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
+			return true;
+		}
+		else if(args.length != 1) {
+			sender.sendMessage(ChatColor.RED + "You have to specify the name of the world you want to go to!");
+			return false;
+		}
+
+		Player p = (Player) sender;
+		String wname = args[0];
+
+		World w = Bukkit.getWorld(wname);
+
+		if(w != null) {
+			p.sendMessage(ChatColor.GREEN + "Sending you to \"" + wname + "\"!");
+			p.teleport(w.getSpawnLocation());
+		}
+		else {
+			p.sendMessage(ChatColor.RED + "There is no world with that name on this server!");
+		}
+
+		return true;
 	}
 
 	private boolean sgjoin(CommandSender sender) {
@@ -93,7 +124,7 @@ public class Commands implements CommandExecutor {
 			return true;
 		} else if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "You need to provide atleast one argument to the command!");
-			return true;
+			return false;
 		} else if (args.length == 1 && args[0].equalsIgnoreCase("info")) {
 			p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
 			p.sendMessage(" - MAIN  : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));

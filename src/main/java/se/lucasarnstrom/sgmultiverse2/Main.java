@@ -71,7 +71,7 @@ public class Main extends JavaPlugin {
 
 		getCommand("sgjoin").setExecutor(c);
 		getCommand("sglocation").setExecutor(c);
-
+		getCommand("sgtp").setExecutor(c);
 
 		// Initiate listeners
 		logger.debug("Initiating listeners...");

@@ -148,8 +148,8 @@ public class GameWorld {
 	public void saveLocations() {
 		final String wname = world.getName();
 
-		final Location[] main = (Location[]) locations_start.keySet().toArray();
-		final Location[] arena = (Location[]) locations_arena.keySet().toArray();
+		final Location[] start = locations_start.keySet().toArray(new Location[locations_start.size()]);
+		final Location[] arena = locations_arena.keySet().toArray(new Location[locations_arena.size()]);
 
 		new BukkitRunnable() {
 			@Override
@@ -159,7 +159,7 @@ public class GameWorld {
 				plugin.sqlite.clearStartLocations(wname, LocationType.ARENA);
 
 				// Save
-				plugin.sqlite.storeStartLocations(wname, LocationType.MAIN,  main);
+				plugin.sqlite.storeStartLocations(wname, LocationType.MAIN,  start);
 				plugin.sqlite.storeStartLocations(wname, LocationType.ARENA, arena);
 			}
 		}.runTaskAsynchronously(plugin);

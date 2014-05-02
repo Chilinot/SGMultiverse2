@@ -12,3 +12,7 @@ commands:
     description: Used to add locations to a gameworld.
     usage: /<command> <add|save|info> [<main|arena>]
     permission: sgmultiverse.commands.sglocation
+  sgtp:
+    description: Used to teleport between worlds.
+    usage: /<command> <worldname>
+    permission: sgmultiverse.commands.sgtp
