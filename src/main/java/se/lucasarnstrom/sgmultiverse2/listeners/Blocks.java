@@ -83,15 +83,15 @@ public class Blocks implements Listener {
 				if(wm.allowBlock(block)) {
 					wm.logBlock(block, true);
 					if(block.getType().equals(Material.CHEST))
-						plugin.getChestManager().addChestToLog(block.getLocation());
+						plugin.chestManager.addChestToLog(block.getLocation());
 				}
 				else {
-					event.getPlayer().sendMessage(ChatColor.RED + plugin.language.getString("nonAllowedBlock"));
+					event.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place this block!");
 					event.setCancelled(true);
 				}
 			}
 			else {
-				event.getPlayer().sendMessage(ChatColor.RED + plugin.language.getString("gameHasNotStartedYet"));
+				event.getPlayer().sendMessage(ChatColor.RED + "The game has not started yet!");
 				event.setCancelled(true);
 			}
 		}
@@ -112,12 +112,12 @@ public class Blocks implements Listener {
 					wm.logBlock(block, false);
 				}
 				else {
-					player.sendMessage(ChatColor.RED + plugin.language.getString("nonAllowedBlock"));
+					player.sendMessage(ChatColor.RED + "You are not allowed to break this block!");
 					event.setCancelled(true);
 				}
 			}
 			else {
-				player.sendMessage(ChatColor.RED + plugin.language.getString("gameHasNotStartedYet"));
+				player.sendMessage(ChatColor.RED + "The game has not started yet!");
 				event.setCancelled(true);
 			}
 		}
