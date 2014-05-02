@@ -19,6 +19,12 @@ commands:
 
 
 permissions:
+  sgmultiverse.commands.sgjoin:
+    default: true
+  sgmultiverse.commands.sglocation:
+    default: op
+  sgmultiverse.commands.sgtp:
+    default: op
   sgmultiverse.ignore.blockfilter:
     description: Allows a user to bypass the blockfilter.
     default: false
