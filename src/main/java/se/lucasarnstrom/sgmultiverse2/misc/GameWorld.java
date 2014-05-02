@@ -1,3 +1,30 @@
+/**
+ *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Contact: lucasarnstrom(at)gmail(dot)com
+ *
+ *
+ *  Copyright 2014 Lucas Arnström
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ *
+ *  Filedescription:
+ *
+ *
+ */
+
 package se.lucasarnstrom.sgmultiverse2.misc;
 
 import org.bukkit.Bukkit;
@@ -8,7 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.Main;
-import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface;
+import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface.LocationType;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +57,8 @@ public class GameWorld {
 		plugin = instance;
 		world = w;
 		logger = new ConsoleLogger("GameWorld-" + w.getName());
+
+		//TODO Load all configurations for the world.
 	}
 
 	public void addLocationStart(Location l) {
@@ -111,6 +140,9 @@ public class GameWorld {
 		//TODO Backup player's inventory
 
 		p.teleport(l);
+
+		//TODO check if start game
+		//TODO Create all time related classes.
 	}
 
 	public void saveLocations() {
@@ -122,8 +154,13 @@ public class GameWorld {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				plugin.sqlite.storeStartLocations(wname, SQLiteInterface.LocationType.MAIN, main);
-				plugin.sqlite.storeStartLocations(wname, SQLiteInterface.LocationType.ARENA, arena);
+				// Clear
+				plugin.sqlite.clearStartLocations(wname, LocationType.MAIN);
+				plugin.sqlite.clearStartLocations(wname, LocationType.ARENA);
+
+				// Save
+				plugin.sqlite.storeStartLocations(wname, LocationType.MAIN,  main);
+				plugin.sqlite.storeStartLocations(wname, LocationType.ARENA, arena);
 			}
 		}.runTaskAsynchronously(plugin);
 	}
