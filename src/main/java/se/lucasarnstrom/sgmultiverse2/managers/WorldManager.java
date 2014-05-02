@@ -31,6 +31,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
@@ -40,6 +42,12 @@ import se.lucasarnstrom.sgmultiverse2.misc.GameWorld;
 import java.util.HashMap;
 
 public class WorldManager {
+
+	public enum StatusFlag {
+		STARTED,
+		WAITING,
+		FAILED
+	}
 
 	private Main plugin;
 	private ConsoleLogger logger = new ConsoleLogger("WorldManager");
@@ -94,19 +102,11 @@ public class WorldManager {
 	}
 
 	public int getNumberOfMainLocations(String w) {
-		if (isRegistered(w)) {
-			return worlds.get(w).getNumberOfMainLocations();
-		}
-
-		return 0;
+		return isRegistered(w) ? worlds.get(w).getNumberOfMainLocations() : 0;
 	}
 
 	public int getNumberOfArenaLocations(String w) {
-		if (isRegistered(w)) {
-			return worlds.get(w).getNumberOfArenaLocations();
-		}
-
-		return 0;
+		return isRegistered(w) ? worlds.get(w).getNumberOfArenaLocations() : 0;
 	}
 
 	public void saveLocations(String w) {
@@ -124,6 +124,30 @@ public class WorldManager {
 	public void addArenaLocation(String w, Location l) {
 		if (isRegistered(w)) {
 			worlds.get(w).addLocationArena(l);
+		}
+	}
+
+	public boolean allowBlock(Block b) {
+		return isRegistered(b.getWorld().getName()) && worlds.get(b.getWorld().getName()).allowBlock(b);
+	}
+
+	public void logBlock(Block b, boolean placed) {
+		if(isRegistered(b.getWorld().getName())) {
+			worlds.get(b.getWorld().getName()).logBlock(b, placed);
+		}
+	}
+
+	public StatusFlag getStatusFlag(String w) {
+		if(isRegistered(w)) {
+			return worlds.get(w).getStatus();
+		}
+
+		return StatusFlag.FAILED;
+	}
+
+	public void logEntity(Hanging e, boolean remove) {
+		if(isRegistered(e.getWorld().getName())) {
+			worlds.get(e.getWorld().getName()).logEntity(e, remove);
 		}
 	}
 }
