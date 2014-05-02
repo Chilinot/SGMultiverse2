@@ -1,9 +1,9 @@
 /**
- *  Author:  Lucas Arnstrï¿½m - LucasEmanuel @ Bukkit forums
+ *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
- *  Copyright 2014 Lucas Arnstrï¿½m
+ *  Copyright 2014 Lucas Arnström
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -164,7 +164,7 @@ public class SQLiteInterface {
 				HashSet<Location> main = new HashSet<>();
 				HashSet<Location> arena = new HashSet<>();
 
-				World w = Bukkit.getWorld(worldname);   // It doesn't matter that it is not thread-safe.
+				World w = Bukkit.getWorld(worldname);   // Thread safety?
 
 				while (rs_main.next()) {
 					double x = rs_main.getDouble(2);
