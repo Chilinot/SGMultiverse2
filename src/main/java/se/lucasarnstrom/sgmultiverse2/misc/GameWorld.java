@@ -230,6 +230,7 @@ public class GameWorld {
 		inReset = true;
 
 		try {
+			// Restore the world
 			logger.debug("Resetting world: " + world.getName());
 
 			MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
@@ -253,6 +254,16 @@ public class GameWorld {
 
 			log_block.clear();
 			log_entity.clear();
+
+			// Reset location statuses
+			for(Entry<Location, UUID> e : locations_start.entrySet()) {
+				e.setValue(null);
+			}
+			for(Entry<Location, Boolean> e : locations_arena.entrySet()) {
+				e.setValue(false);
+			}
+
+			//TODO update infosign
 		}
 		finally {
 			inReset = false;
