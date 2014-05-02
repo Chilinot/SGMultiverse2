@@ -35,6 +35,7 @@ import org.mcstats.Metrics;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface;
 import se.lucasarnstrom.sgmultiverse2.listeners.Blocks;
+import se.lucasarnstrom.sgmultiverse2.listeners.Misc;
 import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 
@@ -78,6 +79,7 @@ public class Main extends JavaPlugin {
 		logger.debug("Initiating listeners...");
 
 		getServer().getPluginManager().registerEvents(new Blocks(this), this);
+		getServer().getPluginManager().registerEvents(new Misc(this), this);
 
 		//TODO start on the listeners
 

@@ -35,10 +35,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.survivalgamesmultiverse.Main;
-import se.lucasarnstrom.survivalgamesmultiverse.managers.WorldManager;
+import se.lucasarnstrom.sgmultiverse2.Main;
+import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 
 public class Misc implements Listener {
 	
@@ -48,20 +47,20 @@ public class Misc implements Listener {
 	public Misc(Main instance) {
 		logger = new ConsoleLogger("MiscListener");
 		
-		worldmanager = instance.getWorldManager();
+		worldmanager = instance.worldManager;
 		
 		logger.debug("Inititated");
 	}
 	
 	@EventHandler(priority= EventPriority.MONITOR, ignoreCancelled=true)
 	public void onHangingBreak(HangingBreakEvent event) {
-		if(worldmanager.isGameWorld(event.getEntity().getWorld().getName()))
+		if(worldmanager.isRegistered(event.getEntity().getWorld().getName()))
 			worldmanager.logEntity(event.getEntity(), false);
 	}
 	
 	@EventHandler(priority= EventPriority.MONITOR, ignoreCancelled=true)
 	public void onHangingPlace(HangingPlaceEvent event) {
-		if(worldmanager.isGameWorld(event.getEntity().getWorld().getName()))
+		if(worldmanager.isRegistered(event.getEntity().getWorld().getName()))
 			worldmanager.logEntity(event.getEntity(), true);
 	}
 }
