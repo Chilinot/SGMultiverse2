@@ -43,6 +43,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
+import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.StatusFlag;
 
 import java.util.EnumSet;
 import java.util.Set;
