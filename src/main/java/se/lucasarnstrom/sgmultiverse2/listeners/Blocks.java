@@ -79,7 +79,7 @@ public class Blocks implements Listener {
 		
 		if(wm.isRegistered(block.getWorld().getName())) {
 			if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
-					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
+					|| event.getPlayer().hasPermission("sgmultiverse.ignore.blockfilter")) {
 				if(wm.allowBlock(block)) {
 					wm.logBlock(block, true);
 					if(block.getType().equals(Material.CHEST))
@@ -107,7 +107,7 @@ public class Blocks implements Listener {
 		
 		if(wm.isRegistered(block.getWorld().getName())) {
 			if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
-					|| player.hasPermission("survivalgames.ignore.blockfilter")) {
+					|| player.hasPermission("sgmultiverse.ignore.blockfilter")) {
 				if(wm.allowBlock(block)) {
 					wm.logBlock(block, false);
 				}
