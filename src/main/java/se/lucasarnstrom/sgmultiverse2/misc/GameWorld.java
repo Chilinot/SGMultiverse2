@@ -31,11 +31,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface.LocationType;
+import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.StatusFlag;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -166,5 +169,23 @@ public class GameWorld {
 				plugin.sqlite.storeStartLocations(wname, LocationType.ARENA, arena);
 			}
 		}.runTaskAsynchronously(plugin);
+	}
+
+	public boolean allowBlock(Block b) {
+		//TODO fix allowBlock
+		return true;
+	}
+
+	public void logBlock(Block b, boolean placed) {
+		//TODO fix logBlock
+	}
+
+	public StatusFlag getStatus() {
+		//TODO fix getStatus
+		return StatusFlag.FAILED;
+	}
+
+	public void logEntity(Hanging e, boolean remove) {
+		//TODO fix logEntity
 	}
 }
