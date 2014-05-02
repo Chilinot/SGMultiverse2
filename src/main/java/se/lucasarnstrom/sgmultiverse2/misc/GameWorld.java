@@ -78,6 +78,9 @@ public class GameWorld {
 	}
 
 	public void sendAllPlayersToArena() {
+
+		plugin.worldManager.broadcast(world, ChatColor.GOLD + "Sending all players to the arena!");
+
 		Iterator<UUID> i = playerlist.iterator();
 		while (i.hasNext()) {
 
