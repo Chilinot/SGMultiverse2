@@ -31,9 +31,6 @@
 
 package se.lucasarnstrom.sgmultiverse2.listeners;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -41,54 +38,47 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.survivalgamesmultiverse.Main;
-import se.lucasarnstrom.survivalgamesmultiverse.managers.WorldManager;
-import se.lucasarnstrom.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
+import se.lucasarnstrom.sgmultiverse2.Main;
+import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class Blocks implements Listener {
 	
 	private Main plugin;
-	private ConsoleLogger logger;
+	private ConsoleLogger logger = new ConsoleLogger("BlockListener");
 	
 	// Materials to log in the physics event.
-	private Set<Material> physics = EnumSet.of(
-			Material.TORCH,
-			Material.LADDER,
-			Material.REDSTONE_COMPARATOR_OFF,
-			Material.REDSTONE_COMPARATOR_ON,
-			Material.REDSTONE_TORCH_OFF,
-			Material.REDSTONE_TORCH_ON,
-			Material.REDSTONE_WIRE,
-			Material.WALL_SIGN,
-			Material.SIGN_POST
-		);
+	private final Set<Material> physics = EnumSet.of(
+		Material.TORCH,
+		Material.LADDER,
+		Material.REDSTONE_COMPARATOR_OFF,
+		Material.REDSTONE_COMPARATOR_ON,
+		Material.REDSTONE_TORCH_OFF,
+		Material.REDSTONE_TORCH_ON,
+		Material.REDSTONE_WIRE,
+		Material.WALL_SIGN,
+		Material.SIGN_POST
+	);
 	
 	public Blocks(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger("BlockListener");
-		
 		logger.debug("Initiated");
 	}
 
 	@EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		
-		WorldManager wm = plugin.getWorldManager();
+		WorldManager wm = plugin.worldManager;
 		
 		Block block = event.getBlock();
 		
-		if(wm.isGameWorld(block.getWorld().getName())) {
-			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
+		if(wm.isRegistered(block.getWorld().getName())) {
+			if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
 					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(wm.allowBlock(block)) {
 					wm.logBlock(block, true);
@@ -96,12 +86,12 @@ public class Blocks implements Listener {
 						plugin.getChestManager().addChestToLog(block.getLocation());
 				}
 				else {
-					event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("nonAllowedBlock"));
+					event.getPlayer().sendMessage(ChatColor.RED + plugin.language.getString("nonAllowedBlock"));
 					event.setCancelled(true);
 				}
 			}
 			else {
-				event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
+				event.getPlayer().sendMessage(ChatColor.RED + plugin.language.getString("gameHasNotStartedYet"));
 				event.setCancelled(true);
 			}
 		}
@@ -110,24 +100,24 @@ public class Blocks implements Listener {
 	@EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onBlockBreak(BlockBreakEvent event) {
 		
-		WorldManager wm = plugin.getWorldManager();
+		WorldManager wm = plugin.worldManager;
 		
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		
-		if(wm.isGameWorld(block.getWorld().getName())) {
-			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
+		if(wm.isRegistered(block.getWorld().getName())) {
+			if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
 					|| player.hasPermission("survivalgames.ignore.blockfilter")) {
 				if(wm.allowBlock(block)) {
 					wm.logBlock(block, false);
 				}
 				else {
-					player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("nonAllowedBlock"));
+					player.sendMessage(ChatColor.RED + plugin.language.getString("nonAllowedBlock"));
 					event.setCancelled(true);
 				}
 			}
 			else {
-				player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
+				player.sendMessage(ChatColor.RED + plugin.language.getString("gameHasNotStartedYet"));
 				event.setCancelled(true);
 			}
 		}
@@ -136,9 +126,9 @@ public class Blocks implements Listener {
 	@EventHandler(priority= EventPriority.MONITOR, ignoreCancelled=true)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		
-		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld().getName())) {
+		if(plugin.worldManager.isRegistered(event.getLocation().getWorld().getName())) {
 			for(Block block : event.blockList()) {
-				plugin.getWorldManager().logBlock(block, false);
+				plugin.worldManager.logBlock(block, false);
 			}
 		}
 	}
@@ -148,8 +138,8 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
-			plugin.getWorldManager().logBlock(block, false);
+		if(plugin.worldManager.isRegistered(block.getWorld().getName())) {
+			plugin.worldManager.logBlock(block, false);
 		}
 	}
 	
@@ -158,8 +148,8 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
-			plugin.getWorldManager().logBlock(block, false);
+		if(plugin.worldManager.isRegistered(block.getWorld().getName())) {
+			plugin.worldManager.logBlock(block, false);
 		}
 	}
 	
@@ -168,8 +158,8 @@ public class Blocks implements Listener {
 
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
-			plugin.getWorldManager().logBlock(block, false);
+		if(plugin.worldManager.isRegistered(block.getWorld().getName())) {
+			plugin.worldManager.logBlock(block, false);
 		}
 	}
 	
@@ -178,8 +168,8 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
-			plugin.getWorldManager().logBlock(block, false);
+		if(plugin.worldManager.isRegistered(block.getWorld().getName())) {
+			plugin.worldManager.logBlock(block, false);
 		}
 	}
 	
@@ -190,9 +180,9 @@ public class Blocks implements Listener {
 		
 		Block b = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(b.getWorld().getName())
+		if(plugin.worldManager.isRegistered(b.getWorld().getName())
 				&& physics.contains(b.getType())) {
-			plugin.getWorldManager().logBlock(b, false);
+			plugin.worldManager.logBlock(b, false);
 		}
 	}
 }
