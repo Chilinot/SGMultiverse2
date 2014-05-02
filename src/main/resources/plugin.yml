@@ -16,3 +16,8 @@ commands:
     description: Used to teleport between worlds.
     usage: /<command> <worldname>
     permission: sgmultiverse.commands.sgtp
+
+
+permissions:
+  sgmultiverse.ignore.blockfilter:
+    description: Allows a user to bypass the blockfilter.
