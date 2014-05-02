@@ -27,14 +27,20 @@
 
 package se.lucasarnstrom.sgmultiverse2.misc;
 
+import me.desht.dhutils.block.CraftMassBlockUpdate;
+import me.desht.dhutils.block.MassBlockUpdate;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Hanging;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface.LocationType;
+import se.lucasarnstrom.sgmultiverse2.logging.LoggedBlock;
+import se.lucasarnstrom.sgmultiverse2.logging.LoggedEntity;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.StatusFlag;
 
 import java.util.*;
@@ -42,15 +48,24 @@ import java.util.Map.Entry;
 
 public class GameWorld {
 
-	private Main plugin;
-	private ConsoleLogger logger;
+	private Main                           plugin;
+	private ConsoleLogger                  logger;
+	private final World                    world;
+	private HashSet<UUID>                  playerlist         = new HashSet<>();
+	private HashMap<Location, UUID>        locations_start    = new HashMap<>();
+	private HashMap<Location, Boolean>     locations_arena    = new HashMap<>();
+	private EnumSet<Material>              blockfilter        = null;
+	private HashMap<Location, LoggedBlock> log_block          = new HashMap<>();
+	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<>();
+	private HashSet<Entity>                log_entity_removal = new HashSet<>();
+	private boolean                        inReset            = false;
 
-	private final World world;
-	private HashSet<UUID> playerlist = new HashSet<>();
-	private HashMap<Location, String> locations_start = new HashMap<>();
-	private HashMap<Location, Boolean> locations_arena = new HashMap<>();
-
-	private EnumSet<Material> blockfilter = null;
+	// Entities that shouldn't be removed on world reset
+	private static final EnumSet<EntityType> nonremovable = EnumSet.of(
+		EntityType.PLAYER,
+		EntityType.PAINTING,
+		EntityType.ITEM_FRAME
+	);
 
 	public GameWorld(Main instance, World w) {
 		plugin = instance;
@@ -168,7 +183,7 @@ public class GameWorld {
 		logger.debug("Adding player \"" + p.getName() + "\".");
 
 		Location l = null;
-		for (Entry<Location, String> e : locations_start.entrySet()) {
+		for (Entry<Location, UUID> e : locations_start.entrySet()) {
 			if (e.getValue() == null) {
 				l = e.getKey();
 				break;
@@ -180,7 +195,7 @@ public class GameWorld {
 			return;
 		}
 
-		locations_start.put(l, p.getName());
+		locations_start.put(l, p.getUniqueId());
 		playerlist.add(p.getUniqueId());
 
 		//TODO Backup player's inventory
@@ -212,15 +227,91 @@ public class GameWorld {
 	}
 
 	public void reset() {
-		//TODO fix reset
+		inReset = true;
+
+		try {
+			logger.debug("Resetting world: " + world.getName());
+
+			MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
+
+			mbu.setRelightingStrategy(MassBlockUpdate.RelightingStrategy.NEVER);
+
+			for(LoggedBlock block : log_block.values()) {
+				block.reset(mbu);
+			}
+
+			for(LoggedEntity entity : log_entity.values()) {
+				if(entity != null)
+					entity.reset();
+			}
+
+			plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+				public void run() {
+					clearEntities();
+				}
+			});
+
+			log_block.clear();
+			log_entity.clear();
+		}
+		finally {
+			inReset = false;
+		}
 	}
 
-	public boolean allowBlock(Material m) {
-		return blockfilter != null ? blockfilter.contains(m) : true;
+	public void clearEntities() {
+
+		// Clear all logged entities
+		for(Entity e : log_entity_removal) {
+			if(e != null)
+				e.remove();
+		}
+
+		log_entity_removal.clear();
+
+		// Clear the remaining basic entities
+		for (Entity entity : world.getEntities()) {
+			if(nonremovable.contains(entity.getType()))
+				continue;
+			entity.remove();
+		}
 	}
 
 	public void logBlock(Block b, boolean placed) {
-		//TODO fix logBlock
+		if (inReset)
+			return;
+
+		Location l = b.getLocation();
+
+		if (!log_block.containsKey(l)) {
+
+			Material material = placed ? Material.AIR : b.getType();
+
+			String[] sign_lines = null;
+
+			if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
+				sign_lines = ((Sign) b.getState()).getLines();
+			}
+
+			log_block.put(l, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
+			logger.debug("Logging block :: " + b.getWorld().getName() + " " + b.getX() + " " + b.getY() + " " + b.getZ() + " " + material + " " + b.getData() + " " + sign_lines);
+		}
+	}
+
+	public void logEntity(Entity e, boolean remove) {
+		if (inReset)
+			return;
+
+		if(!log_entity.containsKey(e.getUniqueId())) {
+			if(remove) {
+				log_entity_removal.add(e);
+				log_entity.put(e.getUniqueId(), null);
+			}
+			else {
+				log_entity.put(e.getUniqueId(), new LoggedEntity(e));
+			}
+			logger.debug("Logged entity " + e.getType() + " " + e.getLocation());
+		}
 	}
 
 	public StatusFlag getStatus() {
@@ -228,7 +319,7 @@ public class GameWorld {
 		return StatusFlag.FAILED;
 	}
 
-	public void logEntity(Hanging e, boolean remove) {
-		//TODO fix logEntity
+	public boolean allowBlock(Material m) {
+		return blockfilter == null || blockfilter.contains(m);
 	}
 }
