@@ -104,7 +104,7 @@ public class SQLiteInterface {
 
 				stmt.execute(
 					"CREATE TABLE IF NOT EXISTS playerstats (" +
-						"UUID   INT(250) NOT NULL PRIMARY KEY, " +
+						"UUID   STRING(250) NOT NULL PRIMARY KEY, " +
 						"wins   INT(10), " +
 						"kills  INT(10), " +
 						"deaths INT(10)" +
