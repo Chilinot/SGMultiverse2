@@ -338,16 +338,24 @@ public class ChestManager {
 			save = true;
 		}
 
-		if (!itemConfig.contains("enchantments")) {
+		if (!itemConfig.contains("enchantments.swords")) {
 			itemConfig.set("enchantments.swords.fire_aspect", 0.3);
 			itemConfig.set("enchantments.swords.damage_all", 0.3);
 			itemConfig.set("enchantments.swords.knockback", 0.3);
 			itemConfig.set("enchantments.swords.damage_arthropods", 0.3);
 			itemConfig.set("enchantments.swords.damage_undead", 0.3);
+			save = true;
+		}
+
+		if(!itemConfig.contains("enchantments.bow")) {
 			itemConfig.set("enchantments.bow.arrow_damage", 0.3);
 			itemConfig.set("enchantments.bow.arrow_fire", 0.3);
 			itemConfig.set("enchantments.bow.arrow_infinite", 0.3);
 			itemConfig.set("enchantments.bow.arrow_knockback", 0.3);
+			save = true;
+		}
+
+		if(!itemConfig.contains("enchantments.armors")) {
 			itemConfig.set("enchantments.armors.protection_fall", 0.2);
 			itemConfig.set("enchantments.armors.protection_projectile", 0.2);
 			itemConfig.set("enchantments.armors.protection_fire", 0.2);
