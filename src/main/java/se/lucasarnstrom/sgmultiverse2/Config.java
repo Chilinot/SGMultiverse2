@@ -1,8 +1,6 @@
 /**
- *  Name: Config.java
- *  Date: 12:56:03 PM - Apr 22, 2014
- *
- *  Author: Lucas Arnström
+ *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
  *  Copyright 2014 Lucas Arnström
@@ -21,11 +19,12 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  *
+ *
  *  Filedescription:
  *
  *
- *
  */
+
 
 package se.lucasarnstrom.sgmultiverse2;
 
