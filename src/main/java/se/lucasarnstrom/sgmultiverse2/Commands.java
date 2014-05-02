@@ -124,7 +124,7 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 		else if (args.length == 0) {
-			sender.sendMessage(ChatColor.RED + "You need to provide atleast one argument to the command!");
+			sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
 			return false;
 		}
 		else if (args.length == 1 && args[0].equalsIgnoreCase("info")) {
