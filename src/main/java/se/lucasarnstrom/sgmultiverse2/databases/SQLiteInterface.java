@@ -32,6 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.sql.*;
@@ -47,6 +48,8 @@ public class SQLiteInterface {
 
 	private Main plugin;
 	private final String folder;
+
+	private ConsoleLogger logger = new ConsoleLogger("SQLiteInterface");
 
 	private Connection con;
 
@@ -117,8 +120,8 @@ public class SQLiteInterface {
 
 				stmt.close();
 			} catch (ClassNotFoundException | SQLException e) {
-				System.out.println("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
-				System.out.println("Error message: " + e.getMessage());
+				logger.severe("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
+				logger.severe("Error message: " + e.getMessage());
 			}
 		}
 	}
@@ -128,7 +131,7 @@ public class SQLiteInterface {
 			try {
 				con.close();
 			} catch (SQLException e) {
-				System.out.println("Error while closing connection, data might have been lost! " +
+				logger.severe("Error while closing connection, data might have been lost! " +
 						"Message: " + e.getMessage());
 			}
 		}
@@ -171,9 +174,9 @@ public class SQLiteInterface {
 				}
 
 				while (rs_arena.next()) {
-					double x = rs_main.getDouble(2);
-					double y = rs_main.getDouble(3);
-					double z = rs_main.getDouble(4);
+					double x = rs_arena.getDouble(2);
+					double y = rs_arena.getDouble(3);
+					double z = rs_arena.getDouble(4);
 					arena.add(new Location(w, x, y, z));
 				}
 
@@ -185,7 +188,7 @@ public class SQLiteInterface {
 				stmt_main.close();
 				stmt_arena.close();
 			} catch (SQLException e) {
-				System.out.println("Error while retrieving startlocations for world \"" + worldname + "\". " +
+				logger.severe("Error while retrieving startlocations for world \"" + worldname + "\". " +
 						"Message: " + e.getMessage());
 				return;
 			}
@@ -226,7 +229,7 @@ public class SQLiteInterface {
 				stmt.executeBatch();
 				stmt.close();
 			} catch (SQLException e) {
-				System.out.println("Error while saving startlocations for world " + worldname + ". " +
+				logger.severe("Error while saving startlocations for world " + worldname + ". " +
 						"Message: " + e.getMessage());
 			}
 		}
@@ -246,7 +249,7 @@ public class SQLiteInterface {
 				stmt.execute();
 				stmt.close();
 			} catch (SQLException e) {
-				System.out.println("Error while clearing startlocations! " +
+				logger.severe("Error while clearing startlocations! " +
 						"Message: " + e.getMessage());
 			}
 		}
