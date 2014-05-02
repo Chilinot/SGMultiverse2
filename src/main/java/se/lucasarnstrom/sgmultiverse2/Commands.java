@@ -49,7 +49,7 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		//TODO Use iconmenus for the commands
-		//TODO Commands: sgleave, sginfo, sgtp
+		//TODO Commands: sgleave, sginfo
 
 		String command = cmd.getName();
 
