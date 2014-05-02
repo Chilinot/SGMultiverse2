@@ -10,9 +10,26 @@
     <name>SGMultiverse2</name>
     <url>http://maven.apache.org</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>GNU LESSER GENERAL PUBLIC LICENSE - Version 3, 29 June 2007</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>LucasEmanuel</id>
+			<name>Lucas Arnström</name>
+			<email>lucasarnstrom@gmail.com</email>
+			<url>http://github.com/Chilinot</url>
+		</developer>
+	</developers>
 
     <!-- Repositories -->
     <repositories>
@@ -67,6 +84,14 @@
             <version>5.1</version>
             <scope>compile</scope>
         </dependency>
+
+		<!-- dhutils -->
+		<dependency>
+			<groupId>me.desht</groupId>
+			<artifactId>dhutils-lib</artifactId>
+			<version>2.12.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
     </dependencies>
 
 
@@ -98,7 +123,6 @@
                 <configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<encoding>UTF-8</encoding>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
