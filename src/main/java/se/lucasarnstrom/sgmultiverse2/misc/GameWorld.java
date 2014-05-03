@@ -51,6 +51,7 @@ public class GameWorld {
 	private Main                           plugin;
 	private ConsoleLogger                  logger;
 	private final World                    world;
+	private Location                       sign_location      = null;
 	private HashSet<UUID>                  playerlist         = new HashSet<>();
 	private HashMap<Location, UUID>        locations_start    = new HashMap<>();
 	private HashMap<Location, Boolean>     locations_arena    = new HashMap<>();
@@ -59,6 +60,7 @@ public class GameWorld {
 	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<>();
 	private HashSet<Entity>                log_entity_removal = new HashSet<>();
 	private boolean                        inReset            = false;
+	private StatusFlag                     status             = StatusFlag.WAITING;
 
 	// Entities that shouldn't be removed on world reset
 	private static final EnumSet<EntityType> nonremovable = EnumSet.of(
@@ -102,6 +104,82 @@ public class GameWorld {
 				}
 			}
 		}
+
+		loadSign();
+	}
+
+	public void setSignLocation(final Location l) {
+		sign_location = l;
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				plugin.sqlite.storeSignLocation(world.getName(), l);
+			}
+		}.runTaskAsynchronously(plugin);
+
+		// Update the sign 3 ticks after setting it because it was used in the SignChangeEvent.
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				updateSign();
+			}
+		}.runTaskLater(plugin, 3L);
+	}
+
+	private void updateSign() {
+
+		logger.debug("Updating info-sign.");
+
+		if(sign_location == null) {
+			logger.debug("Sign_location is null, attempting to load sign from database.");
+			loadSign(); // This could possibly create an infinite loop if something weird would happen.
+			return;
+		}
+
+		Material m = sign_location.getBlock().getType();
+		if(m == Material.SIGN_POST || m == Material.WALL_SIGN) {
+
+			Sign s = (Sign) sign_location.getBlock().getState();
+
+			StringBuilder status = new StringBuilder();
+
+			switch(this.status) {
+				case STARTED:
+					status.append(ChatColor.GOLD);
+					break;
+				case WAITING:
+					status.append(ChatColor.GREEN);
+					break;
+				case FAILED:
+					status.append(ChatColor.RED);
+					break;
+			}
+
+			status.append(this.status);
+
+			s.setLine(0, ChatColor.WHITE + world.getName());
+			s.setLine(1, status.toString());
+			s.setLine(2, ChatColor.WHITE + "-PLAYERS-");
+			s.setLine(3, playerlist.size() + "/" + getNumberOfMainLocations());
+
+			s.update();
+		}
+		else {
+			logger.severe("The location for this worlds info-sign is no longer a sign!");
+		}
+	}
+
+	private void loadSign() {
+
+		final String wname = world.getName();
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				plugin.sqlite.loadSignLocation(wname);
+			}
+		}.runTaskAsynchronously(plugin);
 	}
 
 	private void addMaterialToFilter(int id) throws NumberFormatException {
@@ -175,7 +253,7 @@ public class GameWorld {
 	}
 
 	public boolean allowPlayerJoin() {
-		return playerlist.size() + 1 % locations_start.size() + 1 > 0; // Added +1 to make sure it never divided by zero.
+		return (playerlist.size() + 1) % (locations_start.size() + 1) > 0; // Added +1 to make sure it never divided by zero.
 	}
 
 	public void addPlayer(Player p) {
@@ -204,6 +282,8 @@ public class GameWorld {
 
 		//TODO check if start game
 		//TODO Create all time related classes.
+
+		updateSign();
 	}
 
 	public void saveLocations() {
@@ -246,6 +326,7 @@ public class GameWorld {
 					entity.reset();
 			}
 
+			// Clearing entities seems to be more efficient if it is run at the next tick.
 			plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
 				public void run() {
 					clearEntities();
@@ -263,7 +344,7 @@ public class GameWorld {
 				e.setValue(false);
 			}
 
-			//TODO update infosign
+			updateSign();
 		}
 		finally {
 			inReset = false;
@@ -326,8 +407,7 @@ public class GameWorld {
 	}
 
 	public StatusFlag getStatus() {
-		//TODO fix getStatus
-		return StatusFlag.FAILED;
+		return status;
 	}
 
 	public boolean allowBlock(Material m) {

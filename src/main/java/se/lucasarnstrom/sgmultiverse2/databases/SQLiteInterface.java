@@ -85,10 +85,11 @@ public class SQLiteInterface {
 
 				stmt.execute(
 					"CREATE TABLE IF NOT EXISTS signlocations  (" +
-						"worldname VARCHAR(255) NOT NULL, " +
-						"x         DOUBLE(255)  NOT NULL, " +
-						"y         DOUBLE(255)  NOT NULL, " +
-						"z         DOUBLE(255)  NOT NULL" +
+						"worldname    VARCHAR(255) NOT NULL PRIMARY KEY, " +
+						"placed_world VARCHAR(255) NOT NULL, " +
+						"x            DOUBLE(255)  NOT NULL, " +
+						"y            DOUBLE(255)  NOT NULL, " +
+						"z            DOUBLE(255)  NOT NULL" +
 					")"
 				);
 
@@ -113,8 +114,8 @@ public class SQLiteInterface {
 
 				stmt.execute(
 					"CREATE TABLE IF NOT EXISTS inventories (" +
-						"playername VARCHAR(250)  NOT NULL PRIMARY KEY, " +
-						"inventory  VARCHAR(8000) NOT NULL" +
+						"UUID      VARCHAR(250)  NOT NULL PRIMARY KEY, " +
+						"inventory VARCHAR(8000) NOT NULL" +
 					")"
 				);
 
@@ -139,14 +140,20 @@ public class SQLiteInterface {
 
 	public void loadLocations(final String worldname) {
 
-		final ArrayList<HashSet<Location>> locations = new ArrayList<HashSet<Location>>();
+		logger.debug("Loading locations for world \"" + worldname + "\"!");
+
+		final HashSet[] locations = {
+			new HashSet<double[]>(), // Main
+			new HashSet<double[]>()  // Arena
+		};
+
+		final String select =
+			"SELECT * " +
+			"FROM startlocations " +
+			"WHERE worldname = ? " +
+			"AND type = ?";
 
 		synchronized (lock) {
-
-			String select = "SELECT * " +
-					"FROM startlocations " +
-					"WHERE worldname = ? " +
-					"AND type = ?";
 			try {
 				testConnection();
 
@@ -161,27 +168,27 @@ public class SQLiteInterface {
 				stmt_arena.setString(2, LocationType.ARENA.toString());
 				ResultSet rs_arena = stmt_arena.executeQuery();
 
-				HashSet<Location> main = new HashSet<>();
-				HashSet<Location> arena = new HashSet<>();
-
-				World w = Bukkit.getWorld(worldname);   // Thread safety?
+				HashSet<double[]> main = new HashSet<>();
+				HashSet<double[]> arena = new HashSet<>();
 
 				while (rs_main.next()) {
-					double x = rs_main.getDouble(2);
-					double y = rs_main.getDouble(3);
-					double z = rs_main.getDouble(4);
-					main.add(new Location(w, x, y, z));
+					double[] a = new double[3];
+					a[0] = rs_main.getDouble(2);
+					a[1] = rs_main.getDouble(3);
+					a[2] = rs_main.getDouble(4);
+					main.add(a);
 				}
 
 				while (rs_arena.next()) {
-					double x = rs_arena.getDouble(2);
-					double y = rs_arena.getDouble(3);
-					double z = rs_arena.getDouble(4);
-					arena.add(new Location(w, x, y, z));
+					double[] a = new double[3];
+					a[0] = rs_arena.getDouble(2);
+					a[1] = rs_arena.getDouble(3);
+					a[2] = rs_arena.getDouble(4);
+					arena.add(a);
 				}
 
-				locations.add(main);
-				locations.add(arena);
+				locations[0] = main;
+				locations[1] = arena;
 
 				rs_main.close();
 				rs_arena.close();
@@ -197,11 +204,11 @@ public class SQLiteInterface {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				for (Location l : locations.get(0)) {
-					plugin.worldManager.addMainLocation(worldname, l);
+				for (double[] a : (HashSet<double[]>) locations[0]) {
+					plugin.worldManager.addMainLocation(worldname,  new Location(Bukkit.getWorld(worldname), a[0], a[1], a[2]));
 				}
-				for (Location l : locations.get(1)) {
-					plugin.worldManager.addArenaLocation(worldname, l);
+				for (double[] a : (HashSet<double[]>) locations[1]) {
+					plugin.worldManager.addArenaLocation(worldname, new Location(Bukkit.getWorld(worldname), a[0], a[1], a[2]));
 				}
 			}
 		}.runTask(plugin);
@@ -211,7 +218,8 @@ public class SQLiteInterface {
 		synchronized (lock) {
 			testConnection();
 
-			String insert_s = "INSERT OR REPLACE INTO startlocations " +
+			String insert_s =
+					"INSERT INTO startlocations " +
 					"VALUES(?,?,?,?,?)";
 
 			try {
@@ -239,7 +247,8 @@ public class SQLiteInterface {
 		synchronized (lock) {
 			testConnection();
 
-			String delete_s = "DELETE FROM startlocations " +
+			String delete_s =
+					"DELETE FROM startlocations " +
 					"WHERE worldname = ? " +
 					"AND type = ?";
 			try {
@@ -250,6 +259,78 @@ public class SQLiteInterface {
 				stmt.close();
 			} catch (SQLException e) {
 				logger.severe("Error while clearing startlocations! " +
+						"Message: " + e.getMessage());
+			}
+		}
+	}
+
+	public void loadSignLocation(final String wname) {
+
+		logger.debug("Loading info-sign for world \"" + wname + "\"!");
+
+		final String load_s =
+				"SELECT placed_world, x, y, z " +
+				"FROM signlocations " +
+				"WHERE worldname = ? ";
+
+		synchronized(lock) {
+			testConnection();
+
+			try{
+				PreparedStatement stmt = con.prepareStatement(load_s);
+				stmt.setString(1, wname);
+
+				ResultSet rs = stmt.executeQuery();
+				if(rs.next()) {
+					final String w = rs.getString(1);
+					final double x = rs.getDouble(2);
+					final double y = rs.getDouble(3);
+					final double z = rs.getDouble(4);
+
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							plugin.worldManager.setSignLocation(wname, new Location(Bukkit.getWorld(w), x, y, z));
+						}
+					}.runTask(plugin);
+				}
+				else {
+					logger.warning("No info-sign saved for world \"" + wname + "\"!");
+				}
+
+				rs.close();
+				stmt.close();
+			}
+			catch (SQLException e) {
+				logger.severe("Error while loading signlocation for world \"" + wname + "\"! " +
+						"Message: " + e.getMessage());
+			}
+		}
+	}
+
+	public void storeSignLocation(final String wname, final Location l) {
+
+		logger.debug("Storing sign for world \"" + wname + "\"!");
+
+		final String store_s =
+			"INSERT OR REPLACE INTO signlocations " +
+			"VALUES(?,?,?,?,?)";
+
+		synchronized(lock) {
+			testConnection();
+
+			try{
+				PreparedStatement stmt = con.prepareStatement(store_s);
+				stmt.setString(1, wname);
+				stmt.setString(2, l.getWorld().getName());
+				stmt.setDouble(3, l.getX());
+				stmt.setDouble(4, l.getY());
+				stmt.setDouble(5, l.getZ());
+				stmt.execute();
+				stmt.close();
+			}
+			catch (SQLException e) {
+				logger.severe("Error while storing signlocation for world \"" + wname + "\"! " +
 						"Message: " + e.getMessage());
 			}
 		}

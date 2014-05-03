@@ -72,6 +72,15 @@ public class WorldManager {
 		}.runTaskAsynchronously(plugin);
 	}
 
+	public void setSignLocation(String w, Location l) {
+		if(isRegistered(w)) {
+			worlds.get(w).setSignLocation(l);
+		}
+		else {
+			logger.severe("Tried to set info-sign for non-registered world!");
+		}
+	}
+
 	public boolean isRegistered(String w) {
 		return worlds.containsKey(w);
 	}

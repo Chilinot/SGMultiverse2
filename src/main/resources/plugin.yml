@@ -31,3 +31,6 @@ permissions:
   sgmultiverse.ignore.blockfilter:
     description: Allows a user to bypass the blockfilter.
     default: false
+  sgmultiverse.signs.sginfo:
+    description: Allows a player to place an info sign.
+    default: op

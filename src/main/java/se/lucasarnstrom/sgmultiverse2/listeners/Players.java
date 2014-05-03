@@ -26,5 +26,27 @@
  */
 package se.lucasarnstrom.sgmultiverse2.listeners;
 
-public class Players {
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.sgmultiverse2.Main;
+
+public class Players implements Listener {
+
+	private Main plugin;
+	private ConsoleLogger logger = new ConsoleLogger("PlayerListener");
+
+	public Players(Main instance) {
+		plugin = instance;
+		logger.debug("Initiated");
+	}
+
+	@EventHandler
+	public void signChange(SignChangeEvent e) {
+		String s = e.getLine(0);
+		if(plugin.worldManager.isRegistered(s) && e.getPlayer().hasPermission("sgmultiverse.signs.sginfo")) {
+			plugin.worldManager.setSignLocation(s, e.getBlock().getLocation());
+		}
+	}
 }
