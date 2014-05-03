@@ -72,6 +72,10 @@ public class WorldManager {
 		}.runTaskAsynchronously(plugin);
 	}
 
+	public String[] getRegisteredWorldnames() {
+		return worlds.keySet().toArray(new String[worlds.size()]);
+	}
+
 	public void setSignLocation(String w, Location l) {
 		if(isRegistered(w)) {
 			worlds.get(w).setSignLocation(l);

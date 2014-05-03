@@ -72,6 +72,7 @@ public class Main extends JavaPlugin {
 		logger.debug("Registering commands...");
 		Commands c = new Commands(this);
 
+		getCommand("sginfo").setExecutor(c);
 		getCommand("sgjoin").setExecutor(c);
 		getCommand("sglocation").setExecutor(c);
 		getCommand("sgtp").setExecutor(c);

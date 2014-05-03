@@ -4,6 +4,10 @@ version: ${project.version}
 main: ${project.groupId}.${project.artifactId}.Main
 
 commands:
+  sginfo:
+    description: Displays various information.
+    usage: /<command>
+    permission: sgmultiverse.commands.sginfo
   sgjoin:
     description: Used to join a game of SurvivalGames.
     usage: /<command> <worldname>
@@ -19,6 +23,8 @@ commands:
 
 
 permissions:
+  sgmultiverse.commands.sginfo:
+    default: op
   sgmultiverse.commands.sgjoin:
     default: true
   sgmultiverse.commands.sglocation:

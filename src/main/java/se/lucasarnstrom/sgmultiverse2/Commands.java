@@ -49,11 +49,13 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		//TODO Use iconmenus for the commands
-		//TODO Commands: sgleave, sginfo, sgstats
+		//TODO Commands: sgleave, sgstats
 
 		String command = cmd.getName();
 
 		switch (command) {
+			case "sginfo":
+				return sginfo(sender);
 			case "sgjoin":
 				return sgjoin(sender, args);
 			case "sglocation":
@@ -63,6 +65,22 @@ public class Commands implements CommandExecutor {
 		}
 
 		return false;
+	}
+
+	private boolean sginfo(CommandSender s) {
+		s.sendMessage(ChatColor.GREEN + "SGMultiverse2 version " + plugin.getDescription().getVersion() + " is up and running!");
+
+		s.sendMessage("Currently these worlds are registered as gameworlds:");
+		for(String name : plugin.worldManager.getRegisteredWorldnames()) {
+			s.sendMessage(" - " + ChatColor.GOLD + name);
+		}
+
+		if(s instanceof Player) {
+			Player p = (Player) s;
+			s.sendMessage("You are in the world \"" + ChatColor.GOLD + p.getWorld().getName() + ChatColor.WHITE + "\".");
+		}
+
+		return true;
 	}
 
 	private boolean sgtp(CommandSender sender, String[] args) {
