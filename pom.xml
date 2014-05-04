@@ -143,14 +143,6 @@
                             <filters>
                             </filters>
                             <relocations>
-                                <relocation>
-                                    <pattern>org.mcstats</pattern>
-                                    <shadedPattern>se.lucasarnstrom.sgmultiverse2.mcstats</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>se.lucasarnstrom.lucasutils</pattern>
-                                    <shadedPattern>se.lucasarnstrom.sgmultiverse2.lucasutils</shadedPattern>
-                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
