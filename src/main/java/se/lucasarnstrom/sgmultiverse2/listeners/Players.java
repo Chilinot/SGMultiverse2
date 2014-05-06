@@ -26,14 +26,17 @@
  */
 package se.lucasarnstrom.sgmultiverse2.listeners;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.sgmultiverse2.GameWorld.RemoveReason;
+import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.RemoveReason;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 public class Players implements Listener {
@@ -52,6 +55,34 @@ public class Players implements Listener {
 		if(plugin.worldManager.isRegistered(s) && e.getPlayer().hasPermission("sgmultiverse.signs.sginfo")) {
 			plugin.worldManager.setSignLocation(s, e.getBlock().getLocation());
 		}
+	}
+
+	@EventHandler
+	public void playerDeath(PlayerDeathEvent e) {
+
+		if(plugin.worldManager.isPlaying(e.getEntity().getUniqueId())) {
+
+			Player k = e.getEntity().getKiller();
+
+			if(k == null) {
+				RemoveReason reason = RemoveReason.DEATH;
+				reason.setPlayer(e.getEntity().getName());
+				plugin.worldManager.removePlayer(e.getEntity().getUniqueId(), reason);
+			}
+			else {
+				RemoveReason reason = RemoveReason.KILLED;
+				reason.setPlayer(e.getEntity().getName());
+				reason.setKiller(k.getName());
+				plugin.worldManager.removePlayer(e.getEntity().getUniqueId(), reason);
+			}
+
+			e.setDeathMessage(null);
+		}
+	}
+
+	@EventHandler
+	public void playerJoin(PlayerJoinEvent e) {
+		//TODO restore inventory
 	}
 
     @EventHandler
