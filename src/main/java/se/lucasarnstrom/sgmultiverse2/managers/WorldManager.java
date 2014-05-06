@@ -40,6 +40,8 @@ import se.lucasarnstrom.sgmultiverse2.GameWorld;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 public class WorldManager {
 
@@ -98,6 +100,29 @@ public class WorldManager {
 			worlds.get(worldname).addPlayer(p);
 		}
 	}
+
+    public void removePlayer(UUID id, GameWorld.RemoveReason reason) {
+        for(Entry<String, GameWorld> e : worlds.entrySet()) {
+            if(e.getValue().isInPlayerlist(id)) {
+                e.getValue().removePlayer(id);
+                broadcast(e.getKey(), reason.reason);
+                break;
+            }
+        }
+    }
+
+    public boolean isPlaying(UUID id) {
+        boolean playing = false;
+
+        for(GameWorld w : worlds.values()) {
+            if(w.isInPlayerlist(id)) {
+                playing = true;
+                break;
+            }
+        }
+
+        return playing;
+    }
 
 	public void broadcast(String wname, String msg) {
 		broadcast(Bukkit.getWorld(wname), msg);

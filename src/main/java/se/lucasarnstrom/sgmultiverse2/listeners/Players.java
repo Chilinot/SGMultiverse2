@@ -29,7 +29,11 @@ package se.lucasarnstrom.sgmultiverse2.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.sgmultiverse2.GameWorld.RemoveReason;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 public class Players implements Listener {
@@ -49,4 +53,26 @@ public class Players implements Listener {
 			plugin.worldManager.setSignLocation(s, e.getBlock().getLocation());
 		}
 	}
+
+    @EventHandler
+    public void playerTeleport(PlayerTeleportEvent e) {
+        if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())
+                && !e.getTo().getWorld().equals(e.getFrom().getWorld())) {
+            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), RemoveReason.TELEPORT);
+        }
+    }
+
+    @EventHandler
+    public void playerQuit(PlayerQuitEvent e) {
+        if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
+            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), RemoveReason.QUIT);
+        }
+    }
+
+    @EventHandler
+    public void playerKick(PlayerKickEvent e) {
+        if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
+            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), RemoveReason.KICK);
+        }
+    }
 }

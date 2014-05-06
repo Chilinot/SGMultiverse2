@@ -47,6 +47,18 @@ import java.util.Map.Entry;
 
 public class GameWorld {
 
+    public enum RemoveReason {
+        KICK     ("A player has been kicked from the game!"),
+        QUIT     ("A player left the game."),
+        TELEPORT ("A player teleported out of this world and was removed!");
+
+        public String reason;
+
+        private RemoveReason(String r) {
+            reason = r;
+        }
+    }
+
 	private Main                           plugin;
 	private ConsoleLogger                  logger;
 	private final World                    world;
@@ -160,7 +172,9 @@ public class GameWorld {
 			s.setLine(0, ChatColor.WHITE + world.getName());
 			s.setLine(1, status.toString());
 			s.setLine(2, ChatColor.WHITE + "-PLAYERS-");
-			s.setLine(3, playerlist.size() + "/" + getNumberOfMainLocations());
+			s.setLine(3, ChatColor.WHITE + Integer.toString(playerlist.size()) + // It kept confusing the string concatenation with integer addition.
+                    ChatColor.GOLD + "/" +
+                    ChatColor.WHITE + getNumberOfMainLocations());
 
 			s.update();
 		}
@@ -284,6 +298,24 @@ public class GameWorld {
 
 		updateSign();
 	}
+
+    public void removePlayer(UUID id) {
+
+        for(Entry<Location, UUID> e : locations_start.entrySet()) {
+            if(e.getValue().equals(id)) {
+                e.setValue(null);
+                break;
+            }
+        }
+
+        playerlist.remove(id);
+        updateSign();
+        //TODO Restore the players inventory if he/she is still online.
+    }
+
+    public boolean isInPlayerlist(UUID id) {
+        return playerlist.contains(id);
+    }
 
 	public void saveLocations() {
 		final String wname = world.getName();
