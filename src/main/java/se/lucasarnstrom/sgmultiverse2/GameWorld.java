@@ -47,18 +47,6 @@ import java.util.Map.Entry;
 
 public class GameWorld {
 
-    public enum RemoveReason {
-        KICK     ("A player has been kicked from the game!"),
-        QUIT     ("A player left the game."),
-        TELEPORT ("A player teleported out of this world and was removed!");
-
-        public String reason;
-
-        private RemoveReason(String r) {
-            reason = r;
-        }
-    }
-
 	private Main                           plugin;
 	private ConsoleLogger                  logger;
 	private final World                    world;
