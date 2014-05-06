@@ -45,6 +45,42 @@ import java.util.UUID;
 
 public class WorldManager {
 
+	public enum RemoveReason {
+		KICK     ("%player% has been kicked from the game!"),
+		QUIT     ("%player% left the game."),
+		TELEPORT ("%player% teleported out of this world and was removed!"),
+		DEATH    ("&player& was killed."),
+		KILLED   ("&player& was killed by &killer&!");
+
+		private String reason;
+		private String player = null;
+		private String killer = null;
+
+		private RemoveReason(String r) {
+			reason = r;
+		}
+
+		public void setPlayer(String s) {
+			player = s;
+		}
+
+		public void setKiller(String s) {
+			killer = s;
+		}
+
+		public String getMessage() {
+
+			if(player != null) {
+				reason = reason.replace("&player&", ChatColor.GOLD + player + ChatColor.WHITE);
+			}
+			if(killer != null) {
+				reason = reason.replace("&killer&", ChatColor.GOLD + killer + ChatColor.WHITE);
+			}
+
+			return reason;
+		}
+	}
+
 	public enum StatusFlag {
 		STARTED,
 		WAITING,
@@ -101,11 +137,14 @@ public class WorldManager {
 		}
 	}
 
-    public void removePlayer(UUID id, GameWorld.RemoveReason reason) {
+    public void removePlayer(UUID id, RemoveReason reason) {
+
+		logger.debug("Removing player with id=\"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");
+
         for(Entry<String, GameWorld> e : worlds.entrySet()) {
             if(e.getValue().isInPlayerlist(id)) {
                 e.getValue().removePlayer(id);
-                broadcast(e.getKey(), reason.reason);
+                broadcast(e.getKey(), reason.getMessage());
                 break;
             }
         }
