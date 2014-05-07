@@ -47,19 +47,20 @@ import java.util.Map.Entry;
 
 public class GameWorld {
 
-	private Main plugin;
-	private ConsoleLogger logger;
-	private final World world;
-	private Location sign_location = null;
-	private HashSet<UUID> playerlist = new HashSet<>();
-	private HashMap<Location, UUID> locations_start = new HashMap<>();
-	private HashMap<Location, Boolean> locations_arena = new HashMap<>();
-	private EnumSet<Material> blockfilter = null;
-	private HashMap<Location, LoggedBlock> log_block = new HashMap<>();
-	private HashMap<UUID, LoggedEntity> log_entity = new HashMap<>();
-	private HashSet<Entity> log_entity_removal = new HashSet<>();
-	private boolean inReset = false;
-	private StatusFlag status = StatusFlag.WAITING;
+	private Main                           plugin;
+	private ConsoleLogger                  logger;
+	private final World                    world;
+	private Location                       lobby;
+	private Location                       sign_location      = null;
+	private HashSet<UUID>                  playerlist         = new HashSet<>();
+	private HashMap<Location, UUID>        locations_start    = new HashMap<>();
+	private HashMap<Location, Boolean>     locations_arena    = new HashMap<>();
+	private EnumSet<Material>              blockfilter        = null;
+	private HashMap<Location, LoggedBlock> log_block          = new HashMap<>();
+	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<>();
+	private HashSet<Entity>                log_entity_removal = new HashSet<>();
+	private boolean                        inReset            = false;
+	private StatusFlag                     status             = StatusFlag.WAITING;
 
 	// Entities that shouldn't be removed on world reset
 	private static final EnumSet<EntityType> nonremovable = EnumSet.of(
@@ -70,7 +71,7 @@ public class GameWorld {
 
 	public GameWorld(Main instance, World w) {
 		plugin = instance;
-		world = w;
+		world  = w;
 		logger = new ConsoleLogger("GameWorld-" + w.getName());
 
 		//TODO Load all configurations for the world.
@@ -106,15 +107,17 @@ public class GameWorld {
 		loadSign();
 	}
 
-	public void setSignLocation(final Location l) {
+	public void setSignLocation(final Location l, boolean save) {
 		sign_location = l;
 
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				plugin.sqlite.storeSignLocation(world.getName(), l);
-			}
-		}.runTaskAsynchronously(plugin);
+		if(save) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					plugin.sqlite.storeSignLocation(world.getName(), l);
+				}
+			}.runTaskAsynchronously(plugin);
+		}
 
 		// Update the sign 3 ticks after setting it because it was used in the SignChangeEvent.
 		new BukkitRunnable() {
@@ -123,6 +126,20 @@ public class GameWorld {
 				updateSign();
 			}
 		}.runTaskLater(plugin, 3L);
+	}
+
+	public void setLobbyLocation(final Location l, boolean save) {
+
+		lobby = l;
+
+		if(save) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					plugin.sqlite.storeLobbyLocation(world.getName(), l);
+				}
+			}.runTaskAsynchronously(plugin);
+		}
 	}
 
 	private void updateSign() {
@@ -257,9 +274,14 @@ public class GameWorld {
 
 	public void addPlayer(Player p) {
 
+		if(!allowPlayerJoin()) {
+			logger.severe("Tried to add player to already full world!");
+			return;
+		}
+
 		logger.debug("Adding player \"" + p.getName() + "\".");
 
-		Location l = null;
+		/*Location l = null;
 		for (Entry<Location, UUID> e : locations_start.entrySet()) {
 			if (e.getValue() == null) {
 				l = e.getKey();
@@ -272,9 +294,10 @@ public class GameWorld {
 			return;
 		}
 
-		p.teleport(l); // The player has to be teleported before he/she is added to the playerlist.
+		locations_start.put(l, p.getUniqueId());*/
 
-		locations_start.put(l, p.getUniqueId());
+		p.teleport(lobby); // The player has to be teleported before he/she is added to the playerlist.
+
 		playerlist.add(p.getUniqueId());
 
 		//TODO Backup player's inventory

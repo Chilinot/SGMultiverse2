@@ -53,7 +53,7 @@ public class Players implements Listener {
 	public void signChange(SignChangeEvent e) {
 		String s = e.getLine(0);
 		if (plugin.worldManager.isRegistered(s) && e.getPlayer().hasPermission("sgmultiverse.signs.sginfo")) {
-			plugin.worldManager.setSignLocation(s, e.getBlock().getLocation());
+			plugin.worldManager.setSignLocation(s, e.getBlock().getLocation(), true);
 		}
 	}
 

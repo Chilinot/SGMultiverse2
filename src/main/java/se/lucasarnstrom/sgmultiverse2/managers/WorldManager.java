@@ -79,11 +79,17 @@ public class WorldManager {
 		return worlds.keySet().toArray(new String[worlds.size()]);
 	}
 
-	public void setSignLocation(String w, Location l) {
+	public void setSignLocation(String w, Location l, boolean save) {
 		if (isRegistered(w)) {
-			worlds.get(w).setSignLocation(l);
+			worlds.get(w).setSignLocation(l, save);
 		} else {
 			logger.severe("Tried to set info-sign for non-registered world!");
+		}
+	}
+
+	public void setLobbyLocation(String w, Location l, boolean save) {
+		if(isRegistered(w)) {
+			worlds.get(w).setLobbyLocation(l, save);
 		}
 	}
 

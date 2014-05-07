@@ -88,8 +88,6 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new Misc(this), this);
 		getServer().getPluginManager().registerEvents(new Players(this), this);
 
-		//TODO start on the listeners
-
 		// Initiate managers
 		logger.debug("Initiating managers...");
 

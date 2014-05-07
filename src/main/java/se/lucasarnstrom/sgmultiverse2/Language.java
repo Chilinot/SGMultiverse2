@@ -8,11 +8,11 @@ import java.io.File;
 
 public enum Language {
 
-	PLAYER_KICK("&6#player#&f has been kicked from the game!"),
-	PLAYER_QUIT("&6#player#&f left the game."),
-	PLAYER_TELEPORT("&6#player#&f teleported out of this world and was removed!"),
-	PLAYER_DEATH("&6#player#&f was killed."),
-	PLAYER_KILLED("&6#player#&f was killed by &6#killer#&f!");
+	PLAYER_KICK     ("&6#player#&f has been kicked from the game!"),
+	PLAYER_QUIT     ("&6#player#&f left the game."),
+	PLAYER_TELEPORT ("&6#player#&f teleported out of this world and was removed!"),
+	PLAYER_DEATH    ("&6#player#&f was killed."),
+	PLAYER_KILLED   ("&6#player#&f was killed by &6#killer#&f!");
 
 	private String msg;
 	private String player = null;
@@ -20,7 +20,7 @@ public enum Language {
 
 	private static FileConfiguration config = null;
 
-	Language(String r) {
+	private Language(String r) {
 		msg = r;
 	}
 
@@ -41,6 +41,8 @@ public enum Language {
 		if (config != null) {
 			msg = config.getString(this.name(), msg);
 		}
+
+		// Variables
 		if (player != null) {
 			msg = msg.replace("#player#", player);
 		}

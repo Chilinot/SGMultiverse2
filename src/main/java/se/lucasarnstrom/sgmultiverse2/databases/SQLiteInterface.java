@@ -1,9 +1,9 @@
 /**
- *  Author:  Lucas Arnstr�m - LucasEmanuel @ Bukkit forums
+ *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
- *  Copyright 2014 Lucas Arnstr�m
+ *  Copyright 2014 Lucas Arnström
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,8 @@ public class SQLiteInterface {
 
 	public enum LocationType {
 		MAIN,
-		ARENA
+		ARENA,
+		LOBBY
 	}
 
 	private Main plugin;
@@ -288,7 +289,7 @@ public class SQLiteInterface {
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							plugin.worldManager.setSignLocation(wname, new Location(Bukkit.getWorld(w), x, y, z));
+							plugin.worldManager.setSignLocation(wname, new Location(Bukkit.getWorld(w), x, y, z), false);
 						}
 					}.runTask(plugin);
 				} else {
@@ -328,6 +329,49 @@ public class SQLiteInterface {
 				logger.severe("Error while storing signlocation for world \"" + wname + "\"! " +
 						"Message: " + e.getMessage());
 			}
+		}
+	}
+
+	public void storeLobbyLocation(String wname, Location l) {
+		final String insert =
+				"INSERT INTO startlocations" +
+				"VALUES(?,?,?,?,?)";
+
+		final String delete =
+				"DELETE FROM startlocations" +
+				"WHERE worldname = ? " +
+				"AND type = ? ";
+
+		synchronized(lock) {
+			testConnection();
+
+			try {
+				PreparedStatement delstmt = con.prepareStatement(delete);
+				delstmt.setString(1, wname);
+				delstmt.setString(2, LocationType.LOBBY.toString());
+				delstmt.execute();
+				delstmt.close();
+
+				PreparedStatement instmt = con.prepareStatement(insert);
+				instmt.setString(1, wname);
+				instmt.setDouble(2, l.getX());
+				instmt.setDouble(3, l.getY());
+				instmt.setDouble(4, l.getZ());
+				instmt.setString(5, LocationType.LOBBY.toString());
+				instmt.execute();
+				instmt.close();
+
+			} catch (SQLException e) {
+				logger.severe("Error while trying to store lobby location for world=\"" + wname + "\"");
+			}
+		}
+	}
+
+	public void loadLobbyLocation(final String wname) {
+		synchronized(lock) {
+			testConnection();
+
+
 		}
 	}
 }

@@ -146,24 +146,34 @@ public class Commands implements CommandExecutor {
 		if (!plugin.worldManager.isRegistered(worldname)) {
 			p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
 			return true;
-		} else if (args.length == 0) {
+		}
+		else if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
 			return false;
-		} else if (args.length == 1 && args[0].equalsIgnoreCase("info")) {
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("info")) {
 			p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
 			p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
 			p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
 			return true;
-		} else if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
+		}
+		else if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
 			p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
 			plugin.worldManager.saveLocations(worldname);
 			return true;
-		} else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
+		}
+		else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
+
 			if (args[1].equalsIgnoreCase("main")) {
 				plugin.worldManager.addMainLocation(worldname, p.getLocation());
-			} else if (args[1].equalsIgnoreCase("arena")) {
+			}
+			else if (args[1].equalsIgnoreCase("arena")) {
 				plugin.worldManager.addArenaLocation(worldname, p.getLocation());
-			} else {
+			}
+			else if(args[1].equalsIgnoreCase("lobby")) {
+				plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
+			}
+			else {
 				return false;
 			}
 

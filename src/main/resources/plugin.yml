@@ -14,7 +14,7 @@ commands:
     permission: sgmultiverse.commands.sgjoin
   sglocation:
     description: Used to add locations to a gameworld.
-    usage: /<command> <add|save|info> [<main|arena>]
+    usage: /<command> <add|save|info> [<main|arena|lobby>]
     permission: sgmultiverse.commands.sglocation
   sgtp:
     description: Used to teleport between worlds.
