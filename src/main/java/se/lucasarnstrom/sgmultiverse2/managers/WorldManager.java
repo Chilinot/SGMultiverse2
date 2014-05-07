@@ -46,9 +46,9 @@ import java.util.UUID;
 public class WorldManager {
 
 	public enum RemoveReason {
-		KICK     ("%player% has been kicked from the game!"),
-		QUIT     ("%player% left the game."),
-		TELEPORT ("%player% teleported out of this world and was removed!"),
+		KICK     ("&player& has been kicked from the game!"),
+		QUIT     ("&player& left the game."),
+		TELEPORT ("&player& teleported out of this world and was removed!"),
 		DEATH    ("&player& was killed."),
 		KILLED   ("&player& was killed by &killer&!");
 

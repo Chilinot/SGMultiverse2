@@ -26,15 +26,15 @@
  */
 package se.lucasarnstrom.sgmultiverse2.listeners;
 
+import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.RemoveReason;
 import se.lucasarnstrom.sgmultiverse2.Main;
@@ -57,8 +57,20 @@ public class Players implements Listener {
 		}
 	}
 
+    @EventHandler
+    public void playerInteract(PlayerInteractEvent e) {
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK &&
+                e.getClickedBlock().getType() == Material.CHEST &&
+                plugin.worldManager.isRegistered(e.getPlayer().getWorld().getName())) {
+
+            plugin.chestManager.randomizeChest((Chest) e.getClickedBlock().getState());
+        }
+    }
+
 	@EventHandler
 	public void playerDeath(PlayerDeathEvent e) {
+
+        logger.debug("Cought PlayerDeathEvent");
 
 		if(plugin.worldManager.isPlaying(e.getEntity().getUniqueId())) {
 

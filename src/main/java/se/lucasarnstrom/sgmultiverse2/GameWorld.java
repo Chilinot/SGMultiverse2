@@ -274,12 +274,12 @@ public class GameWorld {
 			return;
 		}
 
+        p.teleport(l); // The player has to be teleported before he is added to the playerlist.
+
 		locations_start.put(l, p.getUniqueId());
 		playerlist.add(p.getUniqueId());
 
 		//TODO Backup player's inventory
-
-		p.teleport(l);
 
 		//TODO check if start game
 		//TODO Create all time related classes.
@@ -405,7 +405,7 @@ public class GameWorld {
 			}
 
 			log_block.put(l, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
-			logger.debug("Logging block :: " + b.getWorld().getName() + " " + b.getX() + " " + b.getY() + " " + b.getZ() + " " + material + " " + b.getData() + " " + sign_lines);
+			//logger.debug("Logging block :: " + b.getWorld().getName() + " " + b.getX() + " " + b.getY() + " " + b.getZ() + " " + material + " " + b.getData() + " " + sign_lines);
 		}
 	}
 
