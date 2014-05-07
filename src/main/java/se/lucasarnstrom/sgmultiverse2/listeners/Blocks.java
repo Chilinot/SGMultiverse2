@@ -50,8 +50,8 @@ import java.util.Set;
 
 public class Blocks implements Listener {
 
-	private Main plugin;
-	private ConsoleLogger logger = new ConsoleLogger("BlockListener");
+	private final Main plugin;
+	private final ConsoleLogger logger = new ConsoleLogger("BlockListener");
 
 	// Materials to log in the physics event.
 	private final Set<Material> physics = EnumSet.of(

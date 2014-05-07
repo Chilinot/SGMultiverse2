@@ -45,20 +45,21 @@ import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.StatusFlag;
 import java.util.*;
 import java.util.Map.Entry;
 
+@SuppressWarnings("deprecation")
 public class GameWorld {
 
-	private Main                           plugin;
-	private ConsoleLogger                  logger;
+	private final Main                           plugin;
+	private final ConsoleLogger                  logger;
 	private final World                    world;
 	private Location                       lobby;
 	private Location                       sign_location      = null;
-	private HashSet<UUID>                  playerlist         = new HashSet<>();
-	private HashMap<Location, UUID>        locations_start    = new HashMap<>();
-	private HashMap<Location, Boolean>     locations_arena    = new HashMap<>();
+	private final HashSet<UUID>                  playerlist         = new HashSet<>();
+	private final HashMap<Location, UUID>        locations_start    = new HashMap<>();
+	private final HashMap<Location, Boolean>     locations_arena    = new HashMap<>();
 	private EnumSet<Material>              blockfilter        = null;
-	private HashMap<Location, LoggedBlock> log_block          = new HashMap<>();
-	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<>();
-	private HashSet<Entity>                log_entity_removal = new HashSet<>();
+	private final HashMap<Location, LoggedBlock> log_block          = new HashMap<>();
+	private final HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<>();
+	private final HashSet<Entity>                log_entity_removal = new HashSet<>();
 	private boolean                        inReset            = false;
 	private StatusFlag                     status             = StatusFlag.WAITING;
 

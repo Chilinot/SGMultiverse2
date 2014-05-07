@@ -39,7 +39,7 @@ import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 
 public class Commands implements CommandExecutor {
 
-	private Main plugin;
+	private final Main plugin;
 
 	public Commands(Main p) {
 		plugin = p;

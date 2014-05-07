@@ -43,7 +43,7 @@ public class LoggedEntity {
 
 	private final Location location;
 	private final EntityType type;
-	private final HashMap<String, Object> data = new HashMap<String, Object>();
+	private final HashMap<String, Object> data = new HashMap<>();
 
 	public LoggedEntity(Entity e) {
 		type = e.getType();

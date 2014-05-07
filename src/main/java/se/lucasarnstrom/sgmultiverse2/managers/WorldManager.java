@@ -52,10 +52,10 @@ public class WorldManager {
 		FAILED
 	}
 
-	private Main plugin;
-	private ConsoleLogger logger = new ConsoleLogger("WorldManager");
+	private final Main plugin;
+	private final ConsoleLogger logger = new ConsoleLogger("WorldManager");
 
-	private HashMap<String, GameWorld> worlds = new HashMap<>();
+	private final HashMap<String, GameWorld> worlds = new HashMap<>();
 
 	public WorldManager(Main instance) {
 		plugin = instance;
@@ -71,6 +71,7 @@ public class WorldManager {
 			@Override
 			public void run() {
 				plugin.sqlite.loadLocations(wname);
+				plugin.sqlite.loadLobbyLocation(wname);
 			}
 		}.runTaskAsynchronously(plugin);
 	}

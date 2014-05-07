@@ -41,8 +41,8 @@ import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 
 public class Misc implements Listener {
 
-	private ConsoleLogger logger;
-	private WorldManager worldmanager;
+	private final ConsoleLogger logger;
+	private final WorldManager worldmanager;
 
 	public Misc(Main instance) {
 		logger = new ConsoleLogger("MiscListener");

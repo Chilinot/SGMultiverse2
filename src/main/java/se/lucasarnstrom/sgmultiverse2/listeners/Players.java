@@ -41,8 +41,8 @@ import se.lucasarnstrom.sgmultiverse2.Main;
 
 public class Players implements Listener {
 
-	private Main plugin;
-	private ConsoleLogger logger = new ConsoleLogger("PlayerListener");
+	private final Main plugin;
+	private final ConsoleLogger logger = new ConsoleLogger("PlayerListener");
 
 	public Players(Main instance) {
 		plugin = instance;

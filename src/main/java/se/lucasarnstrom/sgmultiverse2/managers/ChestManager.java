@@ -45,11 +45,11 @@ import java.util.*;
 
 public class ChestManager {
 
-	private Main plugin;
-	private ConsoleLogger logger = new ConsoleLogger("ChestManager");
-	private ArrayList<Location> randomizedchests = new ArrayList<>();
-	private HashMap<String, Object[]> worlds = new HashMap<>();
-	private Random generator = new Random(System.currentTimeMillis());
+	private final Main plugin;
+	private final ConsoleLogger logger = new ConsoleLogger("ChestManager");
+	private final ArrayList<Location> randomizedchests = new ArrayList<>();
+	private final HashMap<String, Object[]> worlds = new HashMap<>();
+	private final Random generator = new Random(System.currentTimeMillis());
 
 	public ChestManager(Main instance) {
 		plugin = instance;

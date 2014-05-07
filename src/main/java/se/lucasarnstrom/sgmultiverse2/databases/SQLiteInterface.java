@@ -45,10 +45,10 @@ public class SQLiteInterface {
 		LOBBY
 	}
 
-	private Main plugin;
+	private final Main plugin;
 	private final String folder;
 
-	private ConsoleLogger logger = new ConsoleLogger("SQLiteInterface");
+	private final ConsoleLogger logger = new ConsoleLogger("SQLiteInterface");
 
 	private Connection con;
 
@@ -201,6 +201,7 @@ public class SQLiteInterface {
 		}
 
 		new BukkitRunnable() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				for (double[] a : (HashSet<double[]>) locations[0]) {
@@ -362,16 +363,50 @@ public class SQLiteInterface {
 				instmt.close();
 
 			} catch (SQLException e) {
-				logger.severe("Error while trying to store lobby location for world=\"" + wname + "\"");
+				logger.severe("Error while trying to store lobby location for world=\"" + wname + "\". Message: " + e.getMessage());
 			}
 		}
 	}
 
 	public void loadLobbyLocation(final String wname) {
+
+		final String select =
+			"SELECT * " +
+			"FROM startlocations " +
+			"WHERE worldname = ?" +
+			"AND type = ?";
+
 		synchronized(lock) {
 			testConnection();
 
+			try {
+				PreparedStatement stmt = con.prepareStatement(select);
+				stmt.setString(1, wname);
+				stmt.setString(2, LocationType.LOBBY.toString());
 
+				ResultSet rs = stmt.executeQuery();
+				if(rs.next()) {
+
+					final double x = rs.getDouble(2);
+					final double y = rs.getDouble(3);
+					final double z = rs.getDouble(4);
+
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							plugin.worldManager.setLobbyLocation(wname, new Location(Bukkit.getWorld(wname), x, y, z), false);
+						}
+					}.runTask(plugin);
+				}
+				else {
+					logger.warning("No saved lobby location for world \"" + wname + "\"!");
+				}
+
+				rs.close();
+				stmt.close();
+			} catch (SQLException e) {
+				logger.severe("Error while loading lobby location for world=\"" + wname + "\". Message: " + e.getMessage());
+			}
 		}
 	}
 }
