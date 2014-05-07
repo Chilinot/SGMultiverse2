@@ -40,6 +40,7 @@ import se.lucasarnstrom.sgmultiverse2.listeners.Players;
 import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main extends JavaPlugin {
@@ -53,15 +54,18 @@ public class Main extends JavaPlugin {
 
 	public void onEnable() {
 
-		// Init config
-		Config.init(this);
+        // -- INITIATE STATICS
 
-		// Load defaults
+		Config.init(this);
 		Config.checkDefaults();
 
-		// Initiate main logger
 		ConsoleLogger.init(this);
 
+        File language = new File(this.getDataFolder() + "/language.yml");
+
+        Language.setConfig(language);
+
+        // -- INITIATE OBJECTS
 		logger = new ConsoleLogger("Main");
 		logger.debug("Running onEnable()...");
 
@@ -116,6 +120,12 @@ public class Main extends JavaPlugin {
 				logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
 			}
 		}
+
+        // Update
+        if(getConfig().getBoolean("auto-update")) {
+            logger.info("Auto-Updating enabled!");
+            new Updater(this, 79593, this.getFile(), Updater.UpdateType.DEFAULT, getConfig().getBoolean("debug"));
+        }
 
 		logger.debug("onEnable() is finished!");
 	}

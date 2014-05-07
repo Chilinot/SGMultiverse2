@@ -274,13 +274,12 @@ public class GameWorld {
 			return;
 		}
 
-        p.teleport(l); // The player has to be teleported before he is added to the playerlist.
+        p.teleport(l); // The player has to be teleported before he/she is added to the playerlist.
 
 		locations_start.put(l, p.getUniqueId());
 		playerlist.add(p.getUniqueId());
 
 		//TODO Backup player's inventory
-
 		//TODO check if start game
 		//TODO Create all time related classes.
 

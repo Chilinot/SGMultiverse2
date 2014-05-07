@@ -37,6 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.GameWorld;
+import se.lucasarnstrom.sgmultiverse2.Language;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.util.HashMap;
@@ -45,43 +46,7 @@ import java.util.UUID;
 
 public class WorldManager {
 
-	public enum RemoveReason {
-		KICK     ("&player& has been kicked from the game!"),
-		QUIT     ("&player& left the game."),
-		TELEPORT ("&player& teleported out of this world and was removed!"),
-		DEATH    ("&player& was killed."),
-		KILLED   ("&player& was killed by &killer&!");
-
-		private String reason;
-		private String player = null;
-		private String killer = null;
-
-		private RemoveReason(String r) {
-			reason = r;
-		}
-
-		public void setPlayer(String s) {
-			player = s;
-		}
-
-		public void setKiller(String s) {
-			killer = s;
-		}
-
-		public String getMessage() {
-
-			if(player != null) {
-				reason = reason.replace("&player&", ChatColor.GOLD + player + ChatColor.WHITE);
-			}
-			if(killer != null) {
-				reason = reason.replace("&killer&", ChatColor.GOLD + killer + ChatColor.WHITE);
-			}
-
-			return reason;
-		}
-	}
-
-	public enum StatusFlag {
+    public enum StatusFlag {
 		STARTED,
 		WAITING,
 		FAILED
@@ -137,7 +102,7 @@ public class WorldManager {
 		}
 	}
 
-    public void removePlayer(UUID id, RemoveReason reason) {
+    public void removePlayer(UUID id, Language reason) {
 
 		logger.debug("Removing player with id=\"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");
 

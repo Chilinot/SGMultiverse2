@@ -36,7 +36,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.RemoveReason;
+import se.lucasarnstrom.sgmultiverse2.Language;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 public class Players implements Listener {
@@ -70,19 +70,19 @@ public class Players implements Listener {
 	@EventHandler
 	public void playerDeath(PlayerDeathEvent e) {
 
-        logger.debug("Cought PlayerDeathEvent");
+        logger.debug("Caught PlayerDeathEvent");
 
 		if(plugin.worldManager.isPlaying(e.getEntity().getUniqueId())) {
 
 			Player k = e.getEntity().getKiller();
 
 			if(k == null) {
-				RemoveReason reason = RemoveReason.DEATH;
+				Language reason = Language.PLAYER_DEATH;
 				reason.setPlayer(e.getEntity().getName());
 				plugin.worldManager.removePlayer(e.getEntity().getUniqueId(), reason);
 			}
 			else {
-				RemoveReason reason = RemoveReason.KILLED;
+				Language reason = Language.PLAYER_KILLED;
 				reason.setPlayer(e.getEntity().getName());
 				reason.setKiller(k.getName());
 				plugin.worldManager.removePlayer(e.getEntity().getUniqueId(), reason);
@@ -101,21 +101,21 @@ public class Players implements Listener {
     public void playerTeleport(PlayerTeleportEvent e) {
         if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())
                 && !e.getTo().getWorld().equals(e.getFrom().getWorld())) {
-            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), RemoveReason.TELEPORT);
+            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_TELEPORT);
         }
     }
 
     @EventHandler
     public void playerQuit(PlayerQuitEvent e) {
         if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
-            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), RemoveReason.QUIT);
+            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_QUIT);
         }
     }
 
     @EventHandler
     public void playerKick(PlayerKickEvent e) {
         if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
-            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), RemoveReason.KICK);
+            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_KICK);
         }
     }
 }

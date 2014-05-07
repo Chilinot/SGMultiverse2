@@ -55,6 +55,7 @@ public class Config {
 			// General
 			put("debug", false);
 			put("metrics", true);
+            put("auto-update", true);
 		}};
 
 		for (Entry<String, Object> e : defaults.entrySet()) {
