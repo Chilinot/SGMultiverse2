@@ -1,0 +1,7 @@
+1. Fix the rest of the lobby.
+  - Join the queue by using sgjoin command.
+  - Add command sglobby to join the lobby.
+  - Add signs that lists alive players.
+  - Add ability to spectate.
+2. Add counters.
+3. Add sgplayers command.
