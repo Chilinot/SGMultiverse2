@@ -46,7 +46,7 @@ import java.util.UUID;
 
 public class WorldManager {
 
-    public enum StatusFlag {
+	public enum StatusFlag {
 		STARTED,
 		WAITING,
 		FAILED
@@ -80,10 +80,9 @@ public class WorldManager {
 	}
 
 	public void setSignLocation(String w, Location l) {
-		if(isRegistered(w)) {
+		if (isRegistered(w)) {
 			worlds.get(w).setSignLocation(l);
-		}
-		else {
+		} else {
 			logger.severe("Tried to set info-sign for non-registered world!");
 		}
 	}
@@ -102,31 +101,31 @@ public class WorldManager {
 		}
 	}
 
-    public void removePlayer(UUID id, Language reason) {
+	public void removePlayer(UUID id, Language reason) {
 
 		logger.debug("Removing player with id=\"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");
 
-        for(Entry<String, GameWorld> e : worlds.entrySet()) {
-            if(e.getValue().isInPlayerlist(id)) {
-                e.getValue().removePlayer(id);
-                broadcast(e.getKey(), reason.getMessage());
-                break;
-            }
-        }
-    }
+		for (Entry<String, GameWorld> e : worlds.entrySet()) {
+			if (e.getValue().isInPlayerlist(id)) {
+				e.getValue().removePlayer(id);
+				broadcast(e.getKey(), reason.getMessage());
+				break;
+			}
+		}
+	}
 
-    public boolean isPlaying(UUID id) {
-        boolean playing = false;
+	public boolean isPlaying(UUID id) {
+		boolean playing = false;
 
-        for(GameWorld w : worlds.values()) {
-            if(w.isInPlayerlist(id)) {
-                playing = true;
-                break;
-            }
-        }
+		for (GameWorld w : worlds.values()) {
+			if (w.isInPlayerlist(id)) {
+				playing = true;
+				break;
+			}
+		}
 
-        return playing;
-    }
+		return playing;
+	}
 
 	public void broadcast(String wname, String msg) {
 		broadcast(Bukkit.getWorld(wname), msg);
@@ -174,13 +173,13 @@ public class WorldManager {
 	}
 
 	public void logBlock(Block b, boolean placed) {
-		if(isRegistered(b.getWorld().getName())) {
+		if (isRegistered(b.getWorld().getName())) {
 			worlds.get(b.getWorld().getName()).logBlock(b, placed);
 		}
 	}
 
 	public StatusFlag getStatusFlag(String w) {
-		if(isRegistered(w)) {
+		if (isRegistered(w)) {
 			return worlds.get(w).getStatus();
 		}
 
@@ -188,7 +187,7 @@ public class WorldManager {
 	}
 
 	public void logEntity(Hanging e, boolean remove) {
-		if(isRegistered(e.getWorld().getName())) {
+		if (isRegistered(e.getWorld().getName())) {
 			worlds.get(e.getWorld().getName()).logEntity(e, remove);
 		}
 	}

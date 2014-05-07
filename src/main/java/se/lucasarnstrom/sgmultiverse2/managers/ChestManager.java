@@ -347,7 +347,7 @@ public class ChestManager {
 			save = true;
 		}
 
-		if(!itemConfig.contains("enchantments.bow")) {
+		if (!itemConfig.contains("enchantments.bow")) {
 			itemConfig.set("enchantments.bow.arrow_damage", 0.3);
 			itemConfig.set("enchantments.bow.arrow_fire", 0.3);
 			itemConfig.set("enchantments.bow.arrow_infinite", 0.3);
@@ -355,7 +355,7 @@ public class ChestManager {
 			save = true;
 		}
 
-		if(!itemConfig.contains("enchantments.armors")) {
+		if (!itemConfig.contains("enchantments.armors")) {
 			itemConfig.set("enchantments.armors.protection_fall", 0.2);
 			itemConfig.set("enchantments.armors.protection_projectile", 0.2);
 			itemConfig.set("enchantments.armors.protection_fire", 0.2);

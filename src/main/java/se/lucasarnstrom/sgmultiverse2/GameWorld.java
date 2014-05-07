@@ -47,25 +47,25 @@ import java.util.Map.Entry;
 
 public class GameWorld {
 
-	private Main                           plugin;
-	private ConsoleLogger                  logger;
-	private final World                    world;
-	private Location                       sign_location      = null;
-	private HashSet<UUID>                  playerlist         = new HashSet<>();
-	private HashMap<Location, UUID>        locations_start    = new HashMap<>();
-	private HashMap<Location, Boolean>     locations_arena    = new HashMap<>();
-	private EnumSet<Material>              blockfilter        = null;
-	private HashMap<Location, LoggedBlock> log_block          = new HashMap<>();
-	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<>();
-	private HashSet<Entity>                log_entity_removal = new HashSet<>();
-	private boolean                        inReset            = false;
-	private StatusFlag                     status             = StatusFlag.WAITING;
+	private Main plugin;
+	private ConsoleLogger logger;
+	private final World world;
+	private Location sign_location = null;
+	private HashSet<UUID> playerlist = new HashSet<>();
+	private HashMap<Location, UUID> locations_start = new HashMap<>();
+	private HashMap<Location, Boolean> locations_arena = new HashMap<>();
+	private EnumSet<Material> blockfilter = null;
+	private HashMap<Location, LoggedBlock> log_block = new HashMap<>();
+	private HashMap<UUID, LoggedEntity> log_entity = new HashMap<>();
+	private HashSet<Entity> log_entity_removal = new HashSet<>();
+	private boolean inReset = false;
+	private StatusFlag status = StatusFlag.WAITING;
 
 	// Entities that shouldn't be removed on world reset
 	private static final EnumSet<EntityType> nonremovable = EnumSet.of(
-		EntityType.PLAYER,
-		EntityType.PAINTING,
-		EntityType.ITEM_FRAME
+			EntityType.PLAYER,
+			EntityType.PAINTING,
+			EntityType.ITEM_FRAME
 	);
 
 	public GameWorld(Main instance, World w) {
@@ -78,26 +78,25 @@ public class GameWorld {
 		// Load blockfilter
 		String materials = plugin.getConfig().getString("worlds." + world.getName() + ".blockfilter");
 
-		if(materials != null) {
+		if (materials != null) {
 			String[] list = materials.split(", ");
 
-			for(String s : list) {
+			for (String s : list) {
 
-				if(s.equalsIgnoreCase("false")) {
+				if (s.equalsIgnoreCase("false")) {
 					logger.info("Blockfilter disabled for world " + world.getName());
 					blockfilter = null; // Just to make sure it is disabled.
 					break;
 				}
 
 				// Remove any data added by user since it can't handle that right now
-				if(s.contains(":"))
+				if (s.contains(":"))
 					s = s.split(":")[0];
 
 				try {
 					int id = Integer.parseInt(s);
 					addMaterialToFilter(id);
-				}
-				catch(NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					logger.severe("Incorrectly formatted blockfilter for world \"" + world.getName() + "\" :: ENTRY IS NOT A VALID MATERIAL-ID: ENTRY = \"" + s + "\"");
 					continue;
 				}
@@ -130,20 +129,20 @@ public class GameWorld {
 
 		logger.debug("Updating info-sign.");
 
-		if(sign_location == null) {
+		if (sign_location == null) {
 			logger.debug("Sign_location is null, attempting to load sign from database.");
 			loadSign(); // This could possibly create an infinite loop if something weird would happen.
 			return;
 		}
 
 		Material m = sign_location.getBlock().getType();
-		if(m == Material.SIGN_POST || m == Material.WALL_SIGN) {
+		if (m == Material.SIGN_POST || m == Material.WALL_SIGN) {
 
 			Sign s = (Sign) sign_location.getBlock().getState();
 
 			StringBuilder status = new StringBuilder();
 
-			switch(this.status) {
+			switch (this.status) {
 				case STARTED:
 					status.append(ChatColor.GOLD);
 					break;
@@ -161,12 +160,11 @@ public class GameWorld {
 			s.setLine(1, status.toString());
 			s.setLine(2, ChatColor.WHITE + "-PLAYERS-");
 			s.setLine(3, ChatColor.WHITE + Integer.toString(playerlist.size()) + // It kept confusing the string concatenation with integer addition.
-                    ChatColor.GOLD + "/" +
-                    ChatColor.WHITE + getNumberOfMainLocations());
+					ChatColor.GOLD + "/" +
+					ChatColor.WHITE + getNumberOfMainLocations());
 
 			s.update();
-		}
-		else {
+		} else {
 			logger.severe("The location for this worlds info-sign is no longer a sign!");
 		}
 	}
@@ -184,13 +182,13 @@ public class GameWorld {
 	}
 
 	private void addMaterialToFilter(int id) throws NumberFormatException {
-		if(blockfilter == null) {
+		if (blockfilter == null) {
 			blockfilter = EnumSet.noneOf(Material.class);
 		}
 
 		Material m = Material.getMaterial(id);
 
-		if(m == null)
+		if (m == null)
 			throw new NumberFormatException();
 		else {
 			logger.debug("Adding material \"" + m + "\" to blockfilter for world \"" + world.getName() + "\"");
@@ -274,7 +272,7 @@ public class GameWorld {
 			return;
 		}
 
-        p.teleport(l); // The player has to be teleported before he/she is added to the playerlist.
+		p.teleport(l); // The player has to be teleported before he/she is added to the playerlist.
 
 		locations_start.put(l, p.getUniqueId());
 		playerlist.add(p.getUniqueId());
@@ -286,23 +284,23 @@ public class GameWorld {
 		updateSign();
 	}
 
-    public void removePlayer(UUID id) {
+	public void removePlayer(UUID id) {
 
-        for(Entry<Location, UUID> e : locations_start.entrySet()) {
-            if(e.getValue().equals(id)) {
-                e.setValue(null);
-                break;
-            }
-        }
+		for (Entry<Location, UUID> e : locations_start.entrySet()) {
+			if (e.getValue().equals(id)) {
+				e.setValue(null);
+				break;
+			}
+		}
 
-        playerlist.remove(id);
-        updateSign();
-        //TODO Restore the players inventory if he/she is still online.
-    }
+		playerlist.remove(id);
+		updateSign();
+		//TODO Restore the players inventory if he/she is still online.
+	}
 
-    public boolean isInPlayerlist(UUID id) {
-        return playerlist.contains(id);
-    }
+	public boolean isInPlayerlist(UUID id) {
+		return playerlist.contains(id);
+	}
 
 	public void saveLocations() {
 		final String wname = world.getName();
@@ -318,7 +316,7 @@ public class GameWorld {
 				plugin.sqlite.clearStartLocations(wname, LocationType.ARENA);
 
 				// Save
-				plugin.sqlite.storeStartLocations(wname, LocationType.MAIN,  start);
+				plugin.sqlite.storeStartLocations(wname, LocationType.MAIN, start);
 				plugin.sqlite.storeStartLocations(wname, LocationType.ARENA, arena);
 			}
 		}.runTaskAsynchronously(plugin);
@@ -335,12 +333,12 @@ public class GameWorld {
 
 			mbu.setRelightingStrategy(MassBlockUpdate.RelightingStrategy.NEVER);
 
-			for(LoggedBlock block : log_block.values()) {
+			for (LoggedBlock block : log_block.values()) {
 				block.reset(mbu);
 			}
 
-			for(LoggedEntity entity : log_entity.values()) {
-				if(entity != null)
+			for (LoggedEntity entity : log_entity.values()) {
+				if (entity != null)
 					entity.reset();
 			}
 
@@ -355,16 +353,15 @@ public class GameWorld {
 			log_entity.clear();
 
 			// Reset location statuses
-			for(Entry<Location, UUID> e : locations_start.entrySet()) {
+			for (Entry<Location, UUID> e : locations_start.entrySet()) {
 				e.setValue(null);
 			}
-			for(Entry<Location, Boolean> e : locations_arena.entrySet()) {
+			for (Entry<Location, Boolean> e : locations_arena.entrySet()) {
 				e.setValue(false);
 			}
 
 			updateSign();
-		}
-		finally {
+		} finally {
 			inReset = false;
 		}
 	}
@@ -372,8 +369,8 @@ public class GameWorld {
 	public void clearEntities() {
 
 		// Clear all logged entities
-		for(Entity e : log_entity_removal) {
-			if(e != null)
+		for (Entity e : log_entity_removal) {
+			if (e != null)
 				e.remove();
 		}
 
@@ -381,7 +378,7 @@ public class GameWorld {
 
 		// Clear the remaining basic entities
 		for (Entity entity : world.getEntities()) {
-			if(nonremovable.contains(entity.getType()))
+			if (nonremovable.contains(entity.getType()))
 				continue;
 			entity.remove();
 		}
@@ -412,12 +409,11 @@ public class GameWorld {
 		if (inReset)
 			return;
 
-		if(!log_entity.containsKey(e.getUniqueId())) {
-			if(remove) {
+		if (!log_entity.containsKey(e.getUniqueId())) {
+			if (remove) {
 				log_entity_removal.add(e);
 				log_entity.put(e.getUniqueId(), null);
-			}
-			else {
+			} else {
 				log_entity.put(e.getUniqueId(), new LoggedEntity(e));
 			}
 			logger.debug("Logged entity " + e.getType() + " " + e.getLocation());

@@ -52,36 +52,35 @@ public class Players implements Listener {
 	@EventHandler
 	public void signChange(SignChangeEvent e) {
 		String s = e.getLine(0);
-		if(plugin.worldManager.isRegistered(s) && e.getPlayer().hasPermission("sgmultiverse.signs.sginfo")) {
+		if (plugin.worldManager.isRegistered(s) && e.getPlayer().hasPermission("sgmultiverse.signs.sginfo")) {
 			plugin.worldManager.setSignLocation(s, e.getBlock().getLocation());
 		}
 	}
 
-    @EventHandler
-    public void playerInteract(PlayerInteractEvent e) {
-        if(e.getAction() == Action.RIGHT_CLICK_BLOCK &&
-                e.getClickedBlock().getType() == Material.CHEST &&
-                plugin.worldManager.isRegistered(e.getPlayer().getWorld().getName())) {
+	@EventHandler
+	public void playerInteract(PlayerInteractEvent e) {
+		if (e.getAction() == Action.RIGHT_CLICK_BLOCK &&
+				e.getClickedBlock().getType() == Material.CHEST &&
+				plugin.worldManager.isRegistered(e.getPlayer().getWorld().getName())) {
 
-            plugin.chestManager.randomizeChest((Chest) e.getClickedBlock().getState());
-        }
-    }
+			plugin.chestManager.randomizeChest((Chest) e.getClickedBlock().getState());
+		}
+	}
 
 	@EventHandler
 	public void playerDeath(PlayerDeathEvent e) {
 
-        logger.debug("Caught PlayerDeathEvent");
+		logger.debug("Caught PlayerDeathEvent");
 
-		if(plugin.worldManager.isPlaying(e.getEntity().getUniqueId())) {
+		if (plugin.worldManager.isPlaying(e.getEntity().getUniqueId())) {
 
 			Player k = e.getEntity().getKiller();
 
-			if(k == null) {
+			if (k == null) {
 				Language reason = Language.PLAYER_DEATH;
 				reason.setPlayer(e.getEntity().getName());
 				plugin.worldManager.removePlayer(e.getEntity().getUniqueId(), reason);
-			}
-			else {
+			} else {
 				Language reason = Language.PLAYER_KILLED;
 				reason.setPlayer(e.getEntity().getName());
 				reason.setKiller(k.getName());
@@ -97,25 +96,25 @@ public class Players implements Listener {
 		//TODO restore inventory
 	}
 
-    @EventHandler
-    public void playerTeleport(PlayerTeleportEvent e) {
-        if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())
-                && !e.getTo().getWorld().equals(e.getFrom().getWorld())) {
-            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_TELEPORT);
-        }
-    }
+	@EventHandler
+	public void playerTeleport(PlayerTeleportEvent e) {
+		if (plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())
+				&& !e.getTo().getWorld().equals(e.getFrom().getWorld())) {
+			plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_TELEPORT);
+		}
+	}
 
-    @EventHandler
-    public void playerQuit(PlayerQuitEvent e) {
-        if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
-            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_QUIT);
-        }
-    }
+	@EventHandler
+	public void playerQuit(PlayerQuitEvent e) {
+		if (plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
+			plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_QUIT);
+		}
+	}
 
-    @EventHandler
-    public void playerKick(PlayerKickEvent e) {
-        if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
-            plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_KICK);
-        }
-    }
+	@EventHandler
+	public void playerKick(PlayerKickEvent e) {
+		if (plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())) {
+			plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_KICK);
+		}
+	}
 }

@@ -1,10 +1,10 @@
 /**
  *  Name:    LoggedBlock.java
  *  Created: 19:19:39 - 8 jun 2013
- * 
+ *
  *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
- *  
+ *
  *
  *  Copyright 2013 Lucas Arnström
  *
@@ -20,12 +20,12 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *
  *
  *  Filedescription:
  *
- * 
+ *
  */
 
 package se.lucasarnstrom.sgmultiverse2.logging;
@@ -39,13 +39,13 @@ import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
 public class LoggedBlock {
 
-	private final String	WORLDNAME;
-	private final int		X, Y, Z;
+	private final String WORLDNAME;
+	private final int X, Y, Z;
 
-	private final int		MATERIAL;
-	private final byte		DATA;
+	private final int MATERIAL;
+	private final byte DATA;
 
-	private final String[]	SIGN_LINES;
+	private final String[] SIGN_LINES;
 
 	@SuppressWarnings("deprecation")
 	public LoggedBlock(String worldname, int x, int y, int z, Material material, byte data, String[] sign_lines) {
@@ -62,27 +62,26 @@ public class LoggedBlock {
 	}
 
 	public void reset(MassBlockUpdate mbu) {
-		
+
 		mbu.setBlock(X, Y, Z, MATERIAL, DATA);
-		
+
 		if (SIGN_LINES != null) {
-			
+
 			Block b = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
-			
-			if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
-				
+
+			if (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+
 				Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
-				
+
 				for (int i = 0; i < 4; i++) {
 					sign.setLine(i, SIGN_LINES[i]);
 				}
 
 				sign.update();
-			}
-			else {
+			} else {
 				ConsoleLogger.getLogger("WorldManager")
-					.severe("Tried to reset the data for the following sign but failed! " +
-							"WORLDNAME:\"" + WORLDNAME + "\" X:\"" + X + "\" Y:\"" + Y + "\" Z:\"" + Z + "\"");
+						.severe("Tried to reset the data for the following sign but failed! " +
+								"WORLDNAME:\"" + WORLDNAME + "\" X:\"" + X + "\" Y:\"" + Y + "\" Z:\"" + Z + "\"");
 			}
 		}
 	}

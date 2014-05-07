@@ -54,18 +54,18 @@ public class Main extends JavaPlugin {
 
 	public void onEnable() {
 
-        // -- INITIATE STATICS
+		// -- INITIATE STATICS
 
 		Config.init(this);
 		Config.checkDefaults();
 
 		ConsoleLogger.init(this);
 
-        File language = new File(this.getDataFolder() + "/language.yml");
+		File language = new File(this.getDataFolder() + "/language.yml");
 
-        Language.setConfig(language);
+		Language.setConfig(language);
 
-        // -- INITIATE OBJECTS
+		// -- INITIATE OBJECTS
 		logger = new ConsoleLogger("Main");
 		logger.debug("Running onEnable()...");
 
@@ -121,11 +121,11 @@ public class Main extends JavaPlugin {
 			}
 		}
 
-        // Update
-        if(getConfig().getBoolean("auto-update")) {
-            logger.info("Auto-Updating enabled!");
-            new Updater(this, 79593, this.getFile(), Updater.UpdateType.DEFAULT, getConfig().getBoolean("debug"));
-        }
+		// Update
+		if (getConfig().getBoolean("auto-update")) {
+			logger.info("Auto-Updating enabled!");
+			new Updater(this, 79593, this.getFile(), Updater.UpdateType.DEFAULT, getConfig().getBoolean("debug"));
+		}
 
 		logger.debug("onEnable() is finished!");
 	}

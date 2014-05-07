@@ -1,9 +1,9 @@
 /**
- *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Author:  Lucas Arnstrï¿½m - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
- *  Copyright 2014 Lucas Arnström
+ *  Copyright 2014 Lucas Arnstrï¿½m
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,39 +82,39 @@ public class SQLiteInterface {
 				Statement stmt = con.createStatement();
 
 				stmt.execute(
-					"CREATE TABLE IF NOT EXISTS signlocations  (" +
-						"worldname    VARCHAR(255) NOT NULL PRIMARY KEY, " +
-						"placed_world VARCHAR(255) NOT NULL, " +
-						"x            DOUBLE(255)  NOT NULL, " +
-						"y            DOUBLE(255)  NOT NULL, " +
-						"z            DOUBLE(255)  NOT NULL" +
-					")"
+						"CREATE TABLE IF NOT EXISTS signlocations  (" +
+								"worldname    VARCHAR(255) NOT NULL PRIMARY KEY, " +
+								"placed_world VARCHAR(255) NOT NULL, " +
+								"x            DOUBLE(255)  NOT NULL, " +
+								"y            DOUBLE(255)  NOT NULL, " +
+								"z            DOUBLE(255)  NOT NULL" +
+								")"
 				);
 
 				stmt.execute(
-					"CREATE TABLE IF NOT EXISTS startlocations (" +
-						"worldname VARCHAR(255) NOT NULL, " +
-						"x         DOUBLE(255)  NOT NULL, " +
-						"y         DOUBLE(255)  NOT NULL, " +
-						"z         DOUBLE(255)  NOT NULL, " +
-						"type      VARCHAR(10)  NOT NULL" +
-					")"
+						"CREATE TABLE IF NOT EXISTS startlocations (" +
+								"worldname VARCHAR(255) NOT NULL, " +
+								"x         DOUBLE(255)  NOT NULL, " +
+								"y         DOUBLE(255)  NOT NULL, " +
+								"z         DOUBLE(255)  NOT NULL, " +
+								"type      VARCHAR(10)  NOT NULL" +
+								")"
 				);
 
 				stmt.execute(
-					"CREATE TABLE IF NOT EXISTS playerstats (" +
-						"UUID   STRING(250) NOT NULL PRIMARY KEY, " +
-						"wins   INT(10), " +
-						"kills  INT(10), " +
-						"deaths INT(10)" +
-					")"
+						"CREATE TABLE IF NOT EXISTS playerstats (" +
+								"UUID   STRING(250) NOT NULL PRIMARY KEY, " +
+								"wins   INT(10), " +
+								"kills  INT(10), " +
+								"deaths INT(10)" +
+								")"
 				);
 
 				stmt.execute(
-					"CREATE TABLE IF NOT EXISTS inventories (" +
-						"UUID      VARCHAR(250)  NOT NULL PRIMARY KEY, " +
-						"inventory VARCHAR(8000) NOT NULL" +
-					")"
+						"CREATE TABLE IF NOT EXISTS inventories (" +
+								"UUID      VARCHAR(250)  NOT NULL PRIMARY KEY, " +
+								"inventory VARCHAR(8000) NOT NULL" +
+								")"
 				);
 
 				stmt.close();
@@ -141,15 +141,15 @@ public class SQLiteInterface {
 		logger.debug("Loading locations for world \"" + worldname + "\"!");
 
 		final HashSet[] locations = {
-			new HashSet<double[]>(), // Main
-			new HashSet<double[]>()  // Arena
+				new HashSet<double[]>(), // Main
+				new HashSet<double[]>()  // Arena
 		};
 
 		final String select =
-			"SELECT * " +
-			"FROM startlocations " +
-			"WHERE worldname = ? " +
-			"AND type = ?";
+				"SELECT * " +
+						"FROM startlocations " +
+						"WHERE worldname = ? " +
+						"AND type = ?";
 
 		synchronized (lock) {
 			try {
@@ -203,7 +203,7 @@ public class SQLiteInterface {
 			@Override
 			public void run() {
 				for (double[] a : (HashSet<double[]>) locations[0]) {
-					plugin.worldManager.addMainLocation(worldname,  new Location(Bukkit.getWorld(worldname), a[0], a[1], a[2]));
+					plugin.worldManager.addMainLocation(worldname, new Location(Bukkit.getWorld(worldname), a[0], a[1], a[2]));
 				}
 				for (double[] a : (HashSet<double[]>) locations[1]) {
 					plugin.worldManager.addArenaLocation(worldname, new Location(Bukkit.getWorld(worldname), a[0], a[1], a[2]));
@@ -218,7 +218,7 @@ public class SQLiteInterface {
 
 			String insert_s =
 					"INSERT INTO startlocations " +
-					"VALUES(?,?,?,?,?)";
+							"VALUES(?,?,?,?,?)";
 
 			try {
 				PreparedStatement stmt = con.prepareStatement(insert_s);
@@ -247,8 +247,8 @@ public class SQLiteInterface {
 
 			String delete_s =
 					"DELETE FROM startlocations " +
-					"WHERE worldname = ? " +
-					"AND type = ?";
+							"WHERE worldname = ? " +
+							"AND type = ?";
 			try {
 				PreparedStatement stmt = con.prepareStatement(delete_s);
 				stmt.setString(1, worldname);
@@ -268,18 +268,18 @@ public class SQLiteInterface {
 
 		final String load_s =
 				"SELECT placed_world, x, y, z " +
-				"FROM signlocations " +
-				"WHERE worldname = ? ";
+						"FROM signlocations " +
+						"WHERE worldname = ? ";
 
-		synchronized(lock) {
+		synchronized (lock) {
 			testConnection();
 
-			try{
+			try {
 				PreparedStatement stmt = con.prepareStatement(load_s);
 				stmt.setString(1, wname);
 
 				ResultSet rs = stmt.executeQuery();
-				if(rs.next()) {
+				if (rs.next()) {
 					final String w = rs.getString(1);
 					final double x = rs.getDouble(2);
 					final double y = rs.getDouble(3);
@@ -291,15 +291,13 @@ public class SQLiteInterface {
 							plugin.worldManager.setSignLocation(wname, new Location(Bukkit.getWorld(w), x, y, z));
 						}
 					}.runTask(plugin);
-				}
-				else {
+				} else {
 					logger.warning("No info-sign saved for world \"" + wname + "\"!");
 				}
 
 				rs.close();
 				stmt.close();
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				logger.severe("Error while loading signlocation for world \"" + wname + "\"! " +
 						"Message: " + e.getMessage());
 			}
@@ -311,13 +309,13 @@ public class SQLiteInterface {
 		logger.debug("Storing sign for world \"" + wname + "\"!");
 
 		final String store_s =
-			"INSERT OR REPLACE INTO signlocations " +
-			"VALUES(?,?,?,?,?)";
+				"INSERT OR REPLACE INTO signlocations " +
+						"VALUES(?,?,?,?,?)";
 
-		synchronized(lock) {
+		synchronized (lock) {
 			testConnection();
 
-			try{
+			try {
 				PreparedStatement stmt = con.prepareStatement(store_s);
 				stmt.setString(1, wname);
 				stmt.setString(2, l.getWorld().getName());
@@ -326,8 +324,7 @@ public class SQLiteInterface {
 				stmt.setDouble(5, l.getZ());
 				stmt.execute();
 				stmt.close();
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				logger.severe("Error while storing signlocation for world \"" + wname + "\"! " +
 						"Message: " + e.getMessage());
 			}

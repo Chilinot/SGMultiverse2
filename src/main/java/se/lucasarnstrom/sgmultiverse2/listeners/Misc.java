@@ -1,10 +1,10 @@
 /**
  *  Name:    Misc.java
  *  Created: 15:45:17 - 29 jun 2013
- * 
+ *
  *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
- *  
+ *
  *
  *  Copyright 2013 Lucas Arnström
  *
@@ -20,12 +20,12 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *
  *
  *  Filedescription:
  *
- * 
+ *
  */
 
 package se.lucasarnstrom.sgmultiverse2.listeners;
@@ -40,27 +40,27 @@ import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 
 public class Misc implements Listener {
-	
+
 	private ConsoleLogger logger;
 	private WorldManager worldmanager;
-	
+
 	public Misc(Main instance) {
 		logger = new ConsoleLogger("MiscListener");
-		
+
 		worldmanager = instance.worldManager;
-		
+
 		logger.debug("Inititated");
 	}
-	
-	@EventHandler(priority= EventPriority.MONITOR, ignoreCancelled=true)
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onHangingBreak(HangingBreakEvent event) {
-		if(worldmanager.isRegistered(event.getEntity().getWorld().getName()))
+		if (worldmanager.isRegistered(event.getEntity().getWorld().getName()))
 			worldmanager.logEntity(event.getEntity(), false);
 	}
-	
-	@EventHandler(priority= EventPriority.MONITOR, ignoreCancelled=true)
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onHangingPlace(HangingPlaceEvent event) {
-		if(worldmanager.isRegistered(event.getEntity().getWorld().getName()))
+		if (worldmanager.isRegistered(event.getEntity().getWorld().getName()))
 			worldmanager.logEntity(event.getEntity(), true);
 	}
 }

@@ -71,11 +71,11 @@ public class Commands implements CommandExecutor {
 		s.sendMessage(ChatColor.GREEN + "SGMultiverse2 version " + plugin.getDescription().getVersion() + " is up and running!");
 
 		s.sendMessage("Currently these worlds are registered as gameworlds:");
-		for(String name : plugin.worldManager.getRegisteredWorldnames()) {
+		for (String name : plugin.worldManager.getRegisteredWorldnames()) {
 			s.sendMessage(" - " + ChatColor.GOLD + name);
 		}
 
-		if(s instanceof Player) {
+		if (s instanceof Player) {
 			Player p = (Player) s;
 			s.sendMessage("You are in the world \"" + ChatColor.GOLD + p.getWorld().getName() + ChatColor.WHITE + "\".");
 		}
@@ -88,8 +88,7 @@ public class Commands implements CommandExecutor {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
 			return true;
-		}
-		else if(args.length != 1) {
+		} else if (args.length != 1) {
 			sender.sendMessage(ChatColor.RED + "You have to specify the name of the world you want to go to!");
 			return false;
 		}
@@ -99,11 +98,10 @@ public class Commands implements CommandExecutor {
 
 		World w = Bukkit.getWorld(wname);
 
-		if(w != null) {
+		if (w != null) {
 			p.sendMessage(ChatColor.GREEN + "Sending you to \"" + wname + "\"!");
 			p.teleport(w.getSpawnLocation());
-		}
-		else {
+		} else {
 			p.sendMessage(ChatColor.RED + "There is no world with that name on this server!");
 		}
 
@@ -115,8 +113,7 @@ public class Commands implements CommandExecutor {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
 			return true;
-		}
-		else if(args.length != 1) {
+		} else if (args.length != 1) {
 			return false;
 		}
 
@@ -124,15 +121,13 @@ public class Commands implements CommandExecutor {
 
 		WorldManager wm = plugin.worldManager;
 
-		if(wm.isRegistered(args[0])) {
+		if (wm.isRegistered(args[0])) {
 			if (wm.allowPlayerJoin(args[0])) {
 				wm.addPlayer(args[0], p);
-			}
-			else {
+			} else {
 				p.sendMessage(ChatColor.RED + "That game is full!");
 			}
-		}
-		else {
+		} else {
 			p.sendMessage(ChatColor.RED + "There is no game with that name!");
 		}
 
@@ -151,30 +146,24 @@ public class Commands implements CommandExecutor {
 		if (!plugin.worldManager.isRegistered(worldname)) {
 			p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
 			return true;
-		}
-		else if (args.length == 0) {
+		} else if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
 			return false;
-		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("info")) {
+		} else if (args.length == 1 && args[0].equalsIgnoreCase("info")) {
 			p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
 			p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
 			p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
 			return true;
-		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
+		} else if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
 			p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
 			plugin.worldManager.saveLocations(worldname);
 			return true;
-		}
-		else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
+		} else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
 			if (args[1].equalsIgnoreCase("main")) {
 				plugin.worldManager.addMainLocation(worldname, p.getLocation());
-			}
-			else if (args[1].equalsIgnoreCase("arena")) {
+			} else if (args[1].equalsIgnoreCase("arena")) {
 				plugin.worldManager.addArenaLocation(worldname, p.getLocation());
-			}
-			else {
+			} else {
 				return false;
 			}
 
