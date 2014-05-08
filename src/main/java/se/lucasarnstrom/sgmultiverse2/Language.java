@@ -3,8 +3,10 @@ package se.lucasarnstrom.sgmultiverse2;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
 import java.io.File;
+import java.io.IOException;
 
 public enum Language {
 
@@ -19,13 +21,34 @@ public enum Language {
 	private String killer = null;
 
 	private static FileConfiguration config = null;
+	private static ConsoleLogger logger = new ConsoleLogger("Language");
 
 	private Language(String r) {
 		msg = r;
 	}
 
 	public static void setConfig(File file) {
+
 		config = YamlConfiguration.loadConfiguration(file);
+
+		// Store the defaults in the config.
+		boolean save = false;
+
+		for(Language l : Language.values()) {
+			if(!config.contains(l.name())) {
+				config.set(l.name(), l.msg);
+				save = true;
+			}
+		}
+
+		if(save) {
+			try {
+				config.save(file);
+			} catch (IOException e) {
+				logger.severe("Error while trying to save defaults to the config!");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void setPlayer(String s) {
