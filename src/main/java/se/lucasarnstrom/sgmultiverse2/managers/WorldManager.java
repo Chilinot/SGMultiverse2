@@ -115,7 +115,7 @@ public class WorldManager {
 		for (Entry<String, GameWorld> e : worlds.entrySet()) {
 			if (e.getValue().isInPlayerlist(id)) {
 				e.getValue().removePlayer(id);
-				broadcast(e.getKey(), reason.getMessage());
+				broadcast(e.getKey(), reason);
 				break;
 			}
 		}
@@ -134,11 +134,13 @@ public class WorldManager {
 		return playing;
 	}
 
-	public void broadcast(String wname, String msg) {
-		broadcast(Bukkit.getWorld(wname), msg);
+	public void broadcast(String wname, Language l) {
+		broadcast(Bukkit.getWorld(wname), l);
 	}
 
-	public void broadcast(World w, String msg) {
+	public void broadcast(World w, Language l) {
+
+		String msg = l.getMessage();
 
 		logger.debug("Broadcasting msg \"" + msg + "\" to world \"" + w.getName() + "\".");
 
