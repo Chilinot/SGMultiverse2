@@ -30,12 +30,15 @@ package se.lucasarnstrom.sgmultiverse2;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
+import se.lucasarnstrom.sgmultiverse2.misc.IconMenu;
 
 public class Commands implements CommandExecutor {
 
@@ -113,22 +116,43 @@ public class Commands implements CommandExecutor {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
 			return true;
-		} else if (args.length != 1) {
-			return false;
 		}
 
-		Player p = (Player) sender;
+		final Player p = (Player) sender;
 
-		WorldManager wm = plugin.worldManager;
+		final WorldManager wm = plugin.worldManager;
 
-		if (wm.isRegistered(args[0])) {
-			if (wm.allowPlayerJoin(args[0])) {
-				wm.addPlayer(args[0], p);
-			} else {
-				p.sendMessage(ChatColor.RED + "That game is full!");
+		if(args.length == 1) {
+			if(wm.isRegistered(args[0])) {
+				if(wm.allowPlayerJoin(args[0])) {
+					wm.addPlayer(args[0], p);
+				}
+				else {
+					p.sendMessage(ChatColor.RED + "That game is full!");
+				}
 			}
-		} else {
-			p.sendMessage(ChatColor.RED + "There is no game with that name!");
+			else {
+				p.sendMessage(ChatColor.RED + "There is no game with that name!");
+			}
+		}
+		else {
+			IconMenu menu = new IconMenu("Choose a world!", (9 * (wm.getRegisteredWorldnames().length / 9)) + 9, new IconMenu.OptionClickEventHandler() {
+				@Override
+				public void onOptionClick(IconMenu.OptionClickEvent event) {
+
+					wm.addPlayer(event.getName(), p);
+
+					event.setWillClose(true);
+					event.setWillDestroy(true);
+				}
+			}, plugin);
+
+			int i = 0;
+			for(String w : wm.getRegisteredWorldnames()) {
+				menu.setOption(i++, new ItemStack(Material.MAP), w, "Click this to join the game \"" + w + "\"!");
+			}
+
+			menu.open(p);
 		}
 
 		return true;
@@ -172,6 +196,8 @@ public class Commands implements CommandExecutor {
 			}
 			else if(args[1].equalsIgnoreCase("lobby")) {
 				plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
+				p.sendMessage(ChatColor.GREEN + "You have successfully added a lobby location for this world!");
+				return true;
 			}
 			else {
 				return false;
