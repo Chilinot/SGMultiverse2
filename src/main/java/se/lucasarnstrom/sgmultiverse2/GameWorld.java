@@ -50,18 +50,18 @@ public class GameWorld {
 
 	private final Main                           plugin;
 	private final ConsoleLogger                  logger;
-	private final World                    world;
-	private Location                       lobby;
-	private Location                       sign_location      = null;
+	private final World                          world;
+	private Location                             lobby;
+	private Location                             sign_location      = null;
 	private final HashSet<UUID>                  playerlist         = new HashSet<>();
 	private final HashMap<Location, UUID>        locations_start    = new HashMap<>();
 	private final HashMap<Location, Boolean>     locations_arena    = new HashMap<>();
-	private EnumSet<Material>              blockfilter        = null;
+	private EnumSet<Material>                    blockfilter        = null;
 	private final HashMap<Location, LoggedBlock> log_block          = new HashMap<>();
 	private final HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<>();
 	private final HashSet<Entity>                log_entity_removal = new HashSet<>();
-	private boolean                        inReset            = false;
-	private StatusFlag                     status             = StatusFlag.WAITING;
+	private boolean                              inReset            = false;
+	private StatusFlag                           status             = StatusFlag.WAITING_FOR_PLAYERS;
 
 	// Entities that shouldn't be removed on world reset
 	private static final EnumSet<EntityType> nonremovable = EnumSet.of(
@@ -164,7 +164,7 @@ public class GameWorld {
 				case STARTED:
 					status.append(ChatColor.GOLD);
 					break;
-				case WAITING:
+				case WAITING_FOR_PLAYERS:
 					status.append(ChatColor.GREEN);
 					break;
 				case FAILED:
@@ -232,7 +232,7 @@ public class GameWorld {
 
 	public void sendAllPlayersToArena() {
 
-		plugin.worldManager.broadcast(world, ChatColor.GOLD + "Sending all players to the arena!");
+		plugin.worldManager.broadcast(world, Language.TELEPORT_ARENA);
 
 		Iterator<UUID> i = playerlist.iterator();
 		while (i.hasNext()) {
@@ -279,6 +279,12 @@ public class GameWorld {
 			logger.severe("Tried to add player to already full world!");
 			return;
 		}
+		else if(lobby == null) {
+			logger.severe("The lobby has not been set for this world!");
+			p.sendMessage(ChatColor.RED + "You just tried to enter a incorrectly configured world! " +
+					"Please contact the server admin!");
+			return;
+		}
 
 		logger.debug("Adding player \"" + p.getName() + "\".");
 
@@ -310,10 +316,12 @@ public class GameWorld {
 
 	public void removePlayer(UUID id) {
 
-		for (Entry<Location, UUID> e : locations_start.entrySet()) {
-			if (e.getValue().equals(id)) {
-				e.setValue(null);
-				break;
+		if(status == StatusFlag.COUNTINGDOWN) { //TODO recheck if enough players!
+			for (Entry<Location, UUID> e : locations_start.entrySet()) {
+				if (e.getValue().equals(id)) {
+					e.setValue(null);
+					break;
+				}
 			}
 		}
 

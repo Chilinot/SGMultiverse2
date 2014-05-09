@@ -48,8 +48,9 @@ public class WorldManager {
 
 	public enum StatusFlag {
 		STARTED,
-		WAITING,
-		FAILED
+		WAITING_FOR_PLAYERS,
+		FAILED,
+		COUNTINGDOWN;
 	}
 
 	private final Main plugin;
