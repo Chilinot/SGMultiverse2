@@ -39,6 +39,7 @@ import se.lucasarnstrom.sgmultiverse2.listeners.Misc;
 import se.lucasarnstrom.sgmultiverse2.listeners.Players;
 import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
+import se.lucasarnstrom.sgmultiverse2.misc.Updater;
 
 import java.io.File;
 import java.io.IOException;
