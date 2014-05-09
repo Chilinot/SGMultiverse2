@@ -14,7 +14,9 @@ public enum Language {
 	PLAYER_QUIT     ("&6#player#&f left the game."),
 	PLAYER_TELEPORT ("&6#player#&f teleported out of this world and was removed!"),
 	PLAYER_DEATH    ("&6#player#&f was killed."),
-	PLAYER_KILLED   ("&6#player#&f was killed by &6#killer#&f!");
+	PLAYER_KILLED   ("&6#player#&f was killed by &6#killer#&f!"),
+
+	TELEPORT_ARENA  ("&6Sending all players to the arena!");
 
 	private String msg;
 	private String player = null;
