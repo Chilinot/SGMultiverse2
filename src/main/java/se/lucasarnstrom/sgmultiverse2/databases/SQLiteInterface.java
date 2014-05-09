@@ -122,6 +122,7 @@ public class SQLiteInterface {
 			} catch (ClassNotFoundException | SQLException e) {
 				logger.severe("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
 				logger.severe("Error message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
@@ -133,6 +134,7 @@ public class SQLiteInterface {
 			} catch (SQLException e) {
 				logger.severe("Error while closing connection, data might have been lost! " +
 						"Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
@@ -196,6 +198,7 @@ public class SQLiteInterface {
 			} catch (SQLException e) {
 				logger.severe("Error while retrieving startlocations for world \"" + worldname + "\". " +
 						"Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 				return;
 			}
 		}
@@ -239,6 +242,7 @@ public class SQLiteInterface {
 			} catch (SQLException e) {
 				logger.severe("Error while saving startlocations for world " + worldname + ". " +
 						"Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
@@ -260,6 +264,7 @@ public class SQLiteInterface {
 			} catch (SQLException e) {
 				logger.severe("Error while clearing startlocations! " +
 						"Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
@@ -302,6 +307,7 @@ public class SQLiteInterface {
 			} catch (SQLException e) {
 				logger.severe("Error while loading signlocation for world \"" + wname + "\"! " +
 						"Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
@@ -329,19 +335,20 @@ public class SQLiteInterface {
 			} catch (SQLException e) {
 				logger.severe("Error while storing signlocation for world \"" + wname + "\"! " +
 						"Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
 
 	public void storeLobbyLocation(String wname, Location l) {
 		final String insert =
-				"INSERT INTO startlocations" +
+				"INSERT INTO startlocations " +
 				"VALUES(?,?,?,?,?)";
 
 		final String delete =
-				"DELETE FROM startlocations" +
+				"DELETE FROM startlocations " +
 				"WHERE worldname = ? " +
-				"AND type = ? ";
+				"AND type = ?";
 
 		synchronized(lock) {
 			testConnection();
@@ -364,6 +371,7 @@ public class SQLiteInterface {
 
 			} catch (SQLException e) {
 				logger.severe("Error while trying to store lobby location for world=\"" + wname + "\". Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
@@ -406,6 +414,7 @@ public class SQLiteInterface {
 				stmt.close();
 			} catch (SQLException e) {
 				logger.severe("Error while loading lobby location for world=\"" + wname + "\". Message: " + e.getMessage());
+				logger.debug(e.getStackTrace());
 			}
 		}
 	}
