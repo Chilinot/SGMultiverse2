@@ -36,7 +36,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.lucasutils.*;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.io.File;
@@ -249,7 +249,7 @@ public class ChestManager {
 		// --- Enchantments
 
 		RandomCollection<String> swords = new RandomCollection<>();
-		RandomCollection<String> bows = new RandomCollection<>();
+		RandomCollection<String> bows   = new RandomCollection<>();
 		RandomCollection<String> armors = new RandomCollection<>();
 
 		for (String swordench : itemConfig.getConfigurationSection("enchantments.swords").getKeys(false)) {
@@ -389,34 +389,5 @@ public class ChestManager {
 				logger.severe("Could not save the itemlist!");
 			}
 		}
-	}
-}
-
-/**
- * Below this line is not my work
- */
-
-class RandomCollection<E> {
-	private final NavigableMap<Double, E> map = new TreeMap<>();
-	private final Random random;
-	private double total = 0;
-
-	public RandomCollection() {
-		this(new Random());
-	}
-
-	public RandomCollection(Random random) {
-		this.random = random;
-	}
-
-	public void add(double weight, E result) {
-		if (weight <= 0) return;
-		total += weight;
-		map.put(total, result);
-	}
-
-	public E next() {
-		double value = random.nextDouble() * total;
-		return map.ceilingEntry(value).getValue();
 	}
 }
