@@ -37,8 +37,9 @@ public enum Language {
 		boolean save = false;
 
 		for(Language l : Language.values()) {
-			if(!config.contains(l.name())) {
-				config.set(l.name(), l.msg);
+			String key = l.name().replaceAll("_", "\\."); // Transform the strings from "FOO_BAR" to "FOO.BAR"
+			if(!config.contains(key)) {
+				config.set(key, l.msg);
 				save = true;
 			}
 		}
