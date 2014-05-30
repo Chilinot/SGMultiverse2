@@ -6,3 +6,4 @@
 2. Add counters.
 3. Add sgplayers command.
 4. Add sgspectate command.
+5. Add signs for lobby and queue.
