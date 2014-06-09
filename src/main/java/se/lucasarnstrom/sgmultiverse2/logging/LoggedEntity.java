@@ -41,117 +41,119 @@ import java.util.HashMap;
 
 public class LoggedEntity {
 
-	private final Location location;
-	private final EntityType type;
-	private final HashMap<String, Object> data = new HashMap<>();
+    private final Location   location;
+    private final EntityType type;
+    private final HashMap<String, Object> data = new HashMap<>();
 
-	public LoggedEntity(Entity e) {
-		type = e.getType();
+    public LoggedEntity(Entity e) {
+        type = e.getType();
 
-		if (e instanceof Hanging) {
-			Hanging h = (Hanging) e;
-			data.put("FacingDirection", h.getFacing());
+        if(e instanceof Hanging) {
+            Hanging h = (Hanging) e;
+            data.put("FacingDirection", h.getFacing());
 
-			// Get the pure location (no decimal value)
-			location = e.getLocation().getBlock().getLocation();
+            // Get the pure location (no decimal value)
+            location = e.getLocation().getBlock().getLocation();
 
-			if (h instanceof Painting) {
-				Painting p = (Painting) h;
-				data.put("Art", p.getArt());
-			} else if (h instanceof ItemFrame) {
-				ItemFrame i = (ItemFrame) h;
-				data.put("ItemStack", i.getItem().clone());
-				data.put("Rotation", i.getRotation());
-			}
-		} else
-			location = e.getLocation();
-	}
+            if(h instanceof Painting) {
+                Painting p = (Painting) h;
+                data.put("Art", p.getArt());
+            }
+            else if(h instanceof ItemFrame) {
+                ItemFrame i = (ItemFrame) h;
+                data.put("ItemStack", i.getItem().clone());
+                data.put("Rotation", i.getRotation());
+            }
+        }
+        else
+            location = e.getLocation();
+    }
 
-	public void reset() {
+    public void reset() {
 
-		switch (type) {
-			case ITEM_FRAME:
-				BlockFace face = (BlockFace) data.get("FacingDirection");
-				ItemFrame i = location.getWorld().spawn(location.getBlock().getRelative(face.getOppositeFace()).getLocation(), ItemFrame.class);
-				i.teleport(location);
-				i.setRotation((Rotation) data.get("Rotation"));
-				i.setFacingDirection(face, true);
-				i.setItem((ItemStack) data.get("ItemStack"));
-				break;
+        switch(type) {
+            case ITEM_FRAME:
+                BlockFace face = (BlockFace) data.get("FacingDirection");
+                ItemFrame i = location.getWorld().spawn(location.getBlock().getRelative(face.getOppositeFace()).getLocation(), ItemFrame.class);
+                i.teleport(location);
+                i.setRotation((Rotation) data.get("Rotation"));
+                i.setFacingDirection(face, true);
+                i.setItem((ItemStack) data.get("ItemStack"));
+                break;
 
-			case PAINTING:
-				BlockFace face2 = (BlockFace) data.get("FacingDirection");
-				Art art = (Art) data.get("Art");
-				Painting p = location.getWorld().spawn(location.getBlock().getRelative(face2.getOppositeFace()).getLocation(), Painting.class);
-				p.teleport(calculatePainting(art, face2, location));
-				p.setFacingDirection(face2, true);
-				p.setArt(art, true);
-				break;
+            case PAINTING:
+                BlockFace face2 = (BlockFace) data.get("FacingDirection");
+                Art art = (Art) data.get("Art");
+                Painting p = location.getWorld().spawn(location.getBlock().getRelative(face2.getOppositeFace()).getLocation(), Painting.class);
+                p.teleport(calculatePainting(art, face2, location));
+                p.setFacingDirection(face2, true);
+                p.setArt(art, true);
+                break;
 
-			default:
-		}
-	}
+            default:
+        }
+    }
 
-	private Location calculatePainting(Art art, BlockFace facing, Location loc) {
-		switch (art) {
+    private Location calculatePainting(Art art, BlockFace facing, Location loc) {
+        switch(art) {
 
-			// 1x1
-			case ALBAN:
-			case AZTEC:
-			case AZTEC2:
-			case BOMB:
-			case KEBAB:
-			case PLANT:
-			case WASTELAND:
-				return loc; // No calculation needed.
+            // 1x1
+            case ALBAN:
+            case AZTEC:
+            case AZTEC2:
+            case BOMB:
+            case KEBAB:
+            case PLANT:
+            case WASTELAND:
+                return loc; // No calculation needed.
 
-			// 1x2
-			case GRAHAM:
-			case WANDERER:
-				return loc.getBlock().getLocation().add(0, -1, 0);
+            // 1x2
+            case GRAHAM:
+            case WANDERER:
+                return loc.getBlock().getLocation().add(0, -1, 0);
 
-			// 2x1
-			case CREEBET:
-			case COURBET:
-			case POOL:
-			case SEA:
-			case SUNSET:    // Use same as 4x3
+            // 2x1
+            case CREEBET:
+            case COURBET:
+            case POOL:
+            case SEA:
+            case SUNSET:    // Use same as 4x3
 
-				// 4x3
-			case DONKEYKONG:
-			case SKELETON:
-				if (facing == BlockFace.WEST)
-					return loc.getBlock().getLocation().add(0, 0, -1);
-				else if (facing == BlockFace.SOUTH)
-					return loc.getBlock().getLocation().add(-1, 0, 0);
-				else
-					return loc;
+                // 4x3
+            case DONKEYKONG:
+            case SKELETON:
+                if(facing == BlockFace.WEST)
+                    return loc.getBlock().getLocation().add(0, 0, -1);
+                else if(facing == BlockFace.SOUTH)
+                    return loc.getBlock().getLocation().add(-1, 0, 0);
+                else
+                    return loc;
 
-				// 2x2
-			case BUST:
-			case MATCH:
-			case SKULL_AND_ROSES:
-			case STAGE:
-			case VOID:
-			case WITHER:    // Use same as 4x2
+                // 2x2
+            case BUST:
+            case MATCH:
+            case SKULL_AND_ROSES:
+            case STAGE:
+            case VOID:
+            case WITHER:    // Use same as 4x2
 
-				// 4x2
-			case FIGHTERS:  // Use same as 4x4
+                // 4x2
+            case FIGHTERS:  // Use same as 4x4
 
-				// 4x4
-			case BURNINGSKULL:
-			case PIGSCENE:
-			case POINTER:
-				if (facing == BlockFace.WEST)
-					return loc.getBlock().getLocation().add(0, -1, -1);
-				else if (facing == BlockFace.SOUTH)
-					return loc.getBlock().getLocation().add(-1, -1, 0);
-				else
-					return loc.add(0, -1, 0);
+                // 4x4
+            case BURNINGSKULL:
+            case PIGSCENE:
+            case POINTER:
+                if(facing == BlockFace.WEST)
+                    return loc.getBlock().getLocation().add(0, -1, -1);
+                else if(facing == BlockFace.SOUTH)
+                    return loc.getBlock().getLocation().add(-1, -1, 0);
+                else
+                    return loc.add(0, -1, 0);
 
-				// Unsupported artwork
-			default:
-				return loc;
-		}
-	}
+                // Unsupported artwork
+            default:
+                return loc;
+        }
+    }
 }

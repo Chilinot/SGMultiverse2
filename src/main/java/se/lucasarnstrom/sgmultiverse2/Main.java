@@ -46,91 +46,92 @@ import java.io.IOException;
 
 public class Main extends JavaPlugin {
 
-	private ConsoleLogger logger;
+    private ConsoleLogger logger;
 
-	public ChestManager chestManager;
-	public WorldManager worldManager;
+    public ChestManager chestManager;
+    public WorldManager worldManager;
 
-	public SQLiteInterface sqlite;
+    public SQLiteInterface sqlite;
 
-	public void onEnable() {
+    public void onEnable() {
 
-		// -- INITIATE STATICS
+        // -- INITIATE STATICS
 
-		Config.init(this);
-		Config.checkDefaults();
+        Config.init(this);
+        Config.checkDefaults();
 
-		ConsoleLogger.init(this);
+        ConsoleLogger.init(this);
 
-		File language = new File(this.getDataFolder() + "/language.yml");
+        File language = new File(this.getDataFolder() + "/language.yml");
 
-		Language.setConfig(language);
+        Language.setConfig(language);
 
-		// -- INITIATE OBJECTS
-		logger = new ConsoleLogger("Main");
-		logger.debug("Running onEnable()...");
+        // -- INITIATE OBJECTS
+        logger = new ConsoleLogger("Main");
+        logger.debug("Running onEnable()...");
 
-		// Initiating storage
-		sqlite = new SQLiteInterface(this);
+        // Initiating storage
+        sqlite = new SQLiteInterface(this);
 
-		// Register commands
-		logger.debug("Registering commands...");
-		Commands c = new Commands(this);
+        // Register commands
+        logger.debug("Registering commands...");
+        Commands c = new Commands(this);
 
-		getCommand("sginfo").setExecutor(c);
-		getCommand("sgjoin").setExecutor(c);
-		getCommand("sglocation").setExecutor(c);
-		getCommand("sgtp").setExecutor(c);
+        getCommand("sginfo").setExecutor(c);
+        getCommand("sgjoin").setExecutor(c);
+        getCommand("sglocation").setExecutor(c);
+        getCommand("sgtp").setExecutor(c);
 
-		// Initiate listeners
-		logger.debug("Initiating listeners...");
+        // Initiate listeners
+        logger.debug("Initiating listeners...");
 
-		getServer().getPluginManager().registerEvents(new Blocks(this), this);
-		getServer().getPluginManager().registerEvents(new Misc(this), this);
-		getServer().getPluginManager().registerEvents(new Players(this), this);
+        getServer().getPluginManager().registerEvents(new Blocks(this), this);
+        getServer().getPluginManager().registerEvents(new Misc(this), this);
+        getServer().getPluginManager().registerEvents(new Players(this), this);
 
-		// Initiate managers
-		logger.debug("Initiating managers...");
+        // Initiate managers
+        logger.debug("Initiating managers...");
 
-		chestManager = new ChestManager(this);
-		worldManager = new WorldManager(this);
+        chestManager = new ChestManager(this);
+        worldManager = new WorldManager(this);
 
 
-		// Load worlds
-		logger.debug("Loading worlds...");
+        // Load worlds
+        logger.debug("Loading worlds...");
 
-		for (String name : getConfig().getConfigurationSection("worlds").getKeys(false)) {
+        for(String name : getConfig().getConfigurationSection("worlds").getKeys(false)) {
 
-			logger.debug("Loading world \"" + name + "\".");
+            logger.debug("Loading world \"" + name + "\".");
 
-			World w = Bukkit.createWorld(new WorldCreator(name));
+            World w = Bukkit.createWorld(new WorldCreator(name));
 
-			chestManager.addWorld(name);
-			worldManager.addWorld(w);
-		}
+            chestManager.addWorld(name);
+            worldManager.addWorld(w);
+        }
 
-		// Metrics
-		if (getConfig().getBoolean("metrics")) {
-			try {
-				logger.debug("Initiating metrics...");
-				Metrics metrics = new Metrics(this);
-				metrics.start();
-			} catch (IOException e) {
-				logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
-			}
-		}
+        // Metrics
+        if(getConfig().getBoolean("metrics")) {
+            try {
+                logger.debug("Initiating metrics...");
+                Metrics metrics = new Metrics(this);
+                metrics.start();
+            }
+            catch(IOException e) {
+                logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
+            }
+        }
 
-		// Update
-		if (getConfig().getBoolean("auto-update")) {
-			logger.info("Auto-Updating enabled!");
-			new Updater(this, 79593, this.getFile(), Updater.UpdateType.DEFAULT, getConfig().getBoolean("debug"));
-		}
+        // Update
+        if(getConfig().getBoolean("auto-update")) {
+            logger.info("Auto-Updating enabled!");
+            new Updater(this, 79593, this.getFile(), Updater.UpdateType.DEFAULT, getConfig().getBoolean("debug"));
+        }
 
-		logger.debug("onEnable() is finished!");
-	}
+        logger.debug("onEnable() is finished!");
+    }
 
-	public void onDisable() {
-		logger.debug("Closing SQLite connection.");
-		sqlite.closeConnection();
-	}
+    public void onDisable() {
+        logger.debug("Closing SQLite connection.");
+        sqlite.closeConnection();
+    }
 }

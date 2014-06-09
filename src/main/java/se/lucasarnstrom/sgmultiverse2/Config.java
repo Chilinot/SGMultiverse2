@@ -36,68 +36,68 @@ import java.util.Map.Entry;
 
 public class Config {
 
-	private static JavaPlugin plugin;
-	private static FileConfiguration config;
+    private static JavaPlugin        plugin;
+    private static FileConfiguration config;
 
-	public static void init(JavaPlugin plugin) {
-		Config.plugin = plugin;
-		Config.config = plugin.getConfig();
-	}
+    public static void init(JavaPlugin plugin) {
+        Config.plugin = plugin;
+        Config.config = plugin.getConfig();
+    }
 
-	@SuppressWarnings("serial")
-	public static void checkDefaults() {
+    @SuppressWarnings("serial")
+    public static void checkDefaults() {
 
-		boolean save = false;
+        boolean save = false;
 
-		// General defaults
-		HashMap<String, Object> defaults = new HashMap<String, Object>() {{
+        // General defaults
+        HashMap<String, Object> defaults = new HashMap<String, Object>() {{
 
-			// General
-			put("debug", false);
-			put("metrics", true);
-			put("auto-update", true);
-		}};
+            // General
+            put("debug", false);
+            put("metrics", true);
+            put("auto-update", true);
+        }};
 
-		for (Entry<String, Object> e : defaults.entrySet()) {
-			if (!config.contains(e.getKey())) {
-				config.set(e.getKey(), e.getValue());
-				save = true;
-			}
-		}
+        for(Entry<String, Object> e : defaults.entrySet()) {
+            if(!config.contains(e.getKey())) {
+                config.set(e.getKey(), e.getValue());
+                save = true;
+            }
+        }
 
-		// World defaults
-		HashMap<String, Object> world_defaults = new HashMap<String, Object>() {{
+        // World defaults
+        HashMap<String, Object> world_defaults = new HashMap<String, Object>() {{
 
-			// General
-			put("blockfilter", "2, 3, 5, 12, 13, 16, 17, 18, 20, 24, 31, 32, 35, 37, 38, 39, 40, 46, 50, 54, 58, 61, 85, 102");
+            // General
+            put("blockfilter", "2, 3, 5, 12, 13, 16, 17, 18, 20, 24, 31, 32, 35, 37, 38, 39, 40, 46, 50, 54, 58, 61, 85, 102");
 
-			// Time
-			put("time.start", 120);
-			put("time.arena", 300);
-			put("time.end", 120);
+            // Time
+            put("time.start", 120);
+            put("time.arena", 300);
+            put("time.end", 120);
 
-			// Itemlist
-			put("lootlist", "default"); // Allows server operators to define different lootlists for different worlds.
+            // Itemlist
+            put("lootlist", "default"); // Allows server operators to define different lootlists for different worlds.
 
-		}};
+        }};
 
-		if (!config.contains("worlds")) {
-			config.set("worlds.sgmworld1.time.start", 120);
-			config.set("worlds.sgmworld2.time.start", 120);
-		}
+        if(!config.contains("worlds")) {
+            config.set("worlds.sgmworld1.time.start", 120);
+            config.set("worlds.sgmworld2.time.start", 120);
+        }
 
-		for (String name : config.getConfigurationSection("worlds").getKeys(false)) {
-			for (Entry<String, Object> entry : world_defaults.entrySet()) {
-				String key = "worlds." + name + "." + entry.getKey();
-				if (!config.contains(key)) {
-					config.set(key, entry.getValue());
-					save = true;
-				}
-			}
-		}
+        for(String name : config.getConfigurationSection("worlds").getKeys(false)) {
+            for(Entry<String, Object> entry : world_defaults.entrySet()) {
+                String key = "worlds." + name + "." + entry.getKey();
+                if(!config.contains(key)) {
+                    config.set(key, entry.getValue());
+                    save = true;
+                }
+            }
+        }
 
-		if (save) {
-			plugin.saveConfig();
-		}
-	}
+        if(save) {
+            plugin.saveConfig();
+        }
+    }
 }

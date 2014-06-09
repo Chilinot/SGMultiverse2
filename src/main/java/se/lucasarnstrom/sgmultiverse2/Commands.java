@@ -42,173 +42,177 @@ import se.lucasarnstrom.sgmultiverse2.misc.IconMenu;
 
 public class Commands implements CommandExecutor {
 
-	private final Main plugin;
+    private final Main plugin;
 
-	public Commands(Main p) {
-		plugin = p;
-	}
+    public Commands(Main p) {
+        plugin = p;
+    }
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		//TODO Use iconmenus for the commands
-		//TODO Commands: sgleave, sgstats
+        //TODO Use iconmenus for the commands
+        //TODO Commands: sgleave, sgstats
 
-		String command = cmd.getName();
+        String command = cmd.getName();
 
-		switch (command) {
-			case "sginfo":
-				return sginfo(sender);
-			case "sgjoin":
-				return sgjoin(sender, args);
-			case "sglocation":
-				return sglocation(sender, args);
-			case "sgtp":
-				return sgtp(sender, args);
-		}
+        switch(command) {
+            case "sginfo":
+                return sginfo(sender);
+            case "sgjoin":
+                return sgjoin(sender, args);
+            case "sglocation":
+                return sglocation(sender, args);
+            case "sgtp":
+                return sgtp(sender, args);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private boolean sginfo(CommandSender s) {
-		s.sendMessage(ChatColor.GREEN + "SGMultiverse2 version " + plugin.getDescription().getVersion() + " is up and running!");
+    private boolean sginfo(CommandSender s) {
+        s.sendMessage(ChatColor.GREEN + "SGMultiverse2 version " + plugin.getDescription().getVersion() + " is up and running!");
 
-		s.sendMessage("Currently these worlds are registered as gameworlds:");
-		for (String name : plugin.worldManager.getRegisteredWorldnames()) {
-			s.sendMessage(" - " + ChatColor.GOLD + name);
-		}
+        s.sendMessage("Currently these worlds are registered as gameworlds:");
+        for(String name : plugin.worldManager.getRegisteredWorldnames()) {
+            s.sendMessage(" - " + ChatColor.GOLD + name);
+        }
 
-		if (s instanceof Player) {
-			Player p = (Player) s;
-			s.sendMessage("You are in the world \"" + ChatColor.GOLD + p.getWorld().getName() + ChatColor.WHITE + "\".");
-		}
+        if(s instanceof Player) {
+            Player p = (Player) s;
+            s.sendMessage("You are in the world \"" + ChatColor.GOLD + p.getWorld().getName() + ChatColor.WHITE + "\".");
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private boolean sgtp(CommandSender sender, String[] args) {
+    private boolean sgtp(CommandSender sender, String[] args) {
 
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
-			return true;
-		} else if (args.length != 1) {
-			sender.sendMessage(ChatColor.RED + "You have to specify the name of the world you want to go to!");
-			return false;
-		}
+        if(!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
+            return true;
+        }
+        else if(args.length != 1) {
+            sender.sendMessage(ChatColor.RED + "You have to specify the name of the world you want to go to!");
+            return false;
+        }
 
-		Player p = (Player) sender;
-		String wname = args[0];
+        Player p = (Player) sender;
+        String wname = args[0];
 
-		World w = Bukkit.getWorld(wname);
+        World w = Bukkit.getWorld(wname);
 
-		if (w != null) {
-			p.sendMessage(ChatColor.GREEN + "Sending you to \"" + wname + "\"!");
-			p.teleport(w.getSpawnLocation());
-		} else {
-			p.sendMessage(ChatColor.RED + "There is no world with that name on this server!");
-		}
+        if(w != null) {
+            p.sendMessage(ChatColor.GREEN + "Sending you to \"" + wname + "\"!");
+            p.teleport(w.getSpawnLocation());
+        }
+        else {
+            p.sendMessage(ChatColor.RED + "There is no world with that name on this server!");
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private boolean sgjoin(CommandSender sender, String[] args) {
+    private boolean sgjoin(CommandSender sender, String[] args) {
 
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
-			return true;
-		}
+        if(!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
+            return true;
+        }
 
-		final Player p = (Player) sender;
+        final Player p = (Player) sender;
 
-		final WorldManager wm = plugin.worldManager;
+        final WorldManager wm = plugin.worldManager;
 
-		if(args.length == 1) {
-			if(wm.isRegistered(args[0])) {
-				if(wm.allowPlayerJoin(args[0])) {
-					wm.addPlayer(args[0], p);
-				}
-				else {
-					p.sendMessage(ChatColor.RED + "That game is full!");
-				}
-			}
-			else {
-				p.sendMessage(ChatColor.RED + "There is no game with that name!");
-			}
-		}
-		else {
-			IconMenu menu = new IconMenu("Choose a world!", (9 * (wm.getRegisteredWorldnames().length / 9)) + 9, new IconMenu.OptionClickEventHandler() {
-				@Override
-				public void onOptionClick(IconMenu.OptionClickEvent event) {
+        if(args.length == 1) {
+            if(wm.isRegistered(args[0])) {
+                if(wm.allowPlayerJoin(args[0])) {
+//					wm.addPlayer(args[0], p);
+                    //TODO Send player to lobby
+                }
+                else {
+                    p.sendMessage(ChatColor.RED + "That game is full!");
+                }
+            }
+            else {
+                p.sendMessage(ChatColor.RED + "There is no game with that name!");
+            }
+        }
+        else {
+            IconMenu menu = new IconMenu("Choose a world!", (9 * (wm.getRegisteredWorldnames().length / 9)) + 9, new IconMenu.OptionClickEventHandler() {
+                @Override
+                public void onOptionClick(IconMenu.OptionClickEvent event) {
 
-					wm.addPlayer(event.getName(), p);
+//					wm.addPlayer(event.getName(), p);
+                    //TODO Send player to lobby
 
-					event.setWillClose(true);
-					event.setWillDestroy(true);
-				}
-			}, plugin);
+                    event.setWillClose(true);
+                    event.setWillDestroy(true);
+                }
+            }, plugin);
 
-			int i = 0;
-			for(String w : wm.getRegisteredWorldnames()) {
-				menu.setOption(i++, new ItemStack(Material.MAP), w, "Click this to join the game \"" + w + "\"!");
-			}
+            int i = 0;
+            for(String w : wm.getRegisteredWorldnames()) {
+                menu.setOption(i++, new ItemStack(Material.MAP), w, "Click this to join the game \"" + w + "\"!");
+            }
 
-			menu.open(p);
-		}
+            menu.open(p);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private boolean sglocation(CommandSender sender, String[] args) {
+    private boolean sglocation(CommandSender sender, String[] args) {
 
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "You need to be a player to use this command!");
-		}
+        if(!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "You need to be a player to use this command!");
+        }
 
-		Player p = (Player) sender;
-		String worldname = p.getWorld().getName();
+        Player p = (Player) sender;
+        String worldname = p.getWorld().getName();
 
-		if (!plugin.worldManager.isRegistered(worldname)) {
-			p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
-			return true;
-		}
-		else if (args.length == 0) {
-			sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
-			return false;
-		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("info")) {
-			p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
-			p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
-			p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
-			return true;
-		}
-		else if (args.length == 1 && args[0].equalsIgnoreCase("save")) {
-			p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
-			plugin.worldManager.saveLocations(worldname);
-			return true;
-		}
-		else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
+        if(!plugin.worldManager.isRegistered(worldname)) {
+            p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
+            return true;
+        }
+        else if(args.length == 0) {
+            sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
+            return false;
+        }
+        else if(args.length == 1 && args[0].equalsIgnoreCase("info")) {
+            p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
+            p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
+            p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
+            return true;
+        }
+        else if(args.length == 1 && args[0].equalsIgnoreCase("save")) {
+            p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
+            plugin.worldManager.saveLocations(worldname);
+            return true;
+        }
+        else if(args.length == 2 && args[0].equalsIgnoreCase("add")) {
 
-			if (args[1].equalsIgnoreCase("main")) {
-				plugin.worldManager.addMainLocation(worldname, p.getLocation());
-			}
-			else if (args[1].equalsIgnoreCase("arena")) {
-				plugin.worldManager.addArenaLocation(worldname, p.getLocation());
-			}
-			else if(args[1].equalsIgnoreCase("lobby")) {
-				plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
-				p.sendMessage(ChatColor.GREEN + "You have successfully added a lobby location for this world!");
-				return true;
-			}
-			else {
-				return false;
-			}
+            if(args[1].equalsIgnoreCase("main")) {
+                plugin.worldManager.addMainLocation(worldname, p.getLocation());
+            }
+            else if(args[1].equalsIgnoreCase("arena")) {
+                plugin.worldManager.addArenaLocation(worldname, p.getLocation());
+            }
+            else if(args[1].equalsIgnoreCase("lobby")) {
+                plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
+                p.sendMessage(ChatColor.GREEN + "You have successfully set the lobby location for this world!");
+                return true;
+            }
+            else {
+                return false;
+            }
 
-			p.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GOLD + args[1].toUpperCase() + ChatColor.GREEN + " location! " +
-					"Remember to save if you want the locations to be permanent!");
+            p.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GOLD + args[1].toUpperCase() + ChatColor.GREEN + " location! " +
+                    "Remember to save if you want the locations to be permanent!");
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

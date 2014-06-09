@@ -39,50 +39,51 @@ import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
 public class LoggedBlock {
 
-	private final String WORLDNAME;
-	private final int X, Y, Z;
+    private final String WORLDNAME;
+    private final int    X, Y, Z;
 
-	private final int MATERIAL;
-	private final byte DATA;
+    private final int  MATERIAL;
+    private final byte DATA;
 
-	private final String[] SIGN_LINES;
+    private final String[] SIGN_LINES;
 
-	@SuppressWarnings("deprecation")
-	public LoggedBlock(String worldname, int x, int y, int z, Material material, byte data, String[] sign_lines) {
+    @SuppressWarnings("deprecation")
+    public LoggedBlock(String worldname, int x, int y, int z, Material material, byte data, String[] sign_lines) {
 
-		WORLDNAME = worldname;
-		X = x;
-		Y = y;
-		Z = z;
+        WORLDNAME = worldname;
+        X = x;
+        Y = y;
+        Z = z;
 
-		MATERIAL = material.getId();
-		DATA = data;
+        MATERIAL = material.getId();
+        DATA = data;
 
-		SIGN_LINES = sign_lines;
-	}
+        SIGN_LINES = sign_lines;
+    }
 
-	public void reset(MassBlockUpdate mbu) {
+    public void reset(MassBlockUpdate mbu) {
 
-		mbu.setBlock(X, Y, Z, MATERIAL, DATA);
+        mbu.setBlock(X, Y, Z, MATERIAL, DATA);
 
-		if (SIGN_LINES != null) {
+        if(SIGN_LINES != null) {
 
-			Block b = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
+            Block b = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
 
-			if (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+            if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
 
-				Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
+                Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
 
-				for (int i = 0; i < 4; i++) {
-					sign.setLine(i, SIGN_LINES[i]);
-				}
+                for(int i = 0; i < 4; i++) {
+                    sign.setLine(i, SIGN_LINES[i]);
+                }
 
-				sign.update();
-			} else {
-				ConsoleLogger.getLogger("WorldManager")
-						.severe("Tried to reset the data for the following sign but failed! " +
-								"WORLDNAME:\"" + WORLDNAME + "\" X:\"" + X + "\" Y:\"" + Y + "\" Z:\"" + Z + "\"");
-			}
-		}
-	}
+                sign.update();
+            }
+            else {
+                ConsoleLogger.getLogger("WorldManager")
+                             .severe("Tried to reset the data for the following sign but failed! " +
+                                     "WORLDNAME:\"" + WORLDNAME + "\" X:\"" + X + "\" Y:\"" + Y + "\" Z:\"" + Z + "\"");
+            }
+        }
+    }
 }

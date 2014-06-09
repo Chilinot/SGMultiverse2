@@ -46,159 +46,160 @@ import java.util.UUID;
 
 public class WorldManager {
 
-	public enum StatusFlag {
-		STARTED,
-		WAITING_FOR_PLAYERS,
-		FAILED,
-		COUNTINGDOWN;
-	}
+    public enum StatusFlag {
+        STARTED,
+        WAITING_FOR_PLAYERS,
+        FAILED,
+        COUNTINGDOWN
+    }
 
-	private final Main plugin;
-	private final ConsoleLogger logger = new ConsoleLogger("WorldManager");
+    private final Main plugin;
+    private final ConsoleLogger logger = new ConsoleLogger("WorldManager");
 
-	private final HashMap<String, GameWorld> worlds = new HashMap<>();
+    private final HashMap<String, GameWorld> worlds = new HashMap<>();
 
-	public WorldManager(Main instance) {
-		plugin = instance;
-		logger.debug("Initiated");
-	}
+    public WorldManager(Main instance) {
+        plugin = instance;
+        logger.debug("Initiated");
+    }
 
-	public void addWorld(World w) {
-		worlds.put(w.getName(), new GameWorld(plugin, w));
+    public void addWorld(World w) {
+        worlds.put(w.getName(), new GameWorld(plugin, w));
 
-		final String wname = w.getName();
+        final String wname = w.getName();
 
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				plugin.sqlite.loadLocations(wname);
-				plugin.sqlite.loadLobbyLocation(wname);
-			}
-		}.runTaskAsynchronously(plugin);
-	}
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.sqlite.loadLocations(wname);
+                plugin.sqlite.loadLobbyLocation(wname);
+            }
+        }.runTaskAsynchronously(plugin);
+    }
 
-	public String[] getRegisteredWorldnames() {
-		return worlds.keySet().toArray(new String[worlds.size()]);
-	}
+    public String[] getRegisteredWorldnames() {
+        return worlds.keySet().toArray(new String[worlds.size()]);
+    }
 
-	public void setSignLocation(String w, Location l, boolean save) {
-		if (isRegistered(w)) {
-			worlds.get(w).setSignLocation(l, save);
-		} else {
-			logger.severe("Tried to set info-sign for non-registered world!");
-		}
-	}
+    public void setSignLocation(String w, Location l, boolean save) {
+        if(isRegistered(w)) {
+            worlds.get(w).setSignLocation(l, save);
+        }
+        else {
+            logger.severe("Tried to set info-sign for non-registered world!");
+        }
+    }
 
-	public void setLobbyLocation(String w, Location l, boolean save) {
-		if(isRegistered(w)) {
-			worlds.get(w).setLobbyLocation(l, save);
-		}
-	}
+    public void setLobbyLocation(String w, Location l, boolean save) {
+        if(isRegistered(w)) {
+            worlds.get(w).setLobbyLocation(l, save);
+        }
+    }
 
-	public boolean isRegistered(String w) {
-		return worlds.containsKey(w);
-	}
+    public boolean isRegistered(String w) {
+        return worlds.containsKey(w);
+    }
 
-	public boolean allowPlayerJoin(String w) {
-		return worlds.containsKey(w) && worlds.get(w).allowPlayerJoin();
-	}
+    public boolean allowPlayerJoin(String w) {
+        return worlds.containsKey(w) && worlds.get(w).allowPlayerJoin();
+    }
 
-	public void addPlayer(String worldname, Player p) {
-		if (worlds.containsKey(worldname)) {
+	/*public void addPlayer(String worldname, Player p) {
+        if (worlds.containsKey(worldname)) {
 			worlds.get(worldname).addPlayer(p);
 		}
-	}
+	}*/
 
-	public void removePlayer(UUID id, Language reason) {
+    public void removePlayer(UUID id, Language reason) {
 
-		logger.debug("Removing player with id=\"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");
+        logger.debug("Removing player with id=\"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");
 
-		for (Entry<String, GameWorld> e : worlds.entrySet()) {
-			if (e.getValue().isInPlayerlist(id)) {
-				e.getValue().removePlayer(id);
-				broadcast(e.getKey(), reason);
-				break;
-			}
-		}
-	}
+        for(Entry<String, GameWorld> e : worlds.entrySet()) {
+            if(e.getValue().isInPlayerlist(id)) {
+                e.getValue().removePlayer(id);
+                broadcast(e.getKey(), reason);
+                break;
+            }
+        }
+    }
 
-	public boolean isPlaying(UUID id) {
-		boolean playing = false;
+    public boolean isPlaying(UUID id) {
+        boolean playing = false;
 
-		for (GameWorld w : worlds.values()) {
-			if (w.isInPlayerlist(id)) {
-				playing = true;
-				break;
-			}
-		}
+        for(GameWorld w : worlds.values()) {
+            if(w.isInPlayerlist(id)) {
+                playing = true;
+                break;
+            }
+        }
 
-		return playing;
-	}
+        return playing;
+    }
 
-	public void broadcast(String wname, Language l) {
-		broadcast(Bukkit.getWorld(wname), l);
-	}
+    public void broadcast(String wname, Language l) {
+        broadcast(Bukkit.getWorld(wname), l);
+    }
 
-	public void broadcast(World w, Language l) {
+    public void broadcast(World w, Language l) {
 
-		String msg = l.getMessage();
+        String msg = l.getMessage();
 
-		logger.debug("Broadcasting msg \"" + msg + "\" to world \"" + w.getName() + "\".");
+        logger.debug("Broadcasting msg \"" + msg + "\" to world \"" + w.getName() + "\".");
 
-		msg = "[" + ChatColor.GOLD + "SGM" + ChatColor.WHITE + "] - " + msg;
+        msg = "[" + ChatColor.GOLD + "SGM" + ChatColor.WHITE + "] - " + msg;
 
-		for (Player p : w.getPlayers()) {
-			p.sendMessage(msg);
-		}
-	}
+        for(Player p : w.getPlayers()) {
+            p.sendMessage(msg);
+        }
+    }
 
-	public int getNumberOfMainLocations(String w) {
-		return isRegistered(w) ? worlds.get(w).getNumberOfMainLocations() : 0;
-	}
+    public int getNumberOfMainLocations(String w) {
+        return isRegistered(w) ? worlds.get(w).getNumberOfMainLocations() : 0;
+    }
 
-	public int getNumberOfArenaLocations(String w) {
-		return isRegistered(w) ? worlds.get(w).getNumberOfArenaLocations() : 0;
-	}
+    public int getNumberOfArenaLocations(String w) {
+        return isRegistered(w) ? worlds.get(w).getNumberOfArenaLocations() : 0;
+    }
 
-	public void saveLocations(String w) {
-		if (isRegistered(w)) {
-			worlds.get(w).saveLocations();
-		}
-	}
+    public void saveLocations(String w) {
+        if(isRegistered(w)) {
+            worlds.get(w).saveLocations();
+        }
+    }
 
-	public void addMainLocation(String w, Location l) {
-		if (isRegistered(w)) {
-			worlds.get(w).addLocationStart(l);
-		}
-	}
+    public void addMainLocation(String w, Location l) {
+        if(isRegistered(w)) {
+            worlds.get(w).addLocationStart(l);
+        }
+    }
 
-	public void addArenaLocation(String w, Location l) {
-		if (isRegistered(w)) {
-			worlds.get(w).addLocationArena(l);
-		}
-	}
+    public void addArenaLocation(String w, Location l) {
+        if(isRegistered(w)) {
+            worlds.get(w).addLocationArena(l);
+        }
+    }
 
-	public boolean allowBlock(Block b) {
-		return isRegistered(b.getWorld().getName()) && worlds.get(b.getWorld().getName()).allowBlock(b.getType());
-	}
+    public boolean allowBlock(Block b) {
+        return isRegistered(b.getWorld().getName()) && worlds.get(b.getWorld().getName()).allowBlock(b.getType());
+    }
 
-	public void logBlock(Block b, boolean placed) {
-		if (isRegistered(b.getWorld().getName())) {
-			worlds.get(b.getWorld().getName()).logBlock(b, placed);
-		}
-	}
+    public void logBlock(Block b, boolean placed) {
+        if(isRegistered(b.getWorld().getName())) {
+            worlds.get(b.getWorld().getName()).logBlock(b, placed);
+        }
+    }
 
-	public StatusFlag getStatusFlag(String w) {
-		if (isRegistered(w)) {
-			return worlds.get(w).getStatus();
-		}
+    public StatusFlag getStatusFlag(String w) {
+        if(isRegistered(w)) {
+            return worlds.get(w).getStatus();
+        }
 
-		return StatusFlag.FAILED;
-	}
+        return StatusFlag.FAILED;
+    }
 
-	public void logEntity(Hanging e, boolean remove) {
-		if (isRegistered(e.getWorld().getName())) {
-			worlds.get(e.getWorld().getName()).logEntity(e, remove);
-		}
-	}
+    public void logEntity(Hanging e, boolean remove) {
+        if(isRegistered(e.getWorld().getName())) {
+            worlds.get(e.getWorld().getName()).logEntity(e, remove);
+        }
+    }
 }

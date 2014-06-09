@@ -10,72 +10,73 @@ import java.io.IOException;
 
 public enum Language {
 
-	PLAYER_KICK     ("&6#player#&f has been kicked from the game!"),
-	PLAYER_QUIT     ("&6#player#&f left the game."),
-	PLAYER_TELEPORT ("&6#player#&f teleported out of this world and was removed!"),
-	PLAYER_DEATH    ("&6#player#&f was killed."),
-	PLAYER_KILLED   ("&6#player#&f was killed by &6#killer#&f!"),
+    PLAYER_KICK("&6#player#&f has been kicked from the game!"),
+    PLAYER_QUIT("&6#player#&f left the game."),
+    PLAYER_TELEPORT("&6#player#&f teleported out of this world and was removed!"),
+    PLAYER_DEATH("&6#player#&f was killed."),
+    PLAYER_KILLED("&6#player#&f was killed by &6#killer#&f!"),
 
-	TELEPORT_ARENA  ("&6Sending all players to the arena!");
+    TELEPORT_ARENA("&6Sending all players to the arena!");
 
-	private String msg;
-	private String player = null;
-	private String killer = null;
+    private String msg;
+    private String player = null;
+    private String killer = null;
 
-	private static FileConfiguration config = null;
-	private static ConsoleLogger logger = new ConsoleLogger("Language");
+    private static FileConfiguration config = null;
+    private static ConsoleLogger     logger = new ConsoleLogger("Language");
 
-	private Language(String r) {
-		msg = r;
-	}
+    private Language(String r) {
+        msg = r;
+    }
 
-	public static void setConfig(File file) {
+    public static void setConfig(File file) {
 
-		config = YamlConfiguration.loadConfiguration(file);
+        config = YamlConfiguration.loadConfiguration(file);
 
-		// Store the defaults in the config.
-		boolean save = false;
+        // Store the defaults in the config.
+        boolean save = false;
 
-		for(Language l : Language.values()) {
-			String key = l.name().replaceAll("_", "\\."); // Transform the strings from "FOO_BAR" to "FOO.BAR"
-			if(!config.contains(key)) {
-				config.set(key, l.msg);
-				save = true;
-			}
-		}
+        for(Language l : Language.values()) {
+            String key = l.name().replaceAll("_", "\\."); // Transform the strings from "FOO_BAR" to "FOO.BAR"
+            if(!config.contains(key)) {
+                config.set(key, l.msg);
+                save = true;
+            }
+        }
 
-		if(save) {
-			try {
-				config.save(file);
-			} catch (IOException e) {
-				logger.severe("Error while trying to save defaults to the config!");
-				e.printStackTrace();
-			}
-		}
-	}
+        if(save) {
+            try {
+                config.save(file);
+            }
+            catch(IOException e) {
+                logger.severe("Error while trying to save defaults to the config!");
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public void setPlayer(String s) {
-		player = s;
-	}
+    public void setPlayer(String s) {
+        player = s;
+    }
 
-	public void setKiller(String s) {
-		killer = s;
-	}
+    public void setKiller(String s) {
+        killer = s;
+    }
 
-	public String getMessage() {
+    public String getMessage() {
 
-		if (config != null) {
-			msg = config.getString(this.name(), msg);
-		}
+        if(config != null) {
+            msg = config.getString(this.name(), msg);
+        }
 
-		// Variables
-		if (player != null) {
-			msg = msg.replace("#player#", player);
-		}
-		if (killer != null) {
-			msg = msg.replace("#killer#", killer);
-		}
+        // Variables
+        if(player != null) {
+            msg = msg.replace("#player#", player);
+        }
+        if(killer != null) {
+            msg = msg.replace("#killer#", killer);
+        }
 
-		return ChatColor.translateAlternateColorCodes('&', msg);
-	}
+        return ChatColor.translateAlternateColorCodes('&', msg);
+    }
 }
