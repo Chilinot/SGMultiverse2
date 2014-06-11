@@ -175,44 +175,68 @@ public class Commands implements CommandExecutor {
             p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
             return true;
         }
-        else if(args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
-            return false;
-        }
-        else if(args.length == 1 && args[0].equalsIgnoreCase("info")) {
-            p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
-            p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
-            p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
-            return true;
-        }
-        else if(args.length == 1 && args[0].equalsIgnoreCase("save")) {
-            p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
-            plugin.worldManager.saveLocations(worldname);
-            return true;
-        }
-        else if(args.length == 2 && args[0].equalsIgnoreCase("add")) {
 
-            if(args[1].equalsIgnoreCase("main")) {
-                plugin.worldManager.addMainLocation(worldname, p.getLocation());
-            }
-            else if(args[1].equalsIgnoreCase("arena")) {
-                plugin.worldManager.addArenaLocation(worldname, p.getLocation());
-            }
-            else if(args[1].equalsIgnoreCase("lobby")) {
-                plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
-                p.sendMessage(ChatColor.GREEN + "You have successfully set the lobby location for this world!");
-                return true;
-            }
-            else {
+        switch(args.length) {
+
+            case 0:
+                sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
                 return false;
-            }
 
-            p.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GOLD + args[1].toUpperCase() + ChatColor.GREEN + " location! " +
-                    "Remember to save if you want the locations to be permanent!");
+            case 1:
+                switch(args[0].toLowerCase()) {
 
-            return true;
+                    case "info" :
+                        p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
+                        p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
+                        p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
+                        return true;
+
+                    case "save":
+                        p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
+                        plugin.worldManager.saveLocations(worldname);
+                        return true;
+
+                    default:
+                        return false;
+                }
+
+            case 2:
+                if(args[0].equalsIgnoreCase("add")) {
+                    switch(args[1].toLowerCase()) {
+
+                        case "main":
+                            plugin.worldManager.addMainLocation(worldname, p.getLocation());
+                            break;
+
+                        case "arena":
+                            plugin.worldManager.addArenaLocation(worldname, p.getLocation());
+                            break;
+
+                        case "lobby":
+                            plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
+                            p.sendMessage(ChatColor.GREEN + "You have successfully set the lobby location for this world!");
+                            return true;
+
+                        default:
+                            return false;
+                    }
+
+                    // Called if not returned in switch.
+                    p.sendMessage(
+                        ChatColor.GREEN +
+                            "Added " +
+                            ChatColor.GOLD +
+                            args[1].toUpperCase() +
+                            ChatColor.GREEN +
+                            " location! Remember to save if you want the locations to be permanent!"
+                    );
+
+                    return true;
+                }
+                return false;
+
+            default:
+                return false;
         }
-
-        return false;
     }
 }
