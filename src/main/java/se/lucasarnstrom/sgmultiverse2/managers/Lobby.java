@@ -30,10 +30,14 @@ package se.lucasarnstrom.sgmultiverse2.managers;
 import org.bukkit.Location;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
+import java.util.LinkedList;
+import java.util.UUID;
+
 public class Lobby {
 
     private final ConsoleLogger logger;
     private       Location      location;
+    private final LinkedList<UUID> player_queue = new LinkedList<>();
 
     public Lobby(String name) {
         logger = new ConsoleLogger(name + "-LobbyManager");

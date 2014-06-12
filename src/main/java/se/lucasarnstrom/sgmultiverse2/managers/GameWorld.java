@@ -166,15 +166,21 @@ public class GameWorld {
             StringBuilder status = new StringBuilder();
 
             switch(this.status) {
-                case STARTED:
+
+                case COUNTINGDOWN: case STARTED:
                     status.append(ChatColor.GOLD);
                     break;
+
                 case WAITING_FOR_PLAYERS:
                     status.append(ChatColor.GREEN);
                     break;
+
                 case FAILED:
                     status.append(ChatColor.RED);
                     break;
+
+                default:
+                    logger.warning("Unsupported switch-case! Trying to set color for status flag!");
             }
 
             status.append(this.status);
