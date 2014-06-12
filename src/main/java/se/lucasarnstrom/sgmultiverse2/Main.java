@@ -55,6 +55,16 @@ public class Main extends JavaPlugin {
 
     public void onEnable() {
 
+        //TODO Fix the rest of the lobby
+        //TODO - Join the lobby and queue by using sgjoin command
+        //TODO - Add command sglobby to only join the lobby
+        //TODO - Add signs that lists alive players
+        //TODO - Add ability to spectate
+
+        //TODO Add counters
+
+        //TODO Add signs for lobby and queue.
+
         // -- INITIATE STATICS
 
         Config.init(this);
