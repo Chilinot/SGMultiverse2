@@ -37,11 +37,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 import se.lucasarnstrom.sgmultiverse2.misc.IconMenu;
 
 public class Commands implements CommandExecutor {
 
+    private final ConsoleLogger logger = new ConsoleLogger("CommandManager");
     private final Main plugin;
 
     public Commands(Main p) {
@@ -52,7 +54,7 @@ public class Commands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         //TODO Use iconmenus for the commands
-        //TODO Commands: sgleave, sgstats
+        //TODO Commands: sgleave, sgstats, sgplayers, sgspectate
 
         String command = cmd.getName();
 
@@ -65,6 +67,8 @@ public class Commands implements CommandExecutor {
                 return sglocation(sender, args);
             case "sgtp":
                 return sgtp(sender, args);
+            default:
+                logger.warning("Unsupported command \"" + command + "\" recieved!");
         }
 
         return false;
@@ -197,45 +201,53 @@ public class Commands implements CommandExecutor {
                         return true;
 
                     default:
+                        // Argument not supported.
                         return false;
                 }
 
             case 2:
-                if(args[0].equalsIgnoreCase("add")) {
-                    switch(args[1].toLowerCase()) {
+                switch(args[0].toLowerCase()) {
 
-                        case "main":
-                            plugin.worldManager.addMainLocation(worldname, p.getLocation());
-                            break;
+                    case "add":
+                        switch(args[1].toLowerCase()) {
 
-                        case "arena":
-                            plugin.worldManager.addArenaLocation(worldname, p.getLocation());
-                            break;
+                            case "main":
+                                plugin.worldManager.addMainLocation(worldname, p.getLocation());
+                                break; // Send message below
 
-                        case "lobby":
-                            plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
-                            p.sendMessage(ChatColor.GREEN + "You have successfully set the lobby location for this world!");
-                            return true;
+                            case "arena":
+                                plugin.worldManager.addArenaLocation(worldname, p.getLocation());
+                                break; // Send message below
 
-                        default:
-                            return false;
-                    }
+                            case "lobby":
+                                plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
+                                p.sendMessage(ChatColor.GREEN + "You have successfully set the lobby location for this world!");
+                                return true; // Don't send the message
 
-                    // Called if not returned in switch.
-                    p.sendMessage(
-                        ChatColor.GREEN +
-                            "Added " +
-                            ChatColor.GOLD +
-                            args[1].toUpperCase() +
-                            ChatColor.GREEN +
-                            " location! Remember to save if you want the locations to be permanent!"
-                    );
+                            default:
+                                // Argument not supported.
+                                return false;
+                        }
 
-                    return true;
+                        // Message the player
+                        p.sendMessage(
+                                ChatColor.GREEN +
+                                        "Added " +
+                                        ChatColor.GOLD +
+                                        args[1].toUpperCase() +
+                                        ChatColor.GREEN +
+                                        " location! Remember to save if you want the locations to be permanent!"
+                        );
+
+                        return true;
+
+                    default:
+                        // Argument not supported.
+                        return false;
                 }
-                return false;
 
             default:
+                // Unsupported amount of arguments
                 return false;
         }
     }
