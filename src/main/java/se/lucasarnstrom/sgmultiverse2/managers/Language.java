@@ -1,4 +1,4 @@
-package se.lucasarnstrom.sgmultiverse2;
+package se.lucasarnstrom.sgmultiverse2.managers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

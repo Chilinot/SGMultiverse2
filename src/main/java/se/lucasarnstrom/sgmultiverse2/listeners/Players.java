@@ -36,7 +36,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.sgmultiverse2.Language;
+import se.lucasarnstrom.sgmultiverse2.managers.Language;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 public class Players implements Listener {

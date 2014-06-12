@@ -36,8 +36,6 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.sgmultiverse2.GameWorld;
-import se.lucasarnstrom.sgmultiverse2.Language;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.util.HashMap;

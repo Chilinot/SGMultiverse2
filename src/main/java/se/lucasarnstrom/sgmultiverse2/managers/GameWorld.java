@@ -25,7 +25,7 @@
  *
  */
 
-package se.lucasarnstrom.sgmultiverse2;
+package se.lucasarnstrom.sgmultiverse2.managers;
 
 import me.desht.dhutils.block.CraftMassBlockUpdate;
 import me.desht.dhutils.block.MassBlockUpdate;
@@ -37,6 +37,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.databases.SQLiteInterface.LocationType;
 import se.lucasarnstrom.sgmultiverse2.logging.LoggedBlock;
 import se.lucasarnstrom.sgmultiverse2.logging.LoggedEntity;

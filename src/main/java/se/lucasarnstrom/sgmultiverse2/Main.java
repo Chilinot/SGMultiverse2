@@ -38,6 +38,8 @@ import se.lucasarnstrom.sgmultiverse2.listeners.Blocks;
 import se.lucasarnstrom.sgmultiverse2.listeners.Misc;
 import se.lucasarnstrom.sgmultiverse2.listeners.Players;
 import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
+import se.lucasarnstrom.sgmultiverse2.managers.Commands;
+import se.lucasarnstrom.sgmultiverse2.managers.Language;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 import se.lucasarnstrom.sgmultiverse2.misc.Updater;
 

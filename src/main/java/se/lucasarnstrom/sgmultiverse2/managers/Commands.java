@@ -26,7 +26,7 @@
  */
 
 
-package se.lucasarnstrom.sgmultiverse2;
+package se.lucasarnstrom.sgmultiverse2.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,6 +38,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.sgmultiverse2.Main;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 import se.lucasarnstrom.sgmultiverse2.misc.IconMenu;
 
