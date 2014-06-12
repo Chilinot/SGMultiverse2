@@ -49,10 +49,11 @@ import java.util.Map.Entry;
 @SuppressWarnings("deprecation")
 public class GameWorld {
 
+    public  final String        NAME;
     private final Main          plugin;
     private final ConsoleLogger logger;
     private final World         world;
-    private       Location      lobby;
+    private       Lobby         lobby;
     private       Location                       sign_location      = null;
     private final HashSet<UUID>                  playerlist         = new HashSet<>();
     private final HashMap<Location, UUID>        locations_start    = new HashMap<>();
@@ -72,9 +73,11 @@ public class GameWorld {
     );
 
     public GameWorld(Main instance, World w) {
+        NAME   = "GameWorld-" + w.getName();
         plugin = instance;
-        world = w;
-        logger = new ConsoleLogger("GameWorld-" + w.getName());
+        world  = w;
+        logger = new ConsoleLogger(NAME);
+        lobby  = new Lobby(NAME);
 
         //TODO Load all configurations for the world.
 
@@ -133,7 +136,7 @@ public class GameWorld {
 
     public void setLobbyLocation(final Location l, boolean save) {
 
-        lobby = l;
+        lobby.setLocation(l);
 
         if(save) {
             new BukkitRunnable() {
