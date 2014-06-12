@@ -2,11 +2,11 @@
  *  Name:    Misc.java
  *  Created: 15:45:17 - 29 jun 2013
  *
- *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Author:  Lucas ArnstrÃ¶m - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
- *  Copyright 2013 Lucas Arnström
+ *  Copyright 2013 Lucas ArnstrÃ¶m
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

@@ -1,9 +1,9 @@
 /**
- *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
+ *  Author:  Lucas ArnstrÃ¶m - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
- *  Copyright 2014 Lucas Arnström
+ *  Copyright 2014 Lucas ArnstrÃ¶m
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
