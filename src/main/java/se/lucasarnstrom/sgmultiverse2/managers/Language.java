@@ -71,7 +71,7 @@ public enum Language {
     public String getMessage() {
 
         if(config != null) {
-            msg = config.getString(this.name(), msg);
+            msg = config.getString(this.name().replaceAll("_", "\\."));
         }
 
         // -- Variables
