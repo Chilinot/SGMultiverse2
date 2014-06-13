@@ -107,4 +107,8 @@ public enum Language {
         logger.debug("Returning message: \"" + msg + "\"");
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
+
+    public String toString() {
+        return getMessage();
+    }
 }
