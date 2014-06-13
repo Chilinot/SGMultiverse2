@@ -108,6 +108,12 @@ public class WorldManager {
 		}
 	}*/
 
+    public void sendPlayerToLobby(String worldname, Player p) {
+        if (worlds.containsKey(worldname)) {
+            worlds.get(worldname).sendPlayerToLobby(p);
+        }
+    }
+
     public void removePlayer(UUID id, Language reason) {
 
         logger.debug("Removing player with id=\"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");

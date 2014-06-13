@@ -39,8 +39,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.Main;
-import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
-import se.lucasarnstrom.sgmultiverse2.misc.IconMenu;
+import se.lucasarnstrom.sgmultiverse2.libs.IconMenu;
 
 public class Commands implements CommandExecutor {
 
@@ -132,8 +131,10 @@ public class Commands implements CommandExecutor {
         if(args.length == 1) {
             if(wm.isRegistered(args[0])) {
                 if(wm.allowPlayerJoin(args[0])) {
-//					wm.addPlayer(args[0], p);
+                    //wm.addPlayer(args[0], p);
+
                     //TODO Send player to lobby
+                    wm.sendPlayerToLobby(args[0], p);
                 }
                 else {
                     p.sendMessage(ChatColor.RED + "That game is full!");
@@ -147,9 +148,10 @@ public class Commands implements CommandExecutor {
             IconMenu menu = new IconMenu("Choose a world!", (9 * (wm.getRegisteredWorldnames().length / 9)) + 9, new IconMenu.OptionClickEventHandler() {
                 @Override
                 public void onOptionClick(IconMenu.OptionClickEvent event) {
+                    //wm.addPlayer(event.getName(), p);
 
-//					wm.addPlayer(event.getName(), p);
                     //TODO Send player to lobby
+                    wm.sendPlayerToLobby(event.getName(), p);
 
                     event.setWillClose(true);
                     event.setWillDestroy(true);

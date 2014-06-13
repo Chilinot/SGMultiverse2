@@ -28,6 +28,7 @@
 package se.lucasarnstrom.sgmultiverse2.managers;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
 import java.util.LinkedList;
@@ -46,5 +47,15 @@ public class Lobby {
 
     public void setLocation(Location l) {
         location = l;
+    }
+
+    public void sendPlayer(Player p) {
+        p.teleport(location);
+        player_queue.add(p.getUniqueId());
+
+        Language msg = Language.PLAYER_ADDEDTOQUEUE;
+        msg.setAmount(Integer.toString(player_queue.size() - 1));
+
+        p.sendMessage(msg.getMessage());
     }
 }

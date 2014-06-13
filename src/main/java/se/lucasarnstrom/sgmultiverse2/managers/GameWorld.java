@@ -474,4 +474,15 @@ public class GameWorld {
     public boolean allowBlock(Material m) {
         return blockfilter == null || blockfilter.contains(m);
     }
+
+    public void sendPlayerToLobby(Player p) {
+        if(!allowPlayerJoin()) {
+            logger.severe("Tried to add player to already full world!");
+            return;
+        }
+
+        logger.debug("Adding player \"" + p.getName() + "\".");
+
+        lobby.sendPlayer(p);
+    }
 }
