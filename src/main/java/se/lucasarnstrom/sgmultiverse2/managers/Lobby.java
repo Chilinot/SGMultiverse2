@@ -53,7 +53,7 @@ public class Lobby {
         p.teleport(location);
         player_queue.add(p.getUniqueId());
 
-        Language msg = Language.PLAYER_ADDEDTOQUEUE;
+        Language msg = Language.LOBBY_ADDED_QUEUE;
         msg.AMOUNT = Integer.toString(player_queue.size() - 1);
 
         p.sendMessage(msg.getMessage());

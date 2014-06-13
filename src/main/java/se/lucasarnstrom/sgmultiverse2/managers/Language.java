@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 
 public enum Language {
 
-    PLAYER_ADDEDTOQUEUE("You have been added to the queue! There are &6#AMOUNT#&f players ahead of you."),
+    LOBBY_ADDED_QUEUE("You have been added to the queue! There are &6#AMOUNT#&f players ahead of you."),
 
     PLAYER_KICK("&6#PLAYER#&f has been kicked from the game!"),
     PLAYER_QUIT("&6#PLAYER#&f left the game."),
