@@ -1,4 +1,4 @@
-package se.lucasarnstrom.sgmultiverse2.misc;
+package se.lucasarnstrom.sgmultiverse2.libs;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
