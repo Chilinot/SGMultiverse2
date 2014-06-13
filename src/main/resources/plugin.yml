@@ -12,6 +12,10 @@ commands:
     description: Used to join a game of SurvivalGames.
     usage: /<command> <worldname>
     permission: sgmultiverse.commands.sgjoin
+  sgqueue:
+    description: Used to enter a the queue for a game.
+    usage: /<command>
+    permission: sgmultiverse.commands.sgqueue
   sglocation:
     description: Used to add locations to a gameworld.
     usage: /<command> <add|save|info> [<main|arena|lobby>]
@@ -26,6 +30,8 @@ permissions:
   sgmultiverse.commands.sginfo:
     default: op
   sgmultiverse.commands.sgjoin:
+    default: true
+  sgmultiverse.commands.sgqueue:
     default: true
   sgmultiverse.commands.sglocation:
     default: op

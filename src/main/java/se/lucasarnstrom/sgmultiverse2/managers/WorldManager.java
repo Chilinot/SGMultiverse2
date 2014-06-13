@@ -92,10 +92,6 @@ public class WorldManager {
         return worlds.containsKey(w);
     }
 
-    public boolean allowPlayerJoin(String w) {
-        return worlds.containsKey(w) && worlds.get(w).allowPlayerJoin();
-    }
-
 	/*public void addPlayer(String worldname, Player p) {
         if (worlds.containsKey(worldname)) {
 			worlds.get(worldname).addPlayer(p);
@@ -105,6 +101,12 @@ public class WorldManager {
     public void sendPlayerToLobby(String worldname, Player p) {
         if(worlds.containsKey(worldname)) {
             worlds.get(worldname).sendPlayerToLobby(p);
+        }
+    }
+
+    public void addToQueue(String worldname, Player p) {
+        if(worlds.containsKey(worldname)) {
+            worlds.get(worldname).addToQueue(p);
         }
     }
 
@@ -122,16 +124,21 @@ public class WorldManager {
     }
 
     public boolean isPlaying(UUID id) {
-        boolean playing = false;
-
         for(GameWorld w : worlds.values()) {
             if(w.isInPlayerlist(id)) {
-                playing = true;
-                break;
+                return true;
             }
         }
+        return false;
+    }
 
-        return playing;
+    public boolean isInLobby(Player p) {
+        for(GameWorld w : worlds.values()) {
+            if(w.isInLobby(p)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void broadcast(String wname, Language l) {

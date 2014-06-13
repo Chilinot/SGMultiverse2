@@ -40,6 +40,8 @@ public class Commands implements CommandExecutor {
     private final ConsoleLogger logger = new ConsoleLogger("CommandManager");
     private final Main plugin;
 
+    //TODO Transfer all strings to Language
+
     public Commands(Main p) {
         plugin = p;
     }
@@ -57,6 +59,8 @@ public class Commands implements CommandExecutor {
                 return sginfo(sender);
             case "sgjoin":
                 return sgjoin(sender, args);
+            case "sgqueue":
+                return sgqueue(sender);
             case "sglocation":
                 return sglocation(sender, args);
             case "sgtp":
@@ -124,29 +128,20 @@ public class Commands implements CommandExecutor {
 
         if(args.length == 1) {
             if(wm.isRegistered(args[0])) {
-                if(wm.allowPlayerJoin(args[0])) {
-                    //wm.addPlayer(args[0], p);
-
-                    //TODO Send player to lobby
-                    wm.sendPlayerToLobby(args[0], p);
-                }
-                else {
-                    p.sendMessage(ChatColor.RED + "That game is full!");
-                }
+                wm.sendPlayerToLobby(args[0], p);
             }
             else {
-                p.sendMessage(ChatColor.RED + "There is no game with that name!");
+                p.sendMessage(Language.COMMAND_ERROR_SGJOIN_NOTAGAME.getMessage());
             }
         }
         else {
-            IconMenu menu = new IconMenu("Choose a world!", (9 * (wm.getRegisteredWorldnames().length / 9)) + 9, new IconMenu.OptionClickEventHandler() {
+            //TODO This might produce one extra empty row if there are n % 9 = 0 amounts of registered worlds.
+            int amount = (9 * (wm.getRegisteredWorldnames().length / 9)) + 9;
+
+            IconMenu menu = new IconMenu(Language.COMMAND_MENU_SGJOIN_CHOOSE.getMessage(), amount, new IconMenu.OptionClickEventHandler() {
                 @Override
                 public void onOptionClick(IconMenu.OptionClickEvent event) {
-                    //wm.addPlayer(event.getName(), p);
-
-                    //TODO Send player to lobby
                     wm.sendPlayerToLobby(event.getName(), p);
-
                     event.setWillClose(true);
                     event.setWillDestroy(true);
                 }
@@ -154,10 +149,31 @@ public class Commands implements CommandExecutor {
 
             int i = 0;
             for(String w : wm.getRegisteredWorldnames()) {
-                menu.setOption(i++, new ItemStack(Material.MAP), w, "Click this to join the game \"" + w + "\"!");
+                Language msg = Language.COMMAND_MENU_SGJOIN_CLICK;
+                msg.NAME = w;
+                menu.setOption(i++, new ItemStack(Material.MAP), w, msg.getMessage());
             }
 
             menu.open(p);
+        }
+
+        return true;
+    }
+
+    private boolean sgqueue(CommandSender sender) {
+        if(!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can issue this command!");
+            return true;
+        }
+
+        Player p = (Player) sender;
+        WorldManager wm = plugin.worldManager;
+
+        if(wm.isInLobby(p)) {
+            wm.addToQueue(p.getWorld().getName(), p);
+        }
+        else {
+            p.sendMessage(Language.COMMAND_ERROR_SGQUEUE_NOTINWORLD.getMessage());
         }
 
         return true;

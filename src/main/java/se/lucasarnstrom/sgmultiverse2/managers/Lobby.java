@@ -25,6 +25,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class Lobby {
 
     private final ConsoleLogger logger;
     private       Location      location;
+    private final HashSet<UUID>    players_in_lobby = new HashSet<UUID>();
     private final LinkedList<UUID> player_queue = new LinkedList<>();
 
     public Lobby(String name) {
@@ -44,12 +46,23 @@ public class Lobby {
     }
 
     public void sendPlayer(Player p) {
+        logger.debug("Sending player \"" + p.getName() + "\" to the lobby.");
         p.teleport(location);
+        players_in_lobby.add(p.getUniqueId());
+    }
+
+    public void addToQueue(Player p) {
         player_queue.add(p.getUniqueId());
 
         Language msg = Language.LOBBY_ADDED_QUEUE;
         msg.AMOUNT = Integer.toString(player_queue.size() - 1);
 
         p.sendMessage(msg.getMessage());
+
+        logger.debug("Added player \"" + p.getName() + "\" to the queue.");
+    }
+
+    public boolean isInLobby(Player p) {
+        return players_in_lobby.contains(p.getUniqueId());
     }
 }

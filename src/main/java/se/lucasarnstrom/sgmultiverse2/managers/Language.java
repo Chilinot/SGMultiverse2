@@ -32,6 +32,14 @@ import java.lang.reflect.Field;
 
 public enum Language {
 
+    COMMAND_ERROR_SGQUEUE_NOTINWORLD("&cYou are not in a lobby!"),
+
+    COMMAND_ERROR_SGJOIN_FULLWORLD("&cThat game is full!"),
+    COMMAND_ERROR_SGJOIN_NOTAGAME("&cThere is no game with that name!"),
+
+    COMMAND_MENU_SGJOIN_CHOOSE("Choose a world!"),
+    COMMAND_MENU_SGJOIN_CLICK("Click this to join the game &6#NAME#&f!"),
+
     LOBBY_ADDED_QUEUE("You have been added to the queue! There are &6#AMOUNT#&f players ahead of you."),
 
     PLAYER_KICK("&6#PLAYER#&f has been kicked from the game!"),
@@ -48,12 +56,14 @@ public enum Language {
     public String PLAYER = null;
     public String KILLER = null;
     public String AMOUNT = null;
+    public String NAME   = null;
 
     // It will only access variable-fields defined in this enum.
     private enum Variable {
         PLAYER,
         KILLER,
-        AMOUNT
+        AMOUNT,
+        NAME
     }
 
     private static FileConfiguration config = null;
@@ -92,7 +102,7 @@ public enum Language {
     public String getMessage() {
 
         if(config != null) {
-            msg = config.getString(this.name().replaceAll("_", "\\."));
+            msg = config.getString(this.name().replaceAll("_", "\\."), msg);
         }
 
         // -- Variables

@@ -475,8 +475,14 @@ public class GameWorld {
             return;
         }
 
-        logger.debug("Adding player \"" + p.getName() + "\".");
-
         lobby.sendPlayer(p);
+    }
+
+    public void addToQueue(Player p) {
+        lobby.addToQueue(p);
+    }
+
+    public boolean isInLobby(Player p) {
+        return lobby.isInLobby(p);
     }
 }
