@@ -17,12 +17,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- *
- *
- *  Filedescription:
- *
- *
  */
 
 
@@ -192,7 +186,7 @@ public class Commands implements CommandExecutor {
             case 1:
                 switch(args[0].toLowerCase()) {
 
-                    case "info" :
+                    case "info":
                         p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
                         p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
                         p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));

@@ -17,12 +17,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- *
- *
- *  Filedescription:
- *
- *
  */
 
 package se.lucasarnstrom.sgmultiverse2.managers;
@@ -49,7 +43,7 @@ import java.util.Map.Entry;
 @SuppressWarnings("deprecation")
 public class GameWorld {
 
-    public  final String        NAME;
+    public final  String        NAME;
     private final Main          plugin;
     private final ConsoleLogger logger;
     private final World         world;
@@ -73,11 +67,11 @@ public class GameWorld {
     );
 
     public GameWorld(Main instance, World w) {
-        NAME   = "GameWorld-" + w.getName();
+        NAME = "GameWorld-" + w.getName();
         plugin = instance;
-        world  = w;
+        world = w;
         logger = new ConsoleLogger(NAME);
-        lobby  = new Lobby(NAME);
+        lobby = new Lobby(NAME);
 
         //TODO Load all configurations for the world.
 

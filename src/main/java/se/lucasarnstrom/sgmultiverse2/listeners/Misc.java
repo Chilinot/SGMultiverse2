@@ -1,12 +1,9 @@
 /**
- *  Name:    Misc.java
- *  Created: 15:45:17 - 29 jun 2013
- *
  *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
  *  Contact: lucasarnstrom(at)gmail(dot)com
  *
  *
- *  Copyright 2013 Lucas Arnström
+ *  Copyright 2014 Lucas Arnström
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +17,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- *
- *
- *  Filedescription:
- *
- *
  */
 
 package se.lucasarnstrom.sgmultiverse2.listeners;
