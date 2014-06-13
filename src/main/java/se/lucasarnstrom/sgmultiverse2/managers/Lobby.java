@@ -54,7 +54,7 @@ public class Lobby {
         player_queue.add(p.getUniqueId());
 
         Language msg = Language.PLAYER_ADDEDTOQUEUE;
-        msg.setAmount(Integer.toString(player_queue.size() - 1));
+        msg.AMOUNT = Integer.toString(player_queue.size() - 1);
 
         p.sendMessage(msg.getMessage());
     }

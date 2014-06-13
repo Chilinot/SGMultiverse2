@@ -78,13 +78,13 @@ public class Players implements Listener {
 
             if(k == null) {
                 Language reason = Language.PLAYER_DEATH;
-                reason.setPlayer(e.getEntity().getName());
+                reason.PLAYER = e.getEntity().getName();
                 plugin.worldManager.removePlayer(e.getEntity().getUniqueId(), reason);
             }
             else {
                 Language reason = Language.PLAYER_KILLED;
-                reason.setPlayer(e.getEntity().getName());
-                reason.setKiller(k.getName());
+                reason.PLAYER = e.getEntity().getName();
+                reason.KILLER = k.getName();
                 plugin.worldManager.removePlayer(e.getEntity().getUniqueId(), reason);
             }
 

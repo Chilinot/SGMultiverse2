@@ -24,9 +24,9 @@ public enum Language {
     private String msg;
 
     // Variable-fields
-    private String PLAYER = null;
-    private String KILLER = null;
-    private String AMOUNT = null;
+    public String PLAYER = null;
+    public String KILLER = null;
+    public String AMOUNT = null;
 
     // It will only access variable-fields defined in this enum.
     private enum Variable {
@@ -66,18 +66,6 @@ public enum Language {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void setPlayer(String s) {
-        PLAYER = s;
-    }
-
-    public void setKiller(String s) {
-        KILLER = s;
-    }
-
-    public void setAmount(String s) {
-        AMOUNT = s;
     }
 
     public String getMessage() {
