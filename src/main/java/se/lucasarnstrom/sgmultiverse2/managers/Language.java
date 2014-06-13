@@ -23,11 +23,12 @@ public enum Language {
 
     private String msg;
 
-    // Variables
+    // Variable-fields
     private String PLAYER = null;
     private String KILLER = null;
     private String AMOUNT = null;
 
+    // It will only access variable-fields defined in this enum.
     private enum Variable {
         PLAYER,
         KILLER,
