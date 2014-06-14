@@ -118,7 +118,7 @@ public class Commands implements CommandExecutor {
     private boolean sgjoin(CommandSender sender, String[] args) {
 
         if(!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
+            sender.sendMessage(Language.COMMAND_ERROR_NOTAPLAYER.getMessage());
             return true;
         }
 
@@ -162,7 +162,7 @@ public class Commands implements CommandExecutor {
 
     private boolean sgqueue(CommandSender sender) {
         if(!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can issue this command!");
+            sender.sendMessage(Language.COMMAND_ERROR_NOTAPLAYER.getMessage());
             return true;
         }
 
@@ -173,7 +173,7 @@ public class Commands implements CommandExecutor {
             wm.addToQueue(p.getWorld().getName(), p);
         }
         else {
-            p.sendMessage(Language.COMMAND_ERROR_SGQUEUE_NOTINWORLD.getMessage());
+            p.sendMessage(Language.COMMAND_ERROR_SGQUEUE_NOTINLOBBY.getMessage());
         }
 
         return true;
@@ -182,21 +182,21 @@ public class Commands implements CommandExecutor {
     private boolean sglocation(CommandSender sender, String[] args) {
 
         if(!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "You need to be a player to use this command!");
+            sender.sendMessage(Language.COMMAND_ERROR_NOTAPLAYER.getMessage());
         }
 
         Player p = (Player) sender;
         String worldname = p.getWorld().getName();
 
         if(!plugin.worldManager.isRegistered(worldname)) {
-            p.sendMessage(ChatColor.RED + "You are not in a registered gameworld!");
+            p.sendMessage(Language.COMMAND_ERROR_NOTINREGISTEREDWORLD.getMessage());
             return true;
         }
 
         switch(args.length) {
 
             case 0:
-                sender.sendMessage(ChatColor.RED + "You need to provide at least one argument to the command!");
+                sender.sendMessage(Language.COMMAND_ERROR_MISSINGARGUMENTS.getMessage());
                 return false;
 
             case 1:

@@ -32,11 +32,14 @@ import java.lang.reflect.Field;
 
 public enum Language {
 
-    COMMAND_ERROR_SGQUEUE_NOTINWORLD("&cYou are not in a lobby!"),
+    COMMAND_ERROR_NOTAPLAYER("&cYou have to be a player to use this command!"),
+    COMMAND_ERROR_NOTINREGISTEREDWORLD("&cYou are not in a registered gameworld!"),
+    COMMAND_ERROR_MISSINGARGUMENTS("&cYou have to provide arguments for this command!"),
+
+    COMMAND_ERROR_SGQUEUE_NOTINLOBBY("&cYou have to be in a lobby to use this command!"),
 
     COMMAND_ERROR_SGJOIN_FULLWORLD("&cThat game is full!"),
     COMMAND_ERROR_SGJOIN_NOTAGAME("&cThere is no game with that name!"),
-
     COMMAND_MENU_SGJOIN_CHOOSE("Choose a world!"),
     COMMAND_MENU_SGJOIN_CLICK("Click this to join the game &6#NAME#&f!"),
 
