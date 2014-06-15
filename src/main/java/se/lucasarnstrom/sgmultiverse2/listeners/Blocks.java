@@ -84,7 +84,7 @@ public class Blocks implements Listener {
                 }
             }
             else {
-                event.getPlayer().sendMessage(Language.GAMESTATUS_NOTSTARTED.getMessage());
+                event.getPlayer().sendMessage(Language.GAME_NOTSTARTED.getMessage());
                 event.setCancelled(true);
             }
         }
@@ -110,7 +110,7 @@ public class Blocks implements Listener {
                 }
             }
             else {
-                player.sendMessage(Language.GAMESTATUS_NOTSTARTED.getMessage());
+                player.sendMessage(Language.GAME_NOTSTARTED.getMessage());
                 event.setCancelled(true);
             }
         }

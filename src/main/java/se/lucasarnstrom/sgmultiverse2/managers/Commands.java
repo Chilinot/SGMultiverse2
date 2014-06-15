@@ -73,11 +73,16 @@ public class Commands implements CommandExecutor {
     }
 
     private boolean sginfo(CommandSender s) {
-        s.sendMessage(ChatColor.GREEN + "SGMultiverse2 version " + plugin.getDescription().getVersion() + " is up and running!");
 
-        s.sendMessage("Currently these worlds are registered as gameworlds:");
+        Language msg = Language.COMMAND_SGINFO_INFO_MAIN;
+        msg.INFO = plugin.getDescription().getVersion();
+        s.sendMessage(msg.getMessage());
+
+        s.sendMessage(Language.COMMAND_SGINFO_INFO_REGISTERED.getMessage());
         for(String name : plugin.worldManager.getRegisteredWorldnames()) {
-            s.sendMessage(" - " + ChatColor.GOLD + name);
+            msg = Language.COMMAND_SGINFO_INFO_REGISTEREDWORLD;
+            msg.INFO = name;
+            s.sendMessage(msg.getMessage());
         }
 
         if(s instanceof Player) {
@@ -105,11 +110,13 @@ public class Commands implements CommandExecutor {
         World w = Bukkit.getWorld(wname);
 
         if(w != null) {
-            p.sendMessage(ChatColor.GREEN + "Sending you to \"" + wname + "\"!");
+            Language msg = Language.COMMAND_SGTP_INFO_SENDING;
+            msg.INFO = wname;
+            p.sendMessage(msg.getMessage());
             p.teleport(w.getSpawnLocation());
         }
         else {
-            p.sendMessage(Language.COMMAND_ERROR_SGTP_NOTAVALIDWORLD.getMessage());
+            p.sendMessage(Language.COMMAND_SGTP_ERROR_NOTAVALIDWORLD.getMessage());
         }
 
         return true;
@@ -131,14 +138,14 @@ public class Commands implements CommandExecutor {
                 wm.sendPlayerToLobby(args[0], p);
             }
             else {
-                p.sendMessage(Language.COMMAND_ERROR_SGJOIN_NOTAGAME.getMessage());
+                p.sendMessage(Language.COMMAND_SGJOIN_ERROR_NOTAGAME.getMessage());
             }
         }
         else {
             //TODO This might produce one extra empty row if there are n % 9 = 0 amounts of registered worlds.
             int amount = (9 * (wm.getRegisteredWorldnames().length / 9)) + 9;
 
-            IconMenu menu = new IconMenu(Language.COMMAND_MENU_SGJOIN_CHOOSE.getMessage(), amount, new IconMenu.OptionClickEventHandler() {
+            IconMenu menu = new IconMenu(Language.COMMAND_SGJOIN_MENU_CHOOSE.getMessage(), amount, new IconMenu.OptionClickEventHandler() {
                 @Override
                 public void onOptionClick(IconMenu.OptionClickEvent event) {
                     wm.sendPlayerToLobby(event.getName(), p);
@@ -149,8 +156,8 @@ public class Commands implements CommandExecutor {
 
             int i = 0;
             for(String w : wm.getRegisteredWorldnames()) {
-                Language msg = Language.COMMAND_MENU_SGJOIN_CLICK;
-                msg.NAME = w;
+                Language msg = Language.COMMAND_SGJOIN_MENU_CLICK;
+                msg.INFO = w;
                 menu.setOption(i++, new ItemStack(Material.MAP), w, msg.getMessage());
             }
 
@@ -170,10 +177,11 @@ public class Commands implements CommandExecutor {
         WorldManager wm = plugin.worldManager;
 
         if(wm.isInLobby(p)) {
+            // The player is told about this in the Lobby object.
             wm.addToQueue(p.getWorld().getName(), p);
         }
         else {
-            p.sendMessage(Language.COMMAND_ERROR_SGQUEUE_NOTINLOBBY.getMessage());
+            p.sendMessage(Language.COMMAND_SGQUEUE_ERROR_NOTINLOBBY.getMessage());
         }
 
         return true;
@@ -189,7 +197,7 @@ public class Commands implements CommandExecutor {
         String worldname = p.getWorld().getName();
 
         if(!plugin.worldManager.isRegistered(worldname)) {
-            p.sendMessage(Language.COMMAND_ERROR_NOTINREGISTEREDWORLD.getMessage());
+            p.sendMessage(Language.COMMAND_SGLOCATION_ERROR_NOTINREGISTEREDWORLD.getMessage());
             return true;
         }
 

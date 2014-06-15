@@ -261,7 +261,7 @@ public class GameWorld {
             }
 
             if(l == null) {
-                p.sendMessage(ChatColor.RED + "The arena was full so you have been killed! Sorry about that.");
+                p.sendMessage(Language.GAME_FULLARENA.getMessage());
                 p.setHealth(0D);
                 i.remove();
                 continue;

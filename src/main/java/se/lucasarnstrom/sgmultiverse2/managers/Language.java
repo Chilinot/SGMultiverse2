@@ -33,23 +33,30 @@ import java.lang.reflect.Modifier;
 
 public enum Language {
 
-    LISTENER_BLOCKS_NOTALLOWEDBREAK("&cYou are not allowed to break this block!"),
-    LISTENER_BLOCKS_NOTALLOWEDPLACE("&cYou are not allowed to place this block!"),
-
-    GAMESTATUS_NOTSTARTED("&cThe game has not started yet!"),
-
     COMMAND_ERROR_NOTAPLAYER("&cYou have to be a player to use this command!"),
-    COMMAND_ERROR_NOTINREGISTEREDWORLD("&cYou are not in a registered gameworld!"),
     COMMAND_ERROR_MISSINGARGUMENTS("&cYou have to provide arguments for this command!"),
 
-    COMMAND_ERROR_SGQUEUE_NOTINLOBBY("&cYou have to be in a lobby to use this command!"),
+    COMMAND_SGLOCATION_ERROR_NOTINREGISTEREDWORLD("&cYou are not in a registered gameworld!"),
 
-    COMMAND_ERROR_SGJOIN_FULLWORLD("&cThat game is full!"),
-    COMMAND_ERROR_SGJOIN_NOTAGAME("&cThere is no game with that name!"),
-    COMMAND_MENU_SGJOIN_CHOOSE("Choose a world!"),
-    COMMAND_MENU_SGJOIN_CLICK("Click this to join the game &6#NAME#&f!"),
+    COMMAND_SGQUEUE_ERROR_NOTINLOBBY("&cYou have to be in a lobby to use this command!"),
 
-    COMMAND_ERROR_SGTP_NOTAVALIDWORLD("&cThere is no world with that name on this server!"),
+    COMMAND_SGINFO_INFO_MAIN("&2SGMultiverse2 version &6#INFO#&2 is up and running!"),
+    COMMAND_SGINFO_INFO_REGISTERED("Currently these worlds are registered as gameworlds:"),
+    COMMAND_SGINFO_INFO_REGISTEREDWORLD(" - &6#INFO#"),
+
+    COMMAND_SGJOIN_ERROR_FULLWORLD("&cThat game is full!"),
+    COMMAND_SGJOIN_ERROR_NOTAGAME("&cThere is no game with that name!"),
+    COMMAND_SGJOIN_MENU_CHOOSE("Choose a world!"),
+    COMMAND_SGJOIN_MENU_CLICK("Click this to join the game &6#INFO#"),
+
+    COMMAND_SGTP_ERROR_NOTAVALIDWORLD("&cThere is no world with that name on this server!"),
+    COMMAND_SGTP_INFO_SENDING("Sending you to &6#INFO#&f!"),
+
+    GAME_NOTSTARTED("&cThe game has not started yet!"),
+    GAME_FULLARENA("&cThe arena was full so you have been killed! Sorry about that."),
+
+    LISTENER_BLOCKS_NOTALLOWEDBREAK("&cYou are not allowed to break this block!"),
+    LISTENER_BLOCKS_NOTALLOWEDPLACE("&cYou are not allowed to place this block!"),
 
     LOBBY_ADDED_QUEUE("You have been added to the queue! There are &6#AMOUNT#&f players ahead of you."),
 
@@ -67,7 +74,7 @@ public enum Language {
     public String PLAYER = null;
     public String KILLER = null;
     public String AMOUNT = null;
-    public String NAME   = null;
+    public String INFO   = null;
 
     private static       FileConfiguration config = null;
     private static final ConsoleLogger     logger = new ConsoleLogger("Language");
