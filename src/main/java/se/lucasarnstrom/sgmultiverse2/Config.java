@@ -50,6 +50,7 @@ public class Config {
             put("debug", false);
             put("metrics", true);
             put("auto-update", true);
+            put("languagefile", "language.yml");
         }};
 
         for(Entry<String, Object> e : defaults.entrySet()) {
