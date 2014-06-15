@@ -66,7 +66,7 @@ public class Commands implements CommandExecutor {
             case "sgtp":
                 return sgtp(sender, args);
             default:
-                logger.warning("Unsupported command \"" + command + "\" recieved!");
+                logger.severe("Unsupported command \"" + command + "\" recieved!");
         }
 
         return false;
