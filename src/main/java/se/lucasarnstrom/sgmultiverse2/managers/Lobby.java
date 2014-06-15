@@ -33,7 +33,7 @@ public class Lobby {
 
     private final ConsoleLogger logger;
     private       Location      location;
-    private final HashSet<UUID>    players_in_lobby = new HashSet<UUID>();
+    private final HashSet<UUID>    players_in_lobby = new HashSet<>();
     private final LinkedList<UUID> player_queue = new LinkedList<>();
 
     public Lobby(String name) {

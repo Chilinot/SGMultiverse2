@@ -33,6 +33,11 @@ import java.lang.reflect.Modifier;
 
 public enum Language {
 
+    LISTENER_BLOCKS_NOTALLOWEDBREAK("&cYou are not allowed to break this block!"),
+    LISTENER_BLOCKS_NOTALLOWEDPLACE("&cYou are not allowed to place this block!"),
+
+    GAMESTATUS_NOTSTARTED("&cThe game has not started yet!"),
+
     COMMAND_ERROR_NOTAPLAYER("&cYou have to be a player to use this command!"),
     COMMAND_ERROR_NOTINREGISTEREDWORLD("&cYou are not in a registered gameworld!"),
     COMMAND_ERROR_MISSINGARGUMENTS("&cYou have to provide arguments for this command!"),
@@ -43,6 +48,8 @@ public enum Language {
     COMMAND_ERROR_SGJOIN_NOTAGAME("&cThere is no game with that name!"),
     COMMAND_MENU_SGJOIN_CHOOSE("Choose a world!"),
     COMMAND_MENU_SGJOIN_CLICK("Click this to join the game &6#NAME#&f!"),
+
+    COMMAND_ERROR_SGTP_NOTAVALIDWORLD("&cThere is no world with that name on this server!"),
 
     LOBBY_ADDED_QUEUE("You have been added to the queue! There are &6#AMOUNT#&f players ahead of you."),
 
@@ -62,8 +69,8 @@ public enum Language {
     public String AMOUNT = null;
     public String NAME   = null;
 
-    private static FileConfiguration config = null;
-    private static ConsoleLogger     logger = new ConsoleLogger("Language");
+    private static       FileConfiguration config = null;
+    private static final ConsoleLogger     logger = new ConsoleLogger("Language");
 
     private Language(String s) {
         msg = s;

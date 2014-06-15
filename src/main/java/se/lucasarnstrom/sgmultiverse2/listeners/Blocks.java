@@ -23,7 +23,6 @@
 
 package se.lucasarnstrom.sgmultiverse2.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -34,6 +33,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.sgmultiverse2.Main;
+import se.lucasarnstrom.sgmultiverse2.managers.Language;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager.StatusFlag;
 
@@ -79,12 +79,12 @@ public class Blocks implements Listener {
                         plugin.chestManager.addChestToLog(block.getLocation());
                 }
                 else {
-                    event.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place this block!");
+                    event.getPlayer().sendMessage(Language.LISTENER_BLOCKS_NOTALLOWEDPLACE.getMessage());
                     event.setCancelled(true);
                 }
             }
             else {
-                event.getPlayer().sendMessage(ChatColor.RED + "The game has not started yet!");
+                event.getPlayer().sendMessage(Language.GAMESTATUS_NOTSTARTED.getMessage());
                 event.setCancelled(true);
             }
         }
@@ -105,12 +105,12 @@ public class Blocks implements Listener {
                     wm.logBlock(block, false);
                 }
                 else {
-                    player.sendMessage(ChatColor.RED + "You are not allowed to break this block!");
+                    player.sendMessage(Language.LISTENER_BLOCKS_NOTALLOWEDBREAK.getMessage());
                     event.setCancelled(true);
                 }
             }
             else {
-                player.sendMessage(ChatColor.RED + "The game has not started yet!");
+                player.sendMessage(Language.GAMESTATUS_NOTSTARTED.getMessage());
                 event.setCancelled(true);
             }
         }

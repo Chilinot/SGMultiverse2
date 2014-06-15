@@ -47,7 +47,7 @@ public class GameWorld {
     private final Main          plugin;
     private final ConsoleLogger logger;
     private final World         world;
-    private       Lobby         lobby;
+    private final Lobby         lobby;
     private       Location                       sign_location      = null;
     private final HashSet<UUID>                  playerlist         = new HashSet<>();
     private final HashMap<Location, UUID>        locations_start    = new HashMap<>();
@@ -61,9 +61,9 @@ public class GameWorld {
 
     // Entities that shouldn't be removed on world reset
     private static final EnumSet<EntityType> nonremovable = EnumSet.of(
-            EntityType.PLAYER,
-            EntityType.PAINTING,
-            EntityType.ITEM_FRAME
+                                                                              EntityType.PLAYER,
+                                                                              EntityType.PAINTING,
+                                                                              EntityType.ITEM_FRAME
     );
 
     public GameWorld(Main instance, World w) {

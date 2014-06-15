@@ -91,11 +91,11 @@ public class Commands implements CommandExecutor {
     private boolean sgtp(CommandSender sender, String[] args) {
 
         if(!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
+            sender.sendMessage(Language.COMMAND_ERROR_NOTAPLAYER.getMessage());
             return true;
         }
         else if(args.length != 1) {
-            sender.sendMessage(ChatColor.RED + "You have to specify the name of the world you want to go to!");
+            sender.sendMessage(Language.COMMAND_ERROR_MISSINGARGUMENTS.getMessage());
             return false;
         }
 
@@ -109,7 +109,7 @@ public class Commands implements CommandExecutor {
             p.teleport(w.getSpawnLocation());
         }
         else {
-            p.sendMessage(ChatColor.RED + "There is no world with that name on this server!");
+            p.sendMessage(Language.COMMAND_ERROR_SGTP_NOTAVALIDWORLD.getMessage());
         }
 
         return true;
