@@ -145,7 +145,7 @@ public class Commands implements CommandExecutor {
             //TODO This might produce one extra empty row if there are n % 9 = 0 amounts of registered worlds.
             int amount = (9 * (wm.getRegisteredWorldnames().length / 9)) + 9;
 
-            IconMenu menu = new IconMenu(Language.COMMAND_SGJOIN_MENU_CHOOSE.getMessage(), amount, new IconMenu.OptionClickEventHandler() {
+            IconMenu menu = new IconMenu(Language.COMMAND_SGJOIN_MENU_TITLE.getMessage(), amount, new IconMenu.OptionClickEventHandler() {
                 @Override
                 public void onOptionClick(IconMenu.OptionClickEvent event) {
                     wm.sendPlayerToLobby(event.getName(), p);
@@ -156,7 +156,7 @@ public class Commands implements CommandExecutor {
 
             int i = 0;
             for(String w : wm.getRegisteredWorldnames()) {
-                Language msg = Language.COMMAND_SGJOIN_MENU_CLICK;
+                Language msg = Language.COMMAND_SGJOIN_MENU_CHOICE;
                 msg.INFO = w;
                 menu.setOption(i++, new ItemStack(Material.MAP), w, msg.getMessage());
             }

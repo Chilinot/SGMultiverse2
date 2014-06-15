@@ -46,8 +46,8 @@ public enum Language {
 
     COMMAND_SGJOIN_ERROR_FULLWORLD("&cThat game is full!"),
     COMMAND_SGJOIN_ERROR_NOTAGAME("&cThere is no game with that name!"),
-    COMMAND_SGJOIN_MENU_CHOOSE("Choose a world!"),
-    COMMAND_SGJOIN_MENU_CLICK("Click this to join the game &6#INFO#"),
+    COMMAND_SGJOIN_MENU_TITLE("Choose a world!"),
+    COMMAND_SGJOIN_MENU_CHOICE("Click this to join the game &6#INFO#"),
 
     COMMAND_SGTP_ERROR_NOTAVALIDWORLD("&cThere is no world with that name on this server!"),
     COMMAND_SGTP_INFO_SENDING("Sending you to &6#INFO#&f!"),
