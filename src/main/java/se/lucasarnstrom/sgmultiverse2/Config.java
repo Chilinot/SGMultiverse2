@@ -43,7 +43,7 @@ public class Config {
 
         boolean save = false;
 
-        // General defaults
+        // Define general defaults
         HashMap<String, Object> defaults = new HashMap<String, Object>() {{
 
             // General
@@ -53,6 +53,7 @@ public class Config {
             put("languagefile", "language.yml");
         }};
 
+        // Store defaults
         for(Entry<String, Object> e : defaults.entrySet()) {
             if(!config.contains(e.getKey())) {
                 config.set(e.getKey(), e.getValue());
@@ -60,7 +61,7 @@ public class Config {
             }
         }
 
-        // World defaults
+        // Define world defaults
         HashMap<String, Object> world_defaults = new HashMap<String, Object>() {{
 
             // General
@@ -76,11 +77,13 @@ public class Config {
 
         }};
 
+        // Define two worlds in case there are none in the config
         if(!config.contains("worlds")) {
             config.set("worlds.sgmworld1.time.start", 120);
             config.set("worlds.sgmworld2.time.start", 120);
         }
 
+        // Store defaults
         for(String name : config.getConfigurationSection("worlds").getKeys(false)) {
             for(Entry<String, Object> entry : world_defaults.entrySet()) {
                 String key = "worlds." + name + "." + entry.getKey();
