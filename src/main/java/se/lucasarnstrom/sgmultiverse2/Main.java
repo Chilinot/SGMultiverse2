@@ -21,6 +21,7 @@
 
 package se.lucasarnstrom.sgmultiverse2;
 
+import net.gravitydevelopment.updater.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -35,7 +36,6 @@ import se.lucasarnstrom.sgmultiverse2.managers.ChestManager;
 import se.lucasarnstrom.sgmultiverse2.managers.Commands;
 import se.lucasarnstrom.sgmultiverse2.managers.Language;
 import se.lucasarnstrom.sgmultiverse2.managers.WorldManager;
-import se.lucasarnstrom.sgmultiverse2.libs.Updater;
 
 import java.io.File;
 import java.io.IOException;
