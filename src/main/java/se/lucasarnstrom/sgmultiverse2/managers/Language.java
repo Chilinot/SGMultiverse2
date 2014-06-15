@@ -29,6 +29,7 @@ import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public enum Language {
 
@@ -60,14 +61,6 @@ public enum Language {
     public String KILLER = null;
     public String AMOUNT = null;
     public String NAME   = null;
-
-    // It will only access variable-fields defined in this enum.
-    private enum Variable {
-        PLAYER,
-        KILLER,
-        AMOUNT,
-        NAME
-    }
 
     private static FileConfiguration config = null;
     private static ConsoleLogger     logger = new ConsoleLogger("Language");
@@ -112,16 +105,16 @@ public enum Language {
         // "REFLECTION!?!? Are you nuts?" You might say. Yes I might be, but boy do I love dynamic code.
         // If it was possible to define a string variable in a single place that's what I would do, with no care
         // regarding performance loss.
-        for(Variable v : Variable.values()) {
+        Field[] fa = Language.class.getDeclaredFields();
+        for(Field f : fa) {
             try {
-                Field f = Language.class.getDeclaredField(v.name());
                 Object o = f.get(this);
-                if(o != null && o instanceof String) {
-                    msg = msg.replace('#' + v.name() + '#', (String) o);
+                if(Modifier.isPublic(f.getModifiers()) && o != null && o instanceof String) {
+                    msg = msg.replace('#' + f.getName() + '#', (String) o);
                 }
             }
-            catch(NoSuchFieldException | IllegalAccessException e) {
-                logger.severe("Failed to replace variable \"" + v.name() + "\"");
+            catch(IllegalAccessException e) {
+                logger.severe("Failed to replace variable \"" + f.getName() + "\"");
                 logger.severe("Message: \"" + e.getMessage() + "\"");
                 logger.debug(e.getStackTrace());
             }
