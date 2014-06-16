@@ -34,15 +34,20 @@ import java.lang.reflect.Modifier;
 public enum Language {
 
     COMMAND_ERROR_NOTAPLAYER("&cYou have to be a player to use this command!"),
-    COMMAND_ERROR_MISSINGARGUMENTS("&cYou have to provide arguments for this command!"),
+    COMMAND_ERROR_INCORRECTUSAGE("&cIncorrect usage of the command!"),
 
     COMMAND_SGLOCATION_ERROR_NOTINREGISTEREDWORLD("&cYou are not in a registered gameworld!"),
+    COMMAND_SGLOCATION_INFO_INFO_TITLE(" - &6Number of locations for this world&f - "),
+    COMMAND_SGLOCATION_INFO_INFO_MAIN(" - MAIN   : &2#AMOUNT#"),
+    COMMAND_SGLOCATION_INFO_INFO_ARENA(" - ARENA : &2#AMOUNT#"),
+    COMMAND_SGLOCATION_INFO_SAVE_TITLE("&2Saving locations for this world!"),
 
     COMMAND_SGQUEUE_ERROR_NOTINLOBBY("&cYou have to be in a lobby to use this command!"),
 
     COMMAND_SGINFO_INFO_MAIN("&2SGMultiverse2 version &6#INFO#&2 is up and running!"),
     COMMAND_SGINFO_INFO_REGISTERED("Currently these worlds are registered as gameworlds:"),
     COMMAND_SGINFO_INFO_REGISTEREDWORLD(" - &6#INFO#"),
+    COMMAND_SGINFO_INFO_INWORLD("You are in the world &6#INFO#&f."),
 
     COMMAND_SGJOIN_ERROR_FULLWORLD("&cThat game is full!"),
     COMMAND_SGJOIN_ERROR_NOTAGAME("&cThere is no game with that name!"),

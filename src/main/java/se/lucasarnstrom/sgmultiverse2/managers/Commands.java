@@ -87,7 +87,9 @@ public class Commands implements CommandExecutor {
 
         if(s instanceof Player) {
             Player p = (Player) s;
-            s.sendMessage("You are in the world \"" + ChatColor.GOLD + p.getWorld().getName() + ChatColor.WHITE + "\".");
+            msg = Language.COMMAND_SGINFO_INFO_INWORLD;
+            msg.INFO = p.getWorld().getName();
+            s.sendMessage(msg.getMessage());
         }
 
         return true;
@@ -100,7 +102,7 @@ public class Commands implements CommandExecutor {
             return true;
         }
         else if(args.length != 1) {
-            sender.sendMessage(Language.COMMAND_ERROR_MISSINGARGUMENTS.getMessage());
+            sender.sendMessage(Language.COMMAND_ERROR_INCORRECTUSAGE.getMessage());
             return false;
         }
 
@@ -204,20 +206,26 @@ public class Commands implements CommandExecutor {
         switch(args.length) {
 
             case 0:
-                sender.sendMessage(Language.COMMAND_ERROR_MISSINGARGUMENTS.getMessage());
+                sender.sendMessage(Language.COMMAND_ERROR_INCORRECTUSAGE.getMessage());
                 return false;
 
             case 1:
                 switch(args[0].toLowerCase()) {
 
                     case "info":
-                        p.sendMessage(" - " + ChatColor.GOLD + "Number of locations for this world" + ChatColor.WHITE + " - ");
-                        p.sendMessage(" - MAIN   : " + ChatColor.GREEN + plugin.worldManager.getNumberOfMainLocations(worldname));
-                        p.sendMessage(" - ARENA : " + ChatColor.GREEN + plugin.worldManager.getNumberOfArenaLocations(worldname));
+                        Language main = Language.COMMAND_SGLOCATION_INFO_INFO_MAIN;
+                        main.AMOUNT = Integer.toString(plugin.worldManager.getNumberOfMainLocations(worldname));
+
+                        Language arena = Language.COMMAND_SGLOCATION_INFO_INFO_ARENA;
+                        arena.AMOUNT = Integer.toString(plugin.worldManager.getNumberOfArenaLocations(worldname));
+
+                        p.sendMessage(Language.COMMAND_SGLOCATION_INFO_INFO_TITLE.getMessage());
+                        p.sendMessage(main.getMessage());
+                        p.sendMessage(arena.getMessage());
                         return true;
 
                     case "save":
-                        p.sendMessage(ChatColor.GREEN + "Saving locations for this world!");
+                        p.sendMessage(Language.COMMAND_SGLOCATION_INFO_SAVE_TITLE.getMessage());
                         plugin.worldManager.saveLocations(worldname);
                         return true;
 

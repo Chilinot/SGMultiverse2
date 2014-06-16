@@ -68,8 +68,7 @@ public class Main extends JavaPlugin {
 
         ConsoleLogger.init(this);
 
-        File language = new File(this.getDataFolder() + "/" + getConfig().getString("languagefile"));
-
+        File language = new File(this.getDataFolder() + "/" + getConfig().getString("languagefile") + ".yml");
         Language.setConfig(language);
 
         // -- INITIATE OBJECTS

@@ -61,9 +61,9 @@ public class GameWorld {
 
     // Entities that shouldn't be removed on world reset
     private static final EnumSet<EntityType> nonremovable = EnumSet.of(
-                                                                              EntityType.PLAYER,
-                                                                              EntityType.PAINTING,
-                                                                              EntityType.ITEM_FRAME
+          EntityType.PLAYER,
+          EntityType.PAINTING,
+          EntityType.ITEM_FRAME
     );
 
     public GameWorld(Main instance, World w) {

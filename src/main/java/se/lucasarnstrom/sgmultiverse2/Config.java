@@ -50,7 +50,7 @@ public class Config {
             put("debug", false);
             put("metrics", true);
             put("auto-update", true);
-            put("languagefile", "language.yml");
+            put("languagefile", "language");
         }};
 
         // Store defaults
