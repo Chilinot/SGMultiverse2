@@ -59,6 +59,7 @@ public enum Language {
     LISTENER_BLOCKS_NOTALLOWEDPLACE("&cYou are not allowed to place this block!"),
 
     LOBBY_ADDED_QUEUE("You have been added to the queue! There are &6#AMOUNT#&f players ahead of you."),
+	LOBBY_WELCOME("You are now in the lobby. Please use the command &6/sgqueue&f to start playing!"),
 
     PLAYER_KICK("&6#PLAYER#&f has been kicked from the game!"),
     PLAYER_QUIT("&6#PLAYER#&f left the game."),

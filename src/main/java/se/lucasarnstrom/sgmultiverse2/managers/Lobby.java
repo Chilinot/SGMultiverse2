@@ -47,6 +47,7 @@ public class Lobby {
 
     public void sendPlayer(Player p) {
         logger.debug("Sending player \"" + p.getName() + "\" to the lobby.");
+		p.sendMessage(Language.LOBBY_WELCOME.getMessage());
         p.teleport(location);
         players_in_lobby.add(p.getUniqueId());
     }
