@@ -250,7 +250,7 @@ public class Commands implements CommandExecutor {
 
                             case "lobby":
                                 plugin.worldManager.setLobbyLocation(worldname, p.getLocation(), true);
-                                p.sendMessage(ChatColor.GREEN + "You have successfully set the lobby location for this world!");
+                                p.sendMessage(Language.COMMAND_SGLOCATION_INFO_ADD_LOBBY.getMessage());
                                 return true; // Don't send the message
 
                             default:
@@ -259,14 +259,10 @@ public class Commands implements CommandExecutor {
                         }
 
                         // Message the player
-                        p.sendMessage(
-                                ChatColor.GREEN +
-                                        "Added " +
-                                        ChatColor.GOLD +
-                                        args[1].toUpperCase() +
-                                        ChatColor.GREEN +
-                                        " location! Remember to save if you want the locations to be permanent!"
-                        );
+                        Language msg = Language.COMMAND_SGLOCATION_INFO_ADD_GENERAL;
+                        msg.INFO = args[1].toUpperCase();
+
+                        p.sendMessage(msg.getMessage());
 
                         return true;
 

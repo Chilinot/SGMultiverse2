@@ -41,6 +41,8 @@ public enum Language {
     COMMAND_SGLOCATION_INFO_INFO_MAIN(" - MAIN   : &2#AMOUNT#"),
     COMMAND_SGLOCATION_INFO_INFO_ARENA(" - ARENA : &2#AMOUNT#"),
     COMMAND_SGLOCATION_INFO_SAVE_TITLE("&2Saving locations for this world!"),
+    COMMAND_SGLOCATION_INFO_ADD_LOBBY("&2You have successfully set the lobby location for this world!"),
+    COMMAND_SGLOCATION_INFO_ADD_GENERAL("&2Added &6#INFO#&2 location! Remember to save if you want the locations to be permanent!"),
 
     COMMAND_SGQUEUE_ERROR_NOTINLOBBY("&cYou have to be in a lobby to use this command!"),
 
@@ -64,7 +66,7 @@ public enum Language {
     LISTENER_BLOCKS_NOTALLOWEDPLACE("&cYou are not allowed to place this block!"),
 
     LOBBY_ADDED_QUEUE("You have been added to the queue! There are &6#AMOUNT#&f players ahead of you."),
-	LOBBY_WELCOME("You are now in the lobby. Please use the command &6/sgqueue&f to start playing!"),
+    LOBBY_WELCOME("You are now in the lobby. Please use the command &6/sgqueue&f to start playing!"),
 
     PLAYER_KICK("&6#PLAYER#&f has been kicked from the game!"),
     PLAYER_QUIT("&6#PLAYER#&f left the game."),
