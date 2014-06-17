@@ -23,7 +23,6 @@
 package se.lucasarnstrom.sgmultiverse2.managers;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -39,8 +38,6 @@ public class Commands implements CommandExecutor {
 
     private final ConsoleLogger logger = new ConsoleLogger("CommandManager");
     private final Main plugin;
-
-    //TODO Transfer all strings to Language
 
     public Commands(Main p) {
         plugin = p;
@@ -144,8 +141,8 @@ public class Commands implements CommandExecutor {
             }
         }
         else {
-            //TODO This might produce one extra empty row if there are n % 9 = 0 amounts of registered worlds.
-            int amount = (9 * (wm.getRegisteredWorldnames().length / 9)) + 9;
+            int len = wm.getRegisteredWorldnames().length;
+            int amount = len + (9 - len % 9);
 
             IconMenu menu = new IconMenu(Language.COMMAND_SGJOIN_MENU_TITLE.getMessage(), amount, new IconMenu.OptionClickEventHandler() {
                 @Override

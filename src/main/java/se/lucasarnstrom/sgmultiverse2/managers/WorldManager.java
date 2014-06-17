@@ -112,7 +112,7 @@ public class WorldManager {
 
     public void removePlayer(UUID id, Language reason) {
 
-        logger.debug("Removing player with id=\"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");
+        logger.debug("Removing player with \"" + Bukkit.getPlayer(id).getName() + "\" due to reason=\"" + reason + "\"");
 
         for(Entry<String, GameWorld> e : worlds.entrySet()) {
             if(e.getValue().isInPlayerlist(id)) {

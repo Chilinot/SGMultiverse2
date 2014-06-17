@@ -123,10 +123,8 @@ public enum Language {
             msg = config.getString(this.name().replaceAll("_", "\\."), msg);
         }
 
-        // -- Variables
+        // Variables
         // "REFLECTION!?!? Are you nuts?" You might say. Yes I might be, but boy do I love dynamic code.
-        // If it was possible to define a string variable in a single place that's what I would do, with no care
-        // regarding performance loss.
         Field[] fa = Language.class.getDeclaredFields();
         for(Field f : fa) {
             try {
