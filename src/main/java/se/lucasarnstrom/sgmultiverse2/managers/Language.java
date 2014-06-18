@@ -52,7 +52,7 @@ public enum Language {
     COMMAND_SGINFO_INFO_INWORLD("You are in the world &6#INFO#&f."),
 
     COMMAND_SGJOIN_ERROR_FULLWORLD("&cThat game is full!"),
-    COMMAND_SGJOIN_ERROR_NOTAGAME("&cThere is no game with the name &6#INFO&c!"),
+    COMMAND_SGJOIN_ERROR_NOTAGAME("&cThere is no game with the name: \"&6#INFO&c!\""),
     COMMAND_SGJOIN_MENU_TITLE("Choose a world!"),
     COMMAND_SGJOIN_MENU_CHOICE("Click this to join the game &6#INFO#"),
 
