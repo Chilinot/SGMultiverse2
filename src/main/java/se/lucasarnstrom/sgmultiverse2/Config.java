@@ -24,6 +24,7 @@ package se.lucasarnstrom.sgmultiverse2;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -95,6 +96,7 @@ public class Config {
         }
 
         if(save) {
+            new ConsoleLogger("Config").warning("The configuration file was missing entries! They have now been added!");
             plugin.saveConfig();
         }
     }

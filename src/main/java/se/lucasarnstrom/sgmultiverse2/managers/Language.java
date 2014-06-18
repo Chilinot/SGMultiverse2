@@ -108,6 +108,7 @@ public enum Language {
 
         if(save) {
             try {
+                logger.warning("The defined languagefile is missing some parts! They have been automatically added in english.");
                 config.save(file);
             }
             catch(IOException e) {
