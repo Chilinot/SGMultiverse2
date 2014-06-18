@@ -132,12 +132,14 @@ public class Commands implements CommandExecutor {
 
         final WorldManager wm = plugin.worldManager;
 
-        if(args.length == 1) {
+        if(args.length > 1) {
             if(wm.isRegistered(args[0])) {
                 wm.sendPlayerToLobby(args[0], p);
             }
             else {
-                p.sendMessage(Language.COMMAND_SGJOIN_ERROR_NOTAGAME.getMessage());
+                Language msg = Language.COMMAND_SGJOIN_ERROR_NOTAGAME;
+                msg.INFO = args[0];
+                p.sendMessage(msg.getMessage());
             }
         }
         else {
