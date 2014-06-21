@@ -78,39 +78,39 @@ public class SQLiteInterface {
                 Statement stmt = con.createStatement();
 
                 stmt.execute(
-                        "CREATE TABLE IF NOT EXISTS signlocations  (" +
-                                "worldname    VARCHAR(255) NOT NULL PRIMARY KEY, " +
-                                "placed_world VARCHAR(255) NOT NULL, " +
-                                "x            DOUBLE(255)  NOT NULL, " +
-                                "y            DOUBLE(255)  NOT NULL, " +
-                                "z            DOUBLE(255)  NOT NULL" +
-                                ")"
+                    "CREATE TABLE IF NOT EXISTS signlocations  (" +
+                        "worldname    VARCHAR(255) NOT NULL PRIMARY KEY, " +
+                        "placed_world VARCHAR(255) NOT NULL, " +
+                        "x            DOUBLE(255)  NOT NULL, " +
+                        "y            DOUBLE(255)  NOT NULL, " +
+                        "z            DOUBLE(255)  NOT NULL" +
+                    ")"
                 );
 
                 stmt.execute(
-                        "CREATE TABLE IF NOT EXISTS startlocations (" +
-                                "worldname VARCHAR(255) NOT NULL, " +
-                                "x         DOUBLE(255)  NOT NULL, " +
-                                "y         DOUBLE(255)  NOT NULL, " +
-                                "z         DOUBLE(255)  NOT NULL, " +
-                                "type      VARCHAR(10)  NOT NULL" +
-                                ")"
+                    "CREATE TABLE IF NOT EXISTS startlocations (" +
+                        "worldname VARCHAR(255) NOT NULL, " +
+                        "x         DOUBLE(255)  NOT NULL, " +
+                        "y         DOUBLE(255)  NOT NULL, " +
+                        "z         DOUBLE(255)  NOT NULL, " +
+                        "type      VARCHAR(10)  NOT NULL" +
+                    ")"
                 );
 
                 stmt.execute(
-                        "CREATE TABLE IF NOT EXISTS playerstats (" +
-                                "UUID   STRING(250) NOT NULL PRIMARY KEY, " +
-                                "wins   INT(10), " +
-                                "kills  INT(10), " +
-                                "deaths INT(10)" +
-                                ")"
+                    "CREATE TABLE IF NOT EXISTS playerstats (" +
+                        "UUID   STRING(250) NOT NULL PRIMARY KEY, " +
+                        "wins   INT(10), " +
+                        "kills  INT(10), " +
+                        "deaths INT(10)" +
+                    ")"
                 );
 
                 stmt.execute(
-                        "CREATE TABLE IF NOT EXISTS inventories (" +
-                                "UUID      VARCHAR(250)  NOT NULL PRIMARY KEY, " +
-                                "inventory VARCHAR(8000) NOT NULL" +
-                                ")"
+                    "CREATE TABLE IF NOT EXISTS inventories (" +
+                                    "UUID      VARCHAR(250)  NOT NULL PRIMARY KEY, " +
+                                            "inventory VARCHAR(8000) NOT NULL" +
+                                            ")"
                 );
 
                 stmt.close();
@@ -130,7 +130,7 @@ public class SQLiteInterface {
             }
             catch(SQLException e) {
                 logger.severe("Error while closing connection, data might have been lost! " +
-                        "Message: " + e.getMessage());
+                                      "Message: " + e.getMessage());
                 logger.debug(e.getStackTrace());
             }
         }
@@ -195,7 +195,7 @@ public class SQLiteInterface {
             }
             catch(SQLException e) {
                 logger.severe("Error while retrieving startlocations for world \"" + worldname + "\". " +
-                        "Message: " + e.getMessage());
+                                      "Message: " + e.getMessage());
                 logger.debug(e.getStackTrace());
                 return;
             }
@@ -240,7 +240,7 @@ public class SQLiteInterface {
             }
             catch(SQLException e) {
                 logger.severe("Error while saving startlocations for world " + worldname + ". " +
-                        "Message: " + e.getMessage());
+                                      "Message: " + e.getMessage());
                 logger.debug(e.getStackTrace());
             }
         }
@@ -263,7 +263,7 @@ public class SQLiteInterface {
             }
             catch(SQLException e) {
                 logger.severe("Error while clearing startlocations! " +
-                        "Message: " + e.getMessage());
+                                      "Message: " + e.getMessage());
                 logger.debug(e.getStackTrace());
             }
         }
@@ -308,7 +308,7 @@ public class SQLiteInterface {
             }
             catch(SQLException e) {
                 logger.severe("Error while loading signlocation for world \"" + wname + "\"! " +
-                        "Message: " + e.getMessage());
+                                      "Message: " + e.getMessage());
                 logger.debug(e.getStackTrace());
             }
         }
@@ -337,7 +337,7 @@ public class SQLiteInterface {
             }
             catch(SQLException e) {
                 logger.severe("Error while storing signlocation for world \"" + wname + "\"! " +
-                        "Message: " + e.getMessage());
+                                      "Message: " + e.getMessage());
                 logger.debug(e.getStackTrace());
             }
         }

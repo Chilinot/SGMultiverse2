@@ -73,7 +73,7 @@ public class LoggedBlock {
             else {
                 ConsoleLogger.getLogger("WorldManager")
                              .severe("Tried to reset the data for the following sign but failed! " +
-                                     "WORLDNAME:\"" + WORLDNAME + "\" X:\"" + X + "\" Y:\"" + Y + "\" Z:\"" + Z + "\"");
+                                             "WORLDNAME:\"" + WORLDNAME + "\" X:\"" + X + "\" Y:\"" + Y + "\" Z:\"" + Z + "\"");
             }
         }
     }

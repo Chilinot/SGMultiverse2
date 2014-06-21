@@ -34,7 +34,7 @@ public class Lobby {
     private final ConsoleLogger logger;
     private       Location      location;
     private final HashSet<UUID>    players_in_lobby = new HashSet<>();
-    private final LinkedList<UUID> player_queue = new LinkedList<>();
+    private final LinkedList<UUID> player_queue     = new LinkedList<>();
 
     public Lobby(String name) {
         logger = new ConsoleLogger(name + "-LobbyManager");
@@ -47,7 +47,7 @@ public class Lobby {
 
     public void sendPlayer(Player p) {
         logger.debug("Sending player \"" + p.getName() + "\" to the lobby.");
-		p.sendMessage(Language.LOBBY_WELCOME.getMessage());
+        p.sendMessage(Language.LOBBY_WELCOME.getMessage());
         p.teleport(location);
         players_in_lobby.add(p.getUniqueId());
     }

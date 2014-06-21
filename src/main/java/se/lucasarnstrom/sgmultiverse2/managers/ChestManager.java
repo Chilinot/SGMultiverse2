@@ -30,12 +30,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import se.lucasarnstrom.lucasutils.*;
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.lucasutils.RandomCollection;
 import se.lucasarnstrom.sgmultiverse2.Main;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
 
 public class ChestManager {
 
@@ -53,16 +57,16 @@ public class ChestManager {
     public void addWorld(String name) {
 
         String config =
-                plugin.getDataFolder() +
-                        "/lootlists/" +
-                        plugin.getConfig().getString("worlds." + name + ".lootlist") +
-                        ".yml";
+            plugin.getDataFolder() +
+            "/lootlists/" +
+            plugin.getConfig().getString("worlds." + name + ".lootlist") +
+            ".yml";
 
         worlds.put(name, new Object[]{
-                config,                                           // Itemconfig
-                new RandomCollection<String>(),                   // Itemlist
-                new HashMap<String, RandomCollection<String>>(),  // enchantmentlists
-                new HashMap<String, String>()                     // enchable
+             config,                                           // Itemconfig
+             new RandomCollection<String>(),                   // Itemlist
+             new HashMap<String, RandomCollection<String>>(),  // enchantmentlists
+             new HashMap<String, String>()                     // enchable
         });
 
         loadItemList(name);
@@ -74,10 +78,10 @@ public class ChestManager {
         String worldname = chest.getLocation().getWorld().getName();
 
         if(!randomizedchests.contains(chest.getLocation()) // Is the chest already logged?
-                && worlds.containsKey(worldname)) {        // Is it a registered world?
+                   && worlds.containsKey(worldname)) {        // Is it a registered world?
 
             FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(
-                    new File((String) worlds.get(worldname)[0])
+                new File((String) worlds.get(worldname)[0])
             );
 
             RandomCollection<String> itemlist = (RandomCollection<String>) worlds.get(worldname)[1];
@@ -150,7 +154,7 @@ public class ChestManager {
                             item.addEnchantment(enchantment, level);
                         }
                     }
-					
+
 					/*
 					 *  Enchantments -- stop
 					 */
@@ -203,7 +207,7 @@ public class ChestManager {
         logger.debug("Loading configuration file for world \"" + worldname + "\".");
 
         FileConfiguration itemConfig = YamlConfiguration.loadConfiguration(
-                new File((String) worlds.get(worldname)[0])
+                                                                                  new File((String) worlds.get(worldname)[0])
         );
 
         // Check the default settings

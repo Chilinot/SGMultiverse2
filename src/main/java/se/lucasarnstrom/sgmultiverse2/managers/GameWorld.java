@@ -61,9 +61,9 @@ public class GameWorld {
 
     // Entities that shouldn't be removed on world reset
     private static final EnumSet<EntityType> nonremovable = EnumSet.of(
-          EntityType.PLAYER,
-          EntityType.PAINTING,
-          EntityType.ITEM_FRAME
+        EntityType.PLAYER,
+        EntityType.PAINTING,
+        EntityType.ITEM_FRAME
     );
 
     public GameWorld(Main instance, World w) {
@@ -161,7 +161,8 @@ public class GameWorld {
 
             switch(this.status) {
 
-                case COUNTINGDOWN: case STARTED:
+                case COUNTINGDOWN:
+                case STARTED:
                     status.append(ChatColor.GOLD);
                     break;
 
@@ -183,8 +184,8 @@ public class GameWorld {
             s.setLine(1, status.toString());
             s.setLine(2, ChatColor.WHITE + "-PLAYERS-");
             s.setLine(3, ChatColor.WHITE + Integer.toString(playerlist.size()) + // It kept confusing the string concatenation with integer addition.
-                    ChatColor.GOLD + "/" +
-                    ChatColor.WHITE + getNumberOfMainLocations());
+                                 ChatColor.GOLD + "/" +
+                                 ChatColor.WHITE + getNumberOfMainLocations());
 
             s.update();
         }

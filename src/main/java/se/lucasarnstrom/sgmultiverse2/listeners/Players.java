@@ -30,8 +30,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import se.lucasarnstrom.lucasutils.ConsoleLogger;
-import se.lucasarnstrom.sgmultiverse2.managers.Language;
 import se.lucasarnstrom.sgmultiverse2.Main;
+import se.lucasarnstrom.sgmultiverse2.managers.Language;
 
 public class Players implements Listener {
 
@@ -54,8 +54,8 @@ public class Players implements Listener {
     @EventHandler
     public void playerInteract(PlayerInteractEvent e) {
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK &&
-                e.getClickedBlock().getType() == Material.CHEST &&
-                plugin.worldManager.isRegistered(e.getPlayer().getWorld().getName())) {
+                   e.getClickedBlock().getType() == Material.CHEST &&
+                   plugin.worldManager.isRegistered(e.getPlayer().getWorld().getName())) {
 
             plugin.chestManager.randomizeChest((Chest) e.getClickedBlock().getState());
         }
@@ -94,7 +94,7 @@ public class Players implements Listener {
     @EventHandler
     public void playerTeleport(PlayerTeleportEvent e) {
         if(plugin.worldManager.isPlaying(e.getPlayer().getUniqueId())
-                && !e.getTo().getWorld().equals(e.getFrom().getWorld())) {
+                   && !e.getTo().getWorld().equals(e.getFrom().getWorld())) {
             plugin.worldManager.removePlayer(e.getPlayer().getUniqueId(), Language.PLAYER_TELEPORT);
         }
     }

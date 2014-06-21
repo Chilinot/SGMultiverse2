@@ -47,15 +47,15 @@ public class Blocks implements Listener {
 
     // Materials to log in the physics event.
     private final Set<Material> physics = EnumSet.of(
-            Material.TORCH,
-            Material.LADDER,
-            Material.REDSTONE_COMPARATOR_OFF,
-            Material.REDSTONE_COMPARATOR_ON,
-            Material.REDSTONE_TORCH_OFF,
-            Material.REDSTONE_TORCH_ON,
-            Material.REDSTONE_WIRE,
-            Material.WALL_SIGN,
-            Material.SIGN_POST
+        Material.TORCH,
+        Material.LADDER,
+        Material.REDSTONE_COMPARATOR_OFF,
+        Material.REDSTONE_COMPARATOR_ON,
+        Material.REDSTONE_TORCH_OFF,
+        Material.REDSTONE_TORCH_ON,
+        Material.REDSTONE_WIRE,
+        Material.WALL_SIGN,
+        Material.SIGN_POST
     );
 
     public Blocks(Main instance) {
@@ -72,7 +72,7 @@ public class Blocks implements Listener {
 
         if(wm.isRegistered(block.getWorld().getName())) {
             if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED
-                    || event.getPlayer().hasPermission("sgmultiverse.ignore.startblock")) {
+                       || event.getPlayer().hasPermission("sgmultiverse.ignore.startblock")) {
                 if(wm.allowBlock(block) || event.getPlayer().hasPermission("sgmultiverse.ignore.blockfilter")) {
                     wm.logBlock(block, true);
                     if(block.getType().equals(Material.CHEST))
@@ -100,7 +100,7 @@ public class Blocks implements Listener {
 
         if(wm.isRegistered(block.getWorld().getName())) {
             if(plugin.worldManager.getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED
-                    || player.hasPermission("sgmultiverse.ignore.startblock")) {
+                       || player.hasPermission("sgmultiverse.ignore.startblock")) {
                 if(wm.allowBlock(block) || event.getPlayer().hasPermission("sgmultiverse.ignore.blockfilter")) {
                     wm.logBlock(block, false);
                 }
@@ -174,7 +174,7 @@ public class Blocks implements Listener {
         Block b = event.getBlock();
 
         if(plugin.worldManager.isRegistered(b.getWorld().getName())
-                && physics.contains(b.getType())) {
+                   && physics.contains(b.getType())) {
             plugin.worldManager.logBlock(b, false);
         }
     }
