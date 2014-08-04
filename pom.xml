@@ -170,6 +170,22 @@
                             <filters>
                             </filters>
                             <relocations>
+                                <relocation>
+                                    <pattern>org.mcstats</pattern>
+                                    <shadedPattern>se.lucasarnstrom.sgmultiverse2.libs.mcstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net.gravitydevelopment.updater</pattern>
+                                    <shadedPattern>se.lucasarnstrom.sgmultiverse2.libs.updater</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>me.desht.dhutils</pattern>
+                                    <shadedPattern>se.lucasarnstrom.sgmultiverse2.libs.dhutils</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>se.lucasarnstrom.lucasutils</pattern>
+                                    <shadedPattern>se.lucasarnstrom.sgmultiverse2.libs.lucasutils</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
